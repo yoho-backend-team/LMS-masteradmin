@@ -103,35 +103,15 @@ export default function Navbar() {
           )}
         </div>
 
-        {/* Profile Dropdown */}
-        <div className="relative" ref={profileRef}>
-          <div
-            className="h-[48px] w-[48px] rounded-full overflow-hidden cursor-pointer"
-            onClick={() => {
-              setShowProfileDropdown(!showProfileDropdown);
-              setShowNotificationDropdown(false);
-            }}
-          >
-            <img src={Profileicon} alt="profile" className="h-full w-full object-cover" />
-          </div>
+      {/* profile */}
+      <Link
+  to="/profile"
+  className="h-[48px] w-[48px] rounded-full overflow-hidden cursor-pointer block"
+>
+  <img src={Profileicon} alt="profile" className="h-full w-full object-cover" />
+</Link>
 
-          {showProfileDropdown && (
-            <div className="absolute right-0 mt-2 w-[140px] bg-white rounded-md shadow-md z-20">
-              <Link
-                to="/profile"
-                className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-              >
-                Profile
-              </Link>
-              <Link
-                to="/logout"
-                className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-              >
-                Logout
-              </Link>
-            </div>
-          )}
-        </div>
+       
       </div>
     </nav>
   );
