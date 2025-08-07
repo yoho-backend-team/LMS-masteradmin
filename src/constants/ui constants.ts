@@ -1,39 +1,60 @@
-export const SPACING = {
-  pagePadding: 'px-4 md:px-6',
-  sectionSpacing: 'mb-6',
-  inputPadding: 'py-2 px-3',
-  cardPadding: 'p-4',
-};
-export const Z_INDEX = {
-  navbar: 'z-10',
-  dropdown: 'z-20',
-};
-export const BORDER_RADIUS = {
-  rounded: 'rounded-md',
-  button: 'rounded-xl',
-  navItem: 'rounded-tl-xl rounded-br-xl',
-};
+export const COLORS={
+    primary:'#E0ECDE', //navba/sidebar bg-color
+    secondary:'#2D6974',//table headerbg, hover bg-color, mostly for header content bg
+    button:'#68B39F',//add button, submit button, 
+}
+export const FONTS ={
+    bold_heading: {
+		fontFamily: 'Montserrat',
+		fontWeight: 700,
+		fontSize: '28px',
+        color:'#242731'
+	},
+    description:{
+        fontFamily: 'Montserrat', //table contents normal text
+		fontWeight: 500,
+		fontSize: '20px',
+        color:'#999999'
+    },
+    signin_page:{
+        fontFamily: 'Montserrat',
+		fontWeight: 700,
+		fontSize: '82px',
+        color:'#2D6974',
+        style:'Bold'
 
-export const EFFECTS = {
-  hoverItem: 'hover:bg-[#2D6974] hover:text-white',
-  focusRing: 'focus:ring-2 focus:ring-gray-400 focus:border-transparent',
-  shadow: 'shadow-md',
-  shadowLg: 'shadow-lg',
-};
+    },
+      signin_content:{
+        fontFamily: 'Montserrat',
+		fontWeight: 700,
+		fontSize: '28px',
+        color:'#68B39F',//welcome
+        style:'Bold',
+        text:'#242731',
+        text_size:'20px',
+        fontweight:500,
+        button:'#68B39F'   
+    },
+    card:{
+        color:'#242731',//card inside bold contents
+         fontFamily: 'Montserrat',
+		fontWeight: 600,
+		fontSize: '22px',
+        stylee:'SemiBold',
+        text:'#999999',//card inside content
+		fontweight: 500,
+		fontsize: '16px',
+        style:'md'
 
-export const TEXT = {
-  navItem: 'text-sm font-medium',
-  smallLabel: 'text-xs text-gray-600',
-  tinyNote: 'text-[10px] text-gray-400',
-  linkHighlight: 'text-[#68B39F] text-sm font-medium',
-};
+    },
+    models:{
+            header:'#242731',
+            style:'Bold',
+            fontSize:'18px',
+            fontWeight:'700',
+            suheaers:'#242731',
+            Style:'md',
+            size:'16px',
+    }
 
-export const ICON_SIZE = {
-  sidebar: 'w-6 h-6',
-  dropdownChevron: 'w-4 h-4',
-  childIcon: 'w-4 h-4',
-};
-
-export const TRANSITIONS = {
-  dropdown: 'transition duration-200 ease-in-out',
-};
+}
