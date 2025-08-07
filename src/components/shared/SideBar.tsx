@@ -60,7 +60,7 @@ const Sidebar = () => {
   };
 
   return (
-    <div className="w-64 h-screen bg-[#E0ECDE] p-4">
+    <div className="w-70 h-screen bg-[#E0ECDE] p-4">
       <div className="flex h-[90%] flex-col justify-between">
         {/* Top Menu */}
         <div>
@@ -151,21 +151,7 @@ const Sidebar = () => {
         {/* Bottom Items */}
         <div>
           <ul className="space-y-2">
-            <NavLink
-              to="/settings"
-              className={({ isActive }) =>
-                `flex items-center px-4 py-2 rounded-tl-xl rounded-br-xl cursor-pointer ${
-                  isActive
-                    ? "bg-[#2D6974] text-white"
-                    : "text-[#5F6165] hover:bg-[#2D6974] hover:text-white"
-                }`
-              }
-            >
-              <Cog className="w-6 h-6 mr-3" />
-              <span className="text-sm font-medium">Settings</span>
-            </NavLink>
-
-            <div
+              <div
               className="flex items-center px-4 py-2 rounded-tl-xl rounded-br-xl text-white bg-[#2D6974] cursor-pointer"
               onClick={handleLogout}
             >

@@ -11,6 +11,7 @@ import Settings from '../pages/settings/Settings'
 import HelpcenterFaq from '../pages/helpcenter/HelpcenterFaq'
 import HelpcenterTickets from '../pages/helpcenter/HelpcenterTickets'
 import Categories from '../pages/FaqManagement/Categories'
+import Profile from '../pages/profile/Profile'
 
 function Approutes() {
   return (
@@ -22,6 +23,7 @@ function Approutes() {
         <Route path="payments" element={<Payments/>}/>
         <Route path='subscriptions' element={<Subscription/>}/>
         <Route path='notifications' element={<Notifications/>}/>
+        <Route path="/profile" element={<Profile />} />
         <Route path='helpcenter'>
             <Route path='faq' element={<HelpcenterFaq/>}/>
             <Route path='tickets' element={<HelpcenterTickets/>}/>
@@ -30,7 +32,7 @@ function Approutes() {
                 <Route path='faqs' element={<Faq/>}/>
                 <Route path='categories' element={<Categories/>}/>
         </Route>
-        <Route path='settings' element={<Settings/>}/>
+        {/* <Route path='settings' element={<Settings/>}/> */}
         </Route>
     </Routes>
     </>
