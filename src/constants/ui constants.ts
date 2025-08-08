@@ -2,6 +2,10 @@ export const COLORS = {
 	primary: '#E0ECDE', //navba/sidebar bg-color
 	secondary: '#2D6974', //table headerbg, hover bg-color, mostly for header content bg
 	button: '#68B39F', //add button, submit button,
+	black: '#242731', //text color, card header, model header
+	white: '#FFFFFF', //white color
+	gray_01: '#999',
+	gray_02: '#808191',
 };
 export const FONTS = {
 	bold_heading: {
@@ -53,5 +57,40 @@ export const FONTS = {
 		suheaers: '#242731',
 		Style: 'md',
 		size: '16px',
+	},
+	card_text: {
+		fontFamily: 'Montserrat',
+		fontWeight: 700,
+		fontSize: '18px',
+	},
+	button_text: {
+		fontFamily: 'Montserrat',
+		fontWeight: 600,
+		fontSize: '16px',
+	},
+	sub_text: {
+		fontFamily: 'Montserrat',
+		fontWeight: 600,
+		fontSize: '18px',
+	},
+	sub_text_2: {
+		fontFamily: 'Montserrat',
+		fontWeight: 400,
+		fontSize: '20px',
+	},
+	percentage_text: {
+		fontFamily: 'Montserrat',
+		fontWeight: 700,
+		fontSize: '24px',
+	},
+	small_text: {
+		fontFamily: 'Montserrat',
+		fontWeight: 500,
+		fontSize: '12px',
+	},
+	option_text: {
+		fontFamily: 'Montserrat',
+		fontWeight: 400,
+		fontSize: '14px',
 	},
 };
