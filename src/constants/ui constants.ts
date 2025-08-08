@@ -1,47 +1,46 @@
-export const COLORS={
-    primary:'#E0ECDE', //navba/sidebar bg-color
-    secondary:'#2D6974',//table headerbg, hover bg-color, mostly for header content bg
-    button:'#68B39F',//add button, submit button, 
-}
-export const FONTS ={
-    bold_heading: {
+export const COLORS = {
+	primary: '#E0ECDE', //navba/sidebar bg-color
+	secondary: '#2D6974', //table headerbg, hover bg-color, mostly for header content bg
+	button: '#68B39F', //add button, submit button,
+};
+export const FONTS = {
+	bold_heading: {
 		fontFamily: 'Montserrat',
 		fontWeight: 700,
 		fontSize: '28px',
-        color:'#242731'
+		color: '#242731',
 	},
-    description:{
-        fontFamily: 'Montserrat', //table contents normal text
+	description: {
+		fontFamily: 'Montserrat', //table contents normal text
 		fontWeight: 500,
 		fontSize: '20px',
-        color:'#999999'
-    },
-    signin_page:{
-        fontFamily: 'Montserrat',
+		color: '#999999',
+	},
+	signin_page: {
+		fontFamily: 'Montserrat',
 		fontWeight: 700,
 		fontSize: '82px',
-        color:'#2D6974',
-        style:'Bold'
-
-    },
-      signin_content:{
-        fontFamily: 'Montserrat',
+		color: '#2D6974',
+		style: 'Bold',
+	},
+	signin_content: {
+		fontFamily: 'Montserrat',
 		fontWeight: 700,
 		fontSize: '28px',
-        color:'#68B39F',//welcome
-        style:'Bold',
-        text:'#242731',
-        text_size:'20px',
-        fontweight:500,
-        button:'#68B39F'   
-    },
-    card:{
-        color:'#242731',//card inside bold contents
-         fontFamily: 'Montserrat',
+		color: '#68B39F', //welcome
+		style: 'Bold',
+		text: '#242731',
+		text_size: '20px',
+		fontweight: 500,
+		button: '#68B39F',
+	},
+	card: {
+		color: '#242731', //card inside bold contents
+		fontFamily: 'Montserrat',
 		fontWeight: 600,
 		fontSize: '22px',
-        stylee:'SemiBold',
-        text:'#999999',//card inside content
+		stylee: 'SemiBold',
+		text: '#999999', //card inside content
 		fontweight: 500,
 		fontsize: '16px',
         style:'md'
@@ -80,5 +79,4 @@ export const FONTS ={
 		fontSize: '24px',
         style:'SemiBold',
     },
-
 }
