@@ -14,6 +14,7 @@ import {
 } from '@/components/ui/select';
 import { DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { User } from 'lucide-react';
+import { FONTS } from '@/constants/ui constants';
 
 // Validation schema using Yup
 const validationSchema = Yup.object({
@@ -121,7 +122,7 @@ const SubscriptionPlanForm: React.FC<SubscriptionPlanFormProps> = ({ onClose }) 
   return (
     <div className="w-full max-w-7xl mx-auto">
       <DialogHeader className="border-b pb-4 mb-6">
-        <DialogTitle className="text-xl font-semibold text-gray-800">
+        <DialogTitle style={{...FONTS.bold_heading}}>
           Subscription Plan
         </DialogTitle>
       </DialogHeader>
@@ -129,7 +130,7 @@ const SubscriptionPlanForm: React.FC<SubscriptionPlanFormProps> = ({ onClose }) 
       <form onSubmit={formik.handleSubmit} className="space-y-6">
         {/* Header Section */}
         <div className="bg-gray-50 p-4 rounded-lg">
-          <h3 className="text-sm font-medium text-gray-700 mb-4">
+          <h3 className=" !text-[#2D6974] mb-4"style={{...FONTS.tableheader}}>
             Enter your Address Information Here
           </h3>
           
@@ -155,8 +156,8 @@ const SubscriptionPlanForm: React.FC<SubscriptionPlanFormProps> = ({ onClose }) 
               />
             </div>
             <div>
-              <p className="text-sm font-medium text-gray-700">Upload Profile Picture</p>
-              <p className="text-xs text-gray-500">PNG or JPEG (Max 800K)</p>
+              <p className=" !text-[#242731]"style={{...FONTS.tableheader}}>Upload Profile Picture</p>
+              <p className="!text-[#242731] opacity-40"style={{...FONTS.text3}}>PNG or JPEG (Max 800K)</p>
             </div>
           </div>
         </div>
@@ -165,7 +166,7 @@ const SubscriptionPlanForm: React.FC<SubscriptionPlanFormProps> = ({ onClose }) 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           {/* Plan */}
           <div className="space-y-2">
-            <label className="text-sm font-medium text-gray-700">Plan</label>
+            <label className=" !text-[#242731]"style={{...FONTS.text5}}>Plan</label>
             <Input
               name="plan"
               placeholder=""
@@ -181,7 +182,7 @@ const SubscriptionPlanForm: React.FC<SubscriptionPlanFormProps> = ({ onClose }) 
 
           {/* Plan Price */}
           <div className="space-y-2">
-            <label className="text-sm font-medium text-gray-700">Plan Price</label>
+            <label className=" !text-[#242731]"style={{...FONTS.text5}}>Plan Price</label>
             <Input
               name="planPrice"
               placeholder=""
@@ -197,7 +198,7 @@ const SubscriptionPlanForm: React.FC<SubscriptionPlanFormProps> = ({ onClose }) 
 
           {/* Support Level */}
           <div className="space-y-2">
-            <label className="text-sm font-medium text-gray-700">Support Level</label>
+            <label className="!text-[#242731]"style={{...FONTS.text5}}>Support Level</label>
             <Select
               value={formik.values.supportLevel}
               onValueChange={(value) => formik.setFieldValue('supportLevel', value)}
@@ -207,9 +208,8 @@ const SubscriptionPlanForm: React.FC<SubscriptionPlanFormProps> = ({ onClose }) 
               </SelectTrigger>
               <SelectContent>
                 <SelectItem value="basic">Basic</SelectItem>
-                <SelectItem value="standard">Standard</SelectItem>
                 <SelectItem value="premium">Premium</SelectItem>
-                <SelectItem value="enterprise">Enterprise</SelectItem>
+                
               </SelectContent>
             </Select>
             {getFieldError('supportLevel') && (
@@ -220,7 +220,7 @@ const SubscriptionPlanForm: React.FC<SubscriptionPlanFormProps> = ({ onClose }) 
 
         {/* Plan Description */}
         <div className="space-y-2">
-          <label className="text-sm font-medium text-gray-700">Plan Description</label>
+          <label className="!text-[#242731]"style={{...FONTS.text5}}>Plan Description</label>
           <Textarea
             name="planDescription"
             placeholder="Enter plan description..."
@@ -237,7 +237,7 @@ const SubscriptionPlanForm: React.FC<SubscriptionPlanFormProps> = ({ onClose }) 
         {/* Duration and Duration Type */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div className="space-y-2">
-            <label className="text-sm font-medium text-gray-700">Duration</label>
+            <label className="!text-[#242731]"style={{...FONTS.text5}}>Duration</label>
             <Input
               name="duration"
               placeholder=""
@@ -252,7 +252,7 @@ const SubscriptionPlanForm: React.FC<SubscriptionPlanFormProps> = ({ onClose }) 
           </div>
 
           <div className="space-y-2">
-            <label className="text-sm font-medium text-gray-700">Duration Type</label>
+            <label className="!text-[#242731]"style={{...FONTS.text5}}>Duration Type</label>
             <Select
               value={formik.values.durationType}
               onValueChange={(value) => formik.setFieldValue('durationType', value)}
@@ -278,7 +278,7 @@ const SubscriptionPlanForm: React.FC<SubscriptionPlanFormProps> = ({ onClose }) 
           {/* Students */}
           <div className="space-y-2">
             <div className="space-y-2">
-              <label className="text-sm font-medium text-gray-700">Number of Students</label>
+              <label className=" !text-[#242731]"style={{...FONTS.text5}}>Number of Students</label>
               <Input
                 name="numberOfStudents"
                 placeholder=""
@@ -312,7 +312,7 @@ const SubscriptionPlanForm: React.FC<SubscriptionPlanFormProps> = ({ onClose }) 
           {/* Admins */}
           <div className="space-y-2">
             <div className="space-y-2">
-              <label className="text-sm font-medium text-gray-700">Number of Admins</label>
+              <label className=" !text-[#242731]"style={{...FONTS.text5}}>Number of Admins</label>
               <Input
                 name="numberOfAdmins"
                 placeholder=""
@@ -346,7 +346,7 @@ const SubscriptionPlanForm: React.FC<SubscriptionPlanFormProps> = ({ onClose }) 
           {/* Teachers */}
           <div className="space-y-2">
             <div className="space-y-2">
-              <label className="text-sm font-medium text-gray-700">Number of Teachers</label>
+              <label className=" !text-[#242731]"style={{...FONTS.text5}}>Number of Teachers</label>
               <Input
                 name="numberOfTeachers"
                 placeholder=""
@@ -380,7 +380,7 @@ const SubscriptionPlanForm: React.FC<SubscriptionPlanFormProps> = ({ onClose }) 
           {/* Batches */}
           <div className="space-y-2">
             <div className="space-y-2">
-              <label className="text-sm font-medium text-gray-700">Number of Batches</label>
+              <label className="!text-[#242731]"style={{...FONTS.text5}}>Number of Batches</label>
               <Input
                 name="numberOfBatches"
                 placeholder=""
@@ -414,7 +414,7 @@ const SubscriptionPlanForm: React.FC<SubscriptionPlanFormProps> = ({ onClose }) 
           {/* Courses */}
           <div className="space-y-2">
             <div className="space-y-2">
-              <label className="text-sm font-medium text-gray-700">Number of Courses</label>
+              <label className=" !text-[#242731]"style={{...FONTS.text5}}>Number of Courses</label>
               <Input
                 name="numberOfCourses"
                 placeholder=""
@@ -448,7 +448,7 @@ const SubscriptionPlanForm: React.FC<SubscriptionPlanFormProps> = ({ onClose }) 
           {/* Classes */}
           <div className="space-y-2">
             <div className="space-y-2">
-              <label className="text-sm font-medium text-gray-700">Number of Classes</label>
+              <label className="!text-[#242731]"style={{...FONTS.text5}}>Number of Classes</label>
               <Input
                 name="numberOfClasses"
                 placeholder=""
@@ -481,18 +481,18 @@ const SubscriptionPlanForm: React.FC<SubscriptionPlanFormProps> = ({ onClose }) 
         </div>
 
         {/* Form Actions */}
-        <div className="flex justify-end gap-3 pt-6 border-t">
+        <div className="flex justify-between px-4 py-2"style={{...FONTS.button}}>
           <Button
             type="button"
             variant="outline"
             onClick={handleCancel}
-            className="px-6"
+            className="px-6 rounded-tl-xl rounded-br-xl rounded-tr-none rounded-bl-none text-[#6bc1a3] border-[#6bc1a3]"
           >
             Cancel
           </Button>
           <Button
             type="submit"
-            className="px-6 bg-[#6bc1a3] hover:bg-[#57ab90] text-white"
+            className="bg-[#6bc1a3] px-4 py-2 rounded-tl-xl rounded-br-xl rounded-tr-none rounded-bl-none hover:bg-[#57ab90]"style={{...FONTS.button}}
             disabled={formik.isSubmitting}
           >
             Submit

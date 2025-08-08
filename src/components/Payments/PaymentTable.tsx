@@ -30,7 +30,7 @@ export default function PaymentsTable() {
 
       {/* Table Header Card */}
       <Card className="bg-[#2d6974] text-white shadow-md">
-        <CardContent className="grid grid-cols-6 gap-4 py-2 px-2 "style={{...FONTS.tableheader}}>
+        <CardContent className="grid grid-cols-6 gap-2 py-2 px-1 "style={{...FONTS.tableheader}}>
           <div className="px-2">ID</div>
           <div className="px-2">Institute Name</div>
           <div className="px-2">Current Plan</div>
@@ -46,12 +46,12 @@ export default function PaymentsTable() {
           key={row.id}
           className="shadow-md hover:shadow-md transition-shadow duration-200"
         >
-          <CardContent className="grid grid-cols-6 gap-6 py-2 px-2  items-center"style={{...FONTS.description}}>
+          <CardContent className="grid grid-cols-6 gap-2 py-1 px-1 items-center" style={{...FONTS.description}}>
             <div className="px-2">{row.id}</div>
             <div className="px-2">{row.institute}</div>
             <div className="px-2">{row.plan}</div>
-            <div className="px-2">{row.issue}</div>
-            <div className="px-2">{row.amount}</div>
+            <div className="">{row.issue}</div>
+            <div className="px-2" >{row.amount}</div>
             <div className="px-2 flex justify-end">
               <Eye className="w-4 h-4 text-gray-600 cursor-pointer hover:text-black" />
             </div>

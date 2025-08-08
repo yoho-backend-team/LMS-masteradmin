@@ -19,6 +19,8 @@ import tickicon from "../../assets/circle-check.png";
 import { MoreVertical } from "lucide-react";
 import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
 import SubscriptionPlanForm from "@/components/Subscription/form";
+import { FONTS } from "@/constants/ui constants";
+import { Button } from "@/components/ui/button";
 
 
 type Plan = {
@@ -60,6 +62,11 @@ const initialPlans: Plan[] = [
 export default function Subscription() {
   const [plans, setPlans] = useState(initialPlans);
   const [open, setOpen] = useState(false);
+   const [currentStatus, setCurrentStatus] = useState("Active");
+
+   const handleStatusChange = (status: string) => {
+    setCurrentStatus(status);
+  };
 
 
   const toggleStatus = (index: number, newStatus: "Active" | "Inactive") => {
@@ -71,17 +78,17 @@ export default function Subscription() {
   return (
     <div className="p-6 space-y-4">
       <div className="flex justify-between items-center">
-        <h2 className="text-2xl font-semibold">Subscription Plan</h2>
+        <h2  style={{...FONTS.bold_heading}}>Subscription Plan</h2>
        <Dialog open={open} onOpenChange={setOpen}>
   <DialogTrigger asChild>
     <button
       onClick={() => setOpen(true)}
-      className="bg-[#6bc1a3] text-white px-4 py-2 rounded-tl-md rounded-br-xl hover:bg-[#57ab90] text-sm"
+      className="bg-[#6bc1a3] px-4 py-2 rounded-tl-md rounded-br-xl hover:bg-[#57ab90] "style={{...FONTS.button}}
     >
       + Add Institute
     </button>
   </DialogTrigger>
-  <DialogContent className="max-w-5xl overflow-y-auto max-h-[90vh] mt-80">
+  <DialogContent className="min-w-4xl overflow-y-auto max-h-[90vh] ml-110 mt-80">
     <SubscriptionPlanForm onClose={() => setOpen(false)} />
   </DialogContent>
 </Dialog>
@@ -92,9 +99,9 @@ export default function Subscription() {
         {plans.map((plan, idx) => (
           <Card
             key={idx}
-            className="bg-white hover:bg-[#68b39f] transition-colors duration-300 shadow-md group"
+            className="bg-white hover:bg-[#68b39f] transition-colors duration-300  group"
           >
-            <CardHeader className="p-0">
+            <CardHeader className="px-4 -mt-2">
               <img
                 src={plan.image}
                 alt={plan.name}
@@ -104,26 +111,26 @@ export default function Subscription() {
               />
             </CardHeader>
 
-            <CardContent className="p-4 text-sm space-y-2">
-              <CardTitle className="text-lg font-semibold text-black group-hover:text-white">
+            <CardContent className="p-4 text-sm space-y-4">
+              <CardTitle className=" group-hover:text-white" style={{...FONTS.text}}>
                 {plan.name}
               </CardTitle>
-              <p className="text-xs opacity-80 group-hover:text-white">{plan.description}</p>
+              <p className=" opacity-80 mb-4 group-hover:text-white"style={{...FONTS.text1}}>{plan.description}</p>
 
-              <div className="text-xl font-bold mt-2 group-hover:text-white text-center">
+              <div className="group-hover:text-white text-center" style={{...FONTS.number}}>
                 {plan.price}
-                <span className="text-sm font-normal ml-1">/ Monthly</span>
+                <span className="text-sm font-normal ml-1"style={{...FONTS.text1,fontSize:'16px'}}>/ Monthly</span>
               </div>
 
               {(idx === 0 || idx === 1) && (
                 <Card className="bg-gray-100 group-hover:bg-[#589b89] rounded-md p-3 mt-3">
-                  <p className="text-xs font-semibold mb-1 text-gray-600 group-hover:text-white">
+                  <p className=" mb-1  group-hover:text-white"style={{...FONTS.text3}}>
                     FEATURES
                   </p>
                   <ul className="list-none text-black group-hover:text-white text-sm space-y-1">
                     {plan.features.map((feature, i) => (
                       <li key={i} className="flex items-center gap-2">
-                        <span className="text-green-400"><img src={tickicon}/></span> {feature}
+                        <span style={{...FONTS.text1}} ><img src={tickicon}/></span> {feature}
                       </li>
                     ))}
                   </ul>
@@ -133,31 +140,31 @@ export default function Subscription() {
 
            <CardFooter className="flex justify-between items-center px-4 pb-4 pt-2">
   <DropdownMenu>
-    <DropdownMenuTrigger asChild>
-      <button
-        className={`px-3 py-1 rounded-tl-md rounded-br-xl text-sm relative z-10 ${
-          plan.status === "Active"
-            ? "bg-[#d7f1e8] text-[#68b39f]"
-            : "bg-red-100 text-red-600"
-        }`}
-      >
-        {plan.status}
-      </button>
-    </DropdownMenuTrigger>
-    <DropdownMenuContent>
-      <DropdownMenuItem onClick={() => toggleStatus(idx, "Active")}>
-        Active
-      </DropdownMenuItem>
-      <DropdownMenuItem onClick={() => toggleStatus(idx, "Inactive")}>
-        Inactive
-      </DropdownMenuItem>
-    </DropdownMenuContent>
-  </DropdownMenu>
+      <DropdownMenuTrigger asChild>
+        <Button  className="rounded-tl-xl rounded-br-xl rounded-tr-none rounded-bl-none"variant="outline">{currentStatus}</Button>
+      </DropdownMenuTrigger>
 
+      <DropdownMenuContent className="w-48 p-2">
+        {["Active", "Inactive"].map((status) => (
+          <DropdownMenuItem
+            key={status}
+            onClick={() => handleStatusChange(status)}
+            className={`rounded-md px-3 py-2 text-sm font-medium rounded-tl-xl rounded-br-xl rounded-tr-none rounded-bl-none ${
+              currentStatus === status
+                ? "bg-[#68b39f] text-white"
+                : "hover:bg-gray-100"
+            }`}
+          >
+            {status}
+          </DropdownMenuItem>
+        ))}
+      </DropdownMenuContent>
+    </DropdownMenu>
+  
   <DropdownMenu>
     <DropdownMenuTrigger asChild>
       <button
-        className={`px-3 py-1 rounded-tl-md rounded-br-xl text-sm flex items-center justify-center relative z-10 ${
+        className={`px-3 py-1 rounded-tl-md mt-4 rounded-br-xl text-sm flex items-center justify-center group-hover:bg-white relative z-10 ${
           plan.status === "Active"
             ? "bg-[#d7f1e8] text-[#68b39f]"
             : "bg-red-100 text-red-600"
@@ -168,7 +175,7 @@ export default function Subscription() {
     </DropdownMenuTrigger>
     <DropdownMenuContent>
       <DropdownMenuItem>View</DropdownMenuItem>
-      <DropdownMenuItem>Edit</DropdownMenuItem>
+      <DropdownMenuItem  onClick={() => setOpen(true)}>Edit</DropdownMenuItem>
       <DropdownMenuItem>Delete</DropdownMenuItem>
     </DropdownMenuContent>
   </DropdownMenu>
