@@ -4,14 +4,15 @@ import Institute from '../pages/institute/Institute'
 import Payments from '../pages/payments/Payments'
 import Subscription from '../pages/subscription/Subscription'
 import Notifications from '../pages/notifications/Notifications'
-import HelpCenter from '../pages/helpcenter/HelpcenterTickets'
+
 import Faq from '../pages/FaqManagement/Faq'
 import MainLayout from '../layout/MainLayout'
-import Settings from '../pages/settings/Settings'
+// import Settings from '../pages/settings/Settings'
 import HelpcenterFaq from '../pages/helpcenter/HelpcenterFaq'
-import HelpcenterTickets from '../pages/helpcenter/HelpcenterTickets'
+
 import Categories from '../pages/FaqManagement/Categories'
 import Profile from '../pages/profile/Profile'
+import HelpCenterTickets from '../pages/helpcenter/HelpcenterTickets'
 
 function Approutes() {
   return (
@@ -26,7 +27,7 @@ function Approutes() {
         <Route path="/profile" element={<Profile />} />
         <Route path='helpcenter'>
             <Route path='faq' element={<HelpcenterFaq/>}/>
-            <Route path='tickets' element={<HelpcenterTickets/>}/>
+            <Route path='tickets' element={<HelpCenterTickets/>}/>
         </Route>
         <Route path='faq'>
                 <Route path='faqs' element={<Faq/>}/>
