@@ -12,6 +12,8 @@ import HelpcenterFaq from '../pages/helpcenter/HelpcenterFaq'
 import HelpcenterTickets from '../pages/helpcenter/HelpcenterTickets'
 import Categories from '../pages/FaqManagement/Categories'
 import Profile from '../pages/profile/Profile'
+import SubscriptionForm from '../pages/subscription/SubscriptionForm'
+import AddNotificationForm from '../pages/notifications/AddNotificationForm'
 
 function Approutes() {
   return (
@@ -22,7 +24,9 @@ function Approutes() {
         <Route path='institute' element={<Institute/>}/>
         <Route path="payments" element={<Payments/>}/>
         <Route path='subscriptions' element={<Subscription/>}/>
+            <Route path='add-institute' element={<SubscriptionForm/>}/>
         <Route path='notifications' element={<Notifications/>}/>
+            <Route path='add-notificationform' element={<AddNotificationForm/>}/>
         <Route path="/profile" element={<Profile />} />
         <Route path='helpcenter'>
             <Route path='faq' element={<HelpcenterFaq/>}/>
