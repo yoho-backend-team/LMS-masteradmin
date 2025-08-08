@@ -73,10 +73,44 @@ export const FONTS = {
         color:'#999999'
     },
     profile_head:{
-        color:'#242731',//card inside bold contents
+        color:'#242731',
         fontFamily: 'Montserrat',
 		fontWeight: 600,
 		fontSize: '24px',
         style:'SemiBold',
+    },
+    pass_head:{
+		color: '#242731', 
+		fontFamily: 'Montserrat',
+		fontWeight: 600,
+		fontSize: '20px',
+		style: 'SemiBold',
+		text: '#999999',
+		fontweight: 500,
+    },
+    pass_head_2:{
+		color: '#242731', 
+		fontFamily: 'Montserrat',
+		fontWeight: 600,
+		fontSize: '16px',
+		style: 'SemiBold',
+		text: '#999999',
+		fontweight: 500,
+    },
+    profile_title:{
+		color: '#242731',
+		fontFamily: 'Montserrat',
+		fontWeight: 300,
+		fontSize: '18px',
+		style: 'SemiBold',
+		text: '#999999',
+		fontweight: 500,
+    },
+    edit_form:{
+        fontFamily: 'Montserrat',
+		fontWeight: 500,
+		fontSize: '18px',
+        style:'medium',
+        color:'#999999'
     },
 }

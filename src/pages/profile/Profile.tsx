@@ -16,7 +16,7 @@ function Profile() {
   const inactiveStyle =
     "border border-[#999999] text-[#999999]";
   return (
-    <div className='flex gap-4'>
+    <div className='flex gap-4 scrollbar-hidden'>
 
       <div className="w-[25%] shadow-[0px_0px_15px_0px_#0000001A] p-3 rounded-lg flex flex-col gap-5">
         {/* Account Button */}
@@ -41,7 +41,7 @@ function Profile() {
         </button>
       </div>
 
-      <div className='w-[75%] shadow-[0px_0px_15px_0px_#0000001A] p-3 rounded-lg'>
+      <div className='w-[75%]'>
        {activeTab==="account" && <ProfileDetails /> }
 
         {activeTab==="security" && <SecurityPage /> }
