@@ -1,9 +1,5 @@
-import React from 'react'
-
 function DashBoard() {
-  return (
-    <div>DashBoard</div>
-  )
+	return <div>DashBoard</div>;
 }
 
-export default DashBoard
+export default DashBoard;
