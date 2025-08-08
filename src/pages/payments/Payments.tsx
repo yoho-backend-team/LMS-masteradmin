@@ -1,9 +1,12 @@
-import React from 'react'
+import PaymentsTable from "../../components/Payments/PaymentTable";
 
-function Payments() {
+
+export default function Payments() {
   return (
-    <div>Payments</div>
-  )
+  
+        <div className="p-6 bg-[#f5f9f7] min-h-screen">
+          <PaymentsTable />
+        </div>
+    
+  );
 }
-
-export default Payments
