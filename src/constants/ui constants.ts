@@ -1,3 +1,5 @@
+import { text } from "stream/consumers"
+
 export const COLORS={
     primary:'#E0ECDE', //navba/sidebar bg-color
     secondary:'#2D6974',//table headerbg, hover bg-color, mostly for header content bg
@@ -55,6 +57,12 @@ export const FONTS ={
             suheaers:'#242731',
             Style:'md',
             size:'16px',
-    }
+    },
 
-}
+    tableheader:{
+        fontFamily: 'Montserrat',
+        fontWeight: 600,    
+        fontSize: '20px',
+        text:'#FFFFFF', 
+
+}}
