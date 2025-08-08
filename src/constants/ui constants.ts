@@ -55,6 +55,30 @@ export const FONTS ={
             suheaers:'#242731',
             Style:'md',
             size:'16px',
-    }
+    },
+    btn_txt_active:{
+        fontFamily: 'Montserrat',
+		fontWeight: 700,
+		fontSize: '16px',
+        style:'Bold',
+        text_size:'16px',
+        fontweight:500,
+        button:'#68B39F',
+        color:'#FFFFFF'
+    },
+    btn_txt:{
+        fontFamily: 'Montserrat',
+		fontWeight: 500,
+		fontSize: '16px',
+        style:'medium',
+        color:'#999999'
+    },
+    profile_head:{
+        color:'#242731',//card inside bold contents
+        fontFamily: 'Montserrat',
+		fontWeight: 600,
+		fontSize: '24px',
+        style:'SemiBold',
+    },
 
 }
