@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Plus, SquarePen, Trash2, TriangleAlert, Check } from 'lucide-react';
 import { Input } from "../../components/ui/input";
 import { Button } from "../../components/ui/button";
@@ -13,21 +13,25 @@ import {
   DialogTrigger,
   DialogDescription,
 } from "@/components/ui/dialog";
+import { getCategoriesThunks } from "@/features/FaqCategories/reducers/thunks";
+import { useDispatch, useSelector } from "react-redux";
+import { createCategoriesData, deleteCategoriesData, updateCategoriesData } from "@/features/FaqCategories/services";
 
 interface Category {
   id: string;
-  name: string;
+  identity: string;
   isActive: boolean;
   description: string;
+
 }
 
 const initialCategories: Category[] = [
-  { id: "1", name: "User Management", isActive: true, description: "Manage users" },
-  { id: "2", name: "Content Management", isActive: true, description: "Manage content" },
-  { id: "3", name: "Course Management", isActive: true, description: "Manage courses" },
-  { id: "4", name: "Staff Management", isActive: true, description: "Manage staff" },
-  { id: "5", name: "Batch Management", isActive: true, description: "Manage batches" },
-  { id: "6", name: "Student Management", isActive: true, description: "Manage students" },
+  { id: "1", identity: "User Management", isActive: true, description: "Manage users" },
+  { id: "2", identity: "Content Management", isActive: true, description: "Manage content" },
+  { id: "3", identity: "Course Management", isActive: true, description: "Manage courses" },
+  { id: "4", identity: "Staff Management", isActive: true, description: "Manage staff" },
+  { id: "5", identity: "Batch Management", isActive: true, description: "Manage batches" },
+  { id: "6", identity: "Student Management", isActive: true, description: "Manage students" },
 ];
 
 export default function Categories() {
@@ -38,67 +42,115 @@ export default function Categories() {
   const [isSuccessModalOpen, setIsSuccessModalOpen] = useState(false);
   const [editingCategory, setEditingCategory] = useState<Category | null>(null);
   const [categoryToDeleteId, setCategoryToDeleteId] = useState<string | null>(null);
-  const [newCategory, setNewCategory] = useState({ name: "", description: "" });
+  const [newCategory, setNewCategory] = useState({ identity: "", description: "" });
 
-  const handleToggleStatus = (id: string, checked: boolean) => {
-    setCategories((prevCategories) =>
-      prevCategories.map((category) =>
-        category.id === id ? { ...category, isActive: checked } : category
-      )
-    );
+ const handleToggleStatus = async (checked: boolean, uuid: string) => {
+  if (!uuid) {
+    console.error("Missing uuid for update");
+    return;
+  }
+
+  try {
+    await updateCategoriesData({ uuid, is_active: checked });
+    dispatch(getCategoriesThunks({ page: 1 })); // refresh data
+  } catch (err) {
+    console.error("Update failed:", err);
+  }
+};
+
+ const handleAddSubmit = async (event: React.FormEvent) => {
+  event.preventDefault();
+
+  // Create payload for API
+  const payload = {
+    identity: newCategory.identity,        
+    description: newCategory.description
   };
 
-  const handleAddSubmit = (event: React.FormEvent) => {
-    event.preventDefault();
-    const newId = (categories.length + 1).toString();
+  try {
+    const response = await createCategoriesData(payload); // call your service
+    console.log("Category created:", response);
+
+    // Optionally update local state if you want instant UI update
     setCategories([
       ...categories,
-      {
-        id: newId,
-        name: newCategory.name,
+      { 
+        id: response?.data?._id || (categories.length + 1).toString(),
+        identity: payload.identity,
         isActive: true,
-        description: newCategory.description,
-      },
+        description: payload.description
+      }
     ]);
-    setNewCategory({ name: "", description: "" });
+
+    // Reset form and close modal
+    setNewCategory({ identity: "", description: "" });
     setIsAddModalOpen(false);
-  };
+  } catch (error) {
+    console.error("Error creating category:", error);
+  }
+};
+
 
   const handleEditClick = (category: Category) => {
     setEditingCategory(category);
     setIsEditModalOpen(true);
   };
 
-  const handleEditSubmit = (event: React.FormEvent) => {
-    event.preventDefault();
-    if (editingCategory) {
-      setCategories((prevCategories) =>
-        prevCategories.map((category) =>
-          category.id === editingCategory.id ? editingCategory : category
-        )
-      );
-      setIsEditModalOpen(false);
-      setEditingCategory(null);
-    }
-  };
+const handleEditSubmit = async (event: React.FormEvent) => {
+  event.preventDefault();
 
+  if (!editingCategory?.id) {
+    console.error("Missing _id for update");
+    return;
+  }
+
+  try {
+    await updateCategoriesData(editingCategory);
+    setIsEditModalOpen(false);
+    setEditingCategory(null);
+  } catch (err) {
+    console.error(err);
+  }
+};
   const handleDeleteClick = (id: string) => {
     setCategoryToDeleteId(id);
     setIsDeleteConfirmModalOpen(true);
   };
 
-  const handleDeleteConfirm = () => {
+const handleDeleteConfirm = async () => {
+  if (!categoryToDeleteId) return;
+
+  try {
+    await deleteCategoriesData({ uuid: categoryToDeleteId });
+
     setCategories((prevCategories) =>
       prevCategories.filter((cat) => cat.id !== categoryToDeleteId)
     );
+
     setIsDeleteConfirmModalOpen(false);
     setCategoryToDeleteId(null);
     setIsSuccessModalOpen(true);
-  };
-
+  } catch (err) {
+    console.error("Delete failed:", err);
+  }
+};
   const handleSuccessModalClose = () => {
     setIsSuccessModalOpen(false);
   };
+
+
+// integration
+const dispatch = useDispatch<any>(); 
+const categoriess = useSelector((state: any) => state.CategoriesSlice.data);
+
+useEffect(() => {
+  dispatch(getCategoriesThunks({page:1})); 
+}, [dispatch]);
+
+
+useEffect(() => {
+  setCategories(categoriess);
+}, [categoriess]);
 
   return (
     <div className="p-6  min-h-screen overflow-x-hidden">
@@ -108,8 +160,6 @@ export default function Categories() {
           placeholder="Search"
           className="w-[30%] h-10 border border-gray-300 placeholder:text-gray-500 hover:border-gray-400 focus:border-gray-400 focus:outline-none focus:ring-0 focus-visible:ring-0 focus-visible:border-gray-400 text-[18px]"
         />
-
-
         <Dialog open={isAddModalOpen} onOpenChange={setIsAddModalOpen}>
           <DialogTrigger asChild>
             <Button className="bg-[#68B39F] hover:bg-[#68B39F]/90 text-white px-4 py-2 flex items-center gap-2">
@@ -128,9 +178,9 @@ export default function Categories() {
                 </label>
                 <Input
                   id="add-title"
-                  name="title"
-                  value={newCategory.name}
-                  onChange={(e) => setNewCategory({ ...newCategory, name: e.target.value })}
+                  name="identity"
+                  value={newCategory.identity}
+                  onChange={(e) => setNewCategory({ ...newCategory, identity: e.target.value })}
                   className="w-full h-10 border border-gray-300 placeholder:text-gray-500 hover:border-gray-400 focus:border-gray-400 focus:outline-none focus:ring-0 focus-visible:ring-0 focus-visible:border-gray-400 text-[18px]"
                 />
 
@@ -178,16 +228,17 @@ export default function Categories() {
         </div>
 
         {/* Category Rows */}
-        {categories.map((category) => (
+        {categoriess.map((category:any) => (
           <div
-            key={category.id}
+            key={category._id}
             className="grid grid-cols-3 my-2 gap-4 rounded-lg items-center py-6 px-4 border-[1px] border-t-0 last:border-b-0 text-sm md:text-base shadow-sm"
           >
-            <div className="col-span-1 text-gray-700">{category.name}</div>
+            <div className="col-span-1 text-gray-700">{category.identity}</div>
             <div className="col-span-1 flex justify-center">
               <Switch
-                checked={category.isActive}
-                onCheckedChange={(checked) => handleToggleStatus(category.id, checked)}
+                checked={category.is_active}
+                onCheckedChange={(e) => {
+                  handleToggleStatus(e, category.uuid)}}
                 className="h-6 w-12 rounded-full data-[state=checked]:bg-[#4CAF50] data-[state=unchecked]:bg-gray-300 transition-colors focus:outline-none focus:ring-0"
               />
             </div>
@@ -215,11 +266,11 @@ export default function Categories() {
                       </label>
                       <Input
                         id="edit-title"
-                        name="title"
-                        value={editingCategory?.name || ''}
+                        name="identity"
+                        value={editingCategory?.identity || ''}
                         onChange={(e) =>
                           setEditingCategory(prev =>
-                            prev ? { ...prev, name: e.target.value } : null
+                            prev ? { ...prev, identity: e.target.value } : null
                           )
                         }
                         className="w-full h-10 border border-gray-300 placeholder:text-gray-500 hover:border-gray-400 focus:border-gray-400 focus:outline-none focus:ring-0 focus-visible:ring-0 focus-visible:border-gray-400 text-[18px] selection:bg-transparent selection:text-inherit"
@@ -262,13 +313,13 @@ export default function Categories() {
               </Dialog>
 
               {/* Delete Dialog */}
-              <Dialog open={isDeleteConfirmModalOpen && categoryToDeleteId === category.id} onOpenChange={setIsDeleteConfirmModalOpen}>
+              <Dialog open={isDeleteConfirmModalOpen && categoryToDeleteId === category.uuid} onOpenChange={setIsDeleteConfirmModalOpen}>
                 <DialogTrigger asChild>
                   <Button
                     variant="ghost"
                     size="icon"
                     className="text-orange-500 hover:text-orange-600"
-                    onClick={() => handleDeleteClick(category.id)}
+                    onClick={() => handleDeleteClick(category?.uuid)}
                   >
                     <Trash2 className="h-5 w-5" />
                   </Button>

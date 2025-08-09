@@ -49,8 +49,9 @@ class Client {
     faq_category = {
         get: (querys: any) => httpClient.get(API_END_POINTS.faq_category.all, querys),
         create: (data: any) => httpClient.post(API_END_POINTS.faq_category.create, data),
-        update: (data: { id: string; }) => httpClient.patch(API_END_POINTS.faq_category.create + data.id, data),
-        delete: (data: { id: string; }) => httpClient.delete(API_END_POINTS.faq_category.create + data.id)
+        update: (data: { uuid: string; }) => httpClient.patch(API_END_POINTS.faq_category.create + data.uuid, data),
+        statusupdate: (data: { uuid: string,}) => httpClient.patch(API_END_POINTS.faq_category.create + data.uuid, data),
+        delete: (data: { uuid: string; }) => httpClient.delete(API_END_POINTS.faq_category.create + data.uuid)
     }
     faq = {
         get: (data: any) => httpClient.get(API_END_POINTS.faq, data),
