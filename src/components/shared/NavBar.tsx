@@ -4,6 +4,7 @@ import { Link, useNavigate } from "react-router-dom";
 import Profileicon from "../../assets/profileicon.png";
 import icon from "../../assets/masteradminicon.png";
 import notification from "../../assets/notification.png";
+import { COLORS, FONTS } from "@/constants/ui constants";
 
 export default function Navbar() {
   const [showProfileDropdown, setShowProfileDropdown] = useState(false);
@@ -34,9 +35,16 @@ export default function Navbar() {
     setShowNotificationDropdown(false);
     navigate('/notifications');
   };
+  const handleViewProfile = () => {
+    setShowProfileDropdown(!showProfileDropdown)
+    navigate('/profile');
+  };
+  const handleView = ()=>{
+    setShowProfileDropdown(!showProfileDropdown)
+  }
 
   return (
-    <nav className="flex h-16 items-center justify-between px-4 md:px-6 bg-[#E0ECDE] relative">
+    <nav ref={profileRef} className="flex h-16 items-center justify-between px-4 md:px-6 bg-[#E0ECDE] relative">
       {/* Left section: Logo + Search */}
       <div className="flex items-center gap-32">
         <img src={icon} alt="logo" className="h-12 w-18 ml-4" />
@@ -103,15 +111,20 @@ export default function Navbar() {
           )}
         </div>
 
-      {/* profile */}
-      <Link
-  to="/profile"
-  className="h-[48px] w-[48px] rounded-full overflow-hidden cursor-pointer block"
->
-  <img src={Profileicon} alt="profile" className="h-full w-full object-cover" />
-</Link>
+        {/* profile */}
+        <div className="h-[48px] w-[48px] rounded-full overflow-hidden cursor-pointer block" onClick={handleView}>
+          <img src={Profileicon}  alt="profile" className="h-full w-full object-cover" />
+        </div>
 
-       
+        
+
+        {showProfileDropdown && <div className="bg-[#68B39F] w-[150px] flex flex-col gap-4 absolute top-13 right-0 rounded-2xl p-4">
+          
+            <button className="bg-white w-full rounded-tl-xl rounded-br-xl p-2" style={{ ...FONTS.btn_txt_active, color: COLORS.button }} onClick={handleViewProfile}>Profile</button>
+          
+          <button className="bg-white rounded-tl-xl rounded-br-xl p-2" style={{ ...FONTS.btn_txt_active, color: COLORS.button }}>Logout</button>
+        </div>}
+
       </div>
     </nav>
   );
