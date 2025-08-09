@@ -15,7 +15,6 @@ import {
 } from '@/components/ui/dropdown-menu';
 import { useNavigate } from 'react-router-dom';
 
-
 interface Institute {
 	id: number;
 	name: string;
