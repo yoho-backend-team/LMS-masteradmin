@@ -136,7 +136,6 @@ export const FONTS = {
 		fontWeight: 400,
 		fontSize: '14px',
 	},
-
 	tableheader: {
 		fontFamily: 'Montserrat',
 		fontWeight: 600,
