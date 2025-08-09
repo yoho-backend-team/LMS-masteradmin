@@ -104,7 +104,6 @@ export const FONTS = {
 	profile_title: {
 		color: '#242731',
 		fontFamily: 'Montserrat',
-		fontWeight: 300,
 		fontSize: '18px',
 		fontWeight: '700',
 		suheaers: '#242731',
