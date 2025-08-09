@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { useState, useEffect, useMemo } from 'react';
+import { useState, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import {
@@ -28,46 +28,87 @@ const Dashboard = () => {
 	const [selectedMonth, setSelectedMonth] = useState<string | null>(null);
 	const [selectedYear, setSelectedYear] = useState<string | null>(null);
 	const [revenueYear, setRevenueYear] = useState('2025');
-	const [subscriptionYear, setSubscriptionYear] = useState('2025');
+	const nowDate = new Date()
+	const currentMonth = nowDate.getMonth()
+	const currentYear = nowDate.getFullYear()
 
 	const dispatch = useAppDispatch()
 	const DashBoardDatas = useAppSelector<any>(GetDashboardSelector)
 
-	// Simulate loading
 	useEffect(() => {
-		dispatch(GetDashboardThunks({ month: 0, year: 2025 }))
+		if (selectedMonth || selectedYear) {
+			dispatch(GetDashboardThunks({ month: selectedMonth ?? 0, year: selectedYear ?? currentYear }))
+		}
+		dispatch(GetDashboardThunks({ month: currentMonth, year: currentYear }))
 		const timer = setTimeout(() => {
 			setIsLoading(false);
 		}, 2000);
 		return () => clearTimeout(timer);
-	}, [dispatch]);
-
-	// Get filtered revenue data
-	// const getFilteredRevenueData = () => {
-	// 	let data = revenueDataByYear[revenueYear as keyof typeof revenueDataByYear];
-	// 	if (selectedMonth) {
-	// 		data = data.filter((item) => item.month === selectedMonth);
-	// 	}
-	// 	return data;
-	// };
-
-	// // Get filtered subscription data
-	// const getFilteredSubscriptionData = () => {
-	// 	let data =
-	// 		subscriptionDataByYear[
-	// 		subscriptionYear as keyof typeof subscriptionDataByYear
-	// 		];
-	// 	if (selectedMonth) {
-	// 		data = data.filter((item) => item.month === selectedMonth);
-	// 	}
-	// 	return data;
-	// };
-
-	// const revenueData = getFilteredRevenueData();
-	// const subscriptionData = getFilteredSubscriptionData();
+	}, [currentMonth, currentYear, dispatch, selectedMonth, selectedYear]);
 
 
-	const subscriptionData: any[] | undefined = []
+	function setSubcriptionData() {
+		try {
+			const data = {
+				jan: 0,
+				feb: 0,
+				mar: 0,
+				apr: 0,
+				may: 0,
+				jun: 0,
+				jul: 0,
+				aug: 0,
+				sep: 0,
+				oct: 0,
+				nov: 0,
+				dec: 0,
+			}
+
+			DashBoardDatas?.instituteSubscriptions?.forEach((item: any) => {
+				const date = new Date(item?.createdAt)
+				const month = date.getMonth()
+
+				switch (month) {
+					case 0: ++data.jan; break;
+					case 1: ++data.feb; break;
+					case 2: ++data.mar; break;
+					case 3: ++data.apr; break;
+					case 4: ++data.may; break;
+					case 5: ++data.jun; break;
+					case 6: ++data.jul; break;
+					case 7: ++data.aug; break;
+					case 8: ++data.sep; break;
+					case 9: ++data.oct; break;
+					case 10: ++data.nov; break;
+					case 11: ++data.dec; break;
+				}
+			});
+
+
+			return [
+				{ month: 'Jan', subscriptions: data.jan },
+				{ month: 'Feb', subscriptions: data.feb },
+				{ month: 'Mar', subscriptions: data.mar },
+				{ month: 'Apr', subscriptions: data.apr },
+				{ month: 'May', subscriptions: data.may },
+				{ month: 'Jun', subscriptions: data.jun },
+				{ month: 'Jul', subscriptions: data.jul },
+				{ month: 'Aug', subscriptions: data.aug },
+				{ month: 'Sep', subscriptions: data.sep },
+				{ month: 'Oct', subscriptions: data.oct },
+				{ month: 'Nov', subscriptions: data.nov },
+				{ month: 'Dec', subscriptions: data.dec },
+			]
+
+		} catch (error) {
+			console.log(error, "sub filter")
+		}
+	}
+
+
+
+	const subscriptionData = setSubcriptionData()
+
 
 	const [kpiData, setKpiData] = useState<any[]>([]);
 
@@ -311,8 +352,6 @@ const Dashboard = () => {
 	})
 	const years = ['2022', '2023', '2024', '2025'];
 
-	console.log(revenueData, "check das")
-
 	const resetFilters = () => {
 		setSelectedMonth(null);
 		setSelectedYear(null);
@@ -534,9 +573,9 @@ const Dashboard = () => {
 							<div>
 								<CardTitle style={{ ...FONTS.card_text, color: COLORS.black }}>
 									Subscription{' '}
-									{/* <span style={{ ...FONTS.sub_text_2, color: COLORS.black }}>
+									<span style={{ ...FONTS.sub_text_2, color: COLORS.black }}>
 										Details
-									</span> */}
+									</span>
 								</CardTitle>
 							</div>
 						</CardHeader>
