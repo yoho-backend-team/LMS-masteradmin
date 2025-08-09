@@ -9,6 +9,7 @@ import { useAppDispatch } from "@/hooks/reduxhooks";
 const ProfileDetails = () => {
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [previewImage, setPreviewImage] = useState(User); // default image
+    const dispatch = useAppDispatch()
 
     const handleImageChange = (e: any) => {
         const file = e.target.files[0];
@@ -27,7 +28,7 @@ const ProfileDetails = () => {
             email: "kamal@endhiran.com",
             status: "Active",
             contact: "1234567890000000",
-            image:User
+            image: User
         },
     });
 
@@ -44,10 +45,10 @@ const ProfileDetails = () => {
 
 
     useEffect(() => {
-		// dispatch(getProfileThunks({}));
-        useAppDispatch(getProfileThunks({}))
-	}, []);
-	
+        // dispatch(getProfileThunks({}));
+        dispatch(getProfileThunks({}))
+    }, [dispatch]);
+
 
     return (
         <div className="grid gap-4">
