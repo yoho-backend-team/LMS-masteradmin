@@ -4,6 +4,7 @@ import ProfileSlice from '../features/Profile/reducers/ProfileSlice';
 import PaymentReducer from '../features/Payments/Reducers/slices';
 import HelpcenterTicketSlice from '../features/Profile/helpcenter-ticket/reducers/HelpcenterTicketSlice';
 import dashboard from '../features/dashboard/redux/slice'
+import CategoriesSlice from '../features/FaqCategories/reducers/CategoriesSlice'
 
 export const store = configureStore({
     reducer: {
@@ -11,6 +12,7 @@ export const store = configureStore({
         PaymentReducer: PaymentReducer,
         HelpcenterTicketSlice: HelpcenterTicketSlice,
         dashboard,
+        CategoriesSlice: CategoriesSlice
     },
 });
 
