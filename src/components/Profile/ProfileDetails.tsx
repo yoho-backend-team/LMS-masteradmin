@@ -1,8 +1,10 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import User from "../../assets/Profile/User.png";
 import { FONTS } from "@/constants/ui constants";
 import { MoreVertical, X } from "lucide-react";
 import { useForm } from "react-hook-form";
+import { getProfileThunks } from "@/features/Profile/reducers/thunks";
+import { useAppDispatch } from "@/hooks/reduxhooks";
 
 const ProfileDetails = () => {
     const [isModalOpen, setIsModalOpen] = useState(false);
@@ -38,6 +40,14 @@ const ProfileDetails = () => {
         reset();
         setIsModalOpen(true);
     };
+
+
+
+    useEffect(() => {
+		// dispatch(getProfileThunks({}));
+        useAppDispatch(getProfileThunks({}))
+	}, []);
+	
 
     return (
         <div className="grid gap-4">
