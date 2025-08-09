@@ -1,9 +1,11 @@
 import { configureStore } from "@reduxjs/toolkit"
 import ProfileSlice from '../features/Profile/reducers/ProfileSlice'
+import dashboard from '../features/dashboard/redux/slice'
 
 export const store = configureStore({
     reducer: {
-        ProfileSlice:ProfileSlice
+        ProfileSlice: ProfileSlice,
+        dashboard,
     },
 })
 

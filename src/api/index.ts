@@ -66,6 +66,9 @@ class Client {
     activity = {
         get: (params: any) => httpClient.get(API_END_POINTS.activity.get, params)
     }
+    report = {
+        get: (params: any) => httpClient.get(API_END_POINTS.auth.reports, params)
+    }
 }
 
 export default new Client()
