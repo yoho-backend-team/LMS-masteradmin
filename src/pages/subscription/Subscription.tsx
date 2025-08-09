@@ -1,23 +1,19 @@
-// pages/Subscription/Subscription.tsx
-import { useNavigate, useLocation } from "react-router-dom";
-import React, { useState, useEffect } from "react";
-import SubscriptionHeader from "../../components/SubscriptionPlan/SubscriptionHeader";
-import SubscriptionCard, { SubscriptionPlan } from "../../components/SubscriptionPlan/SubscriptionCard";
-import subcard1 from "../../assets/subcard1.png";
+import React, { useState } from "react";
+import { Plus } from "lucide-react";
+import SubscriptionCard, { SubscriptionPlanProps } from "../../components/SubscriptionPlan/SubscriptionCard";
+import AddSubscription from "../../pages/subscription/AddSubscription";
+import ConfirmDeleteModal from "../../components/SubscriptionPlan/ConfirmDeleteModal";
+import subcard1 from '../../assets/subcard1.png'
 
-const Subscription = () => {
-  const navigate = useNavigate();
-  const location = useLocation();
-
-  const [plans, setPlans] = useState<SubscriptionPlan[]>([
+const Subscription: React.FC = () => {
+  const [showForm, setShowForm] = useState(false);
+  const [plans, setPlans] = useState<SubscriptionPlanProps[]>([
     {
-      id: 1,
-      name: "Basic Plan - Free",
+      title: "Basic Plan - Free",
       description: "The Plan is for everyone",
-      price: 0,
-      period: "Monthly",
+      price: "0",
+      duration: "Monthly",
       image: subcard1,
-      status: "Active",
       features: [
         { label: "Admins", value: 5 },
         { label: "Students", value: 5 },
@@ -26,72 +22,74 @@ const Subscription = () => {
         { label: "Courses", value: 5 },
         { label: "Classes", value: 30 },
       ],
+      active: true,
     },
     {
-      id: 2,
-      name: "Basic Plan",
+      title: "Basic Plan",
       description: "The Plan is for everyone",
-      price: 0,
-      period: "Monthly",
+      price: "5000",
+      duration: "Monthly",
       image: subcard1,
-      status: "Inactive",
       features: [
-        { label: "Admins", value: 5 },
-        { label: "Students", value: 5 },
-        { label: "Teachers", value: 10 },
-        { label: "Batches", value: 3 },
+        { label: "Admins", value: 7 },
+        { label: "Students", value: 50 },
+        { label: "Teachers", value: 15 },
+        { label: "Batches", value: 8 },
         { label: "Courses", value: 5 },
-        { label: "Classes", value: 30 },
+        { label: "Classes", value: 10 },
       ],
+      active: true,
     },
   ]);
 
-  // Toggle Active/Inactive
-  const handleToggleStatus = (id: number) => {
-    setPlans((prevPlans) =>
-      prevPlans.map((plan) =>
-        plan.id === id
-          ? {
-              ...plan,
-              status: plan.status === "Active" ? "Inactive" : "Active",
-            }
-          : plan
-      )
-    );
+  const [deleteIndex, setDeleteIndex] = useState<number | null>(null);
+
+  const handleAddPlan = (newPlan: SubscriptionPlanProps) => {
+    setPlans((prev) => [...prev, newPlan]);
+    setShowForm(false);
   };
 
-  useEffect(() => {
-    const newPlan = location.state?.newPlan;
-    const updatedPlan = location.state?.updatedPlan;
-
-    if (newPlan) {
-      setPlans((prev) => {
-        const alreadyExists = prev.some((p) => p.id === newPlan.id);
-        return alreadyExists ? prev : [...prev, newPlan];
-      });
-      window.history.replaceState({}, document.title);
+  const handleDeletePlan = () => {
+    if (deleteIndex !== null) {
+      setPlans((prev) => prev.filter((_, i) => i !== deleteIndex));
+      setDeleteIndex(null);
     }
-
-    if (updatedPlan) {
-      setPlans((prev) =>
-        prev.map((plan) => (plan.id === updatedPlan.id ? updatedPlan : plan))
-      );
-      window.history.replaceState({}, document.title);
-    }
-  }, [location.state]);
+  };
 
   return (
-    <div className="pl-6 pr-6 overflow-hidden">
-      <SubscriptionHeader onAddClick={() => navigate("/add-subscription")} />
-      <div className="flex flex-wrap gap-6">
-        {plans.map((plan) => (
-          <SubscriptionCard
-            key={plan.id}
-            plan={plan}
-            onToggleStatus={() => handleToggleStatus(plan.id)}
-          />
-        ))}
-      </div>
+    <div className="p-6">
+      {!showForm && (
+        <div className="flex justify-between items-center mb-2">
+          <h1 className="text-2xl font-semibold text-gray-800">Subscription Plan</h1>
+          <button
+            onClick={() => setShowForm(true)}
+            className="flex items-center gap-2 bg-[#68B39F] px-4 py-2 rounded-tl-xl rounded-br-xl text-white hover:bg-[#58a18e] transition"
+          >
+            <Plus size={18} /> Add Institute
+          </button>
+        </div>
+      )}
+
+      {showForm ? (
+        <AddSubscription onCancel={() => setShowForm(false)} onSubmit={handleAddPlan} />
+      ) : (
+        <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+          {plans.map((plan, index) => (
+            <SubscriptionCard
+              key={index}
+              {...plan}
+              onDelete={() => setDeleteIndex(index)} // 🔹 Now sets the index instead of deleting immediately
+            />
+          ))}
+        </div>
+      )}
+
+      {deleteIndex !== null && (
+        <ConfirmDeleteModal
+          onConfirm={handleDeletePlan}
+          onCancel={() => setDeleteIndex(null)}
+        />
+      )}
     </div>
   );
 };

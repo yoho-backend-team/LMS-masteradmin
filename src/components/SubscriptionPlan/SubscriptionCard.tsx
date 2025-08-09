@@ -1,63 +1,72 @@
-// components/SubscriptionPlan/SubscriptionCard.tsx
-import React, { useState, useRef, useEffect } from "react";
-import { MoreVertical } from "lucide-react";
+import React, { useState } from "react";
+import { MoreVertical, Check } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 
-interface Feature {
+export interface Feature {
   label: string;
-  value: number | string;
+  value: string | number;
 }
 
-export interface SubscriptionPlan {
-  id: number;
-  name: string;
+export interface SubscriptionPlanProps {
+  title: string;
   description: string;
-  price: number;
-  period: string;
+  price: string;
+  duration: string;
   image: string;
   features: Feature[];
-  status?: "Active" | "Inactive";
+  active: boolean;
+  onDelete?: () => void;
 }
 
-interface Props {
-  plan: SubscriptionPlan;
-  onToggleStatus: () => void;
-}
-
-const SubscriptionCard: React.FC<Props> = ({ plan, onToggleStatus }) => {
-  const [menuOpen, setMenuOpen] = useState(false);
-  const menuRef = useRef<HTMLDivElement>(null);
+const SubscriptionCard: React.FC<SubscriptionPlanProps> = ({
+  title,
+  description,
+  price,
+  duration,
+  image,
+  features,
+  active: initialActive,
+  onDelete,
+}) => {
+  const [showActions, setShowActions] = useState(false);
+  const [active, setActive] = useState(initialActive); // 🔹 Local state for toggle
   const navigate = useNavigate();
 
-  useEffect(() => {
-    const handleClickOutside = (event: MouseEvent) => {
-      if (menuRef.current && !menuRef.current.contains(event.target as Node)) {
-        setMenuOpen(false);
-      }
-    };
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => document.removeEventListener("mousedown", handleClickOutside);
-  }, []);
+  const toggleActive = () => {
+    setActive((prev) => !prev);
+  };
 
   return (
-    <div className="bg-white rounded-xl shadow-md overflow-hidden w-80 border relative">
-      <div className="m-4 border rounded-xl">
-        <img src={plan.image} alt={plan.name} className="h-40 w-full object-cover" />
+    <div className="bg-white rounded-xl border shadow-sm overflow-hidden border-gray-200 flex flex-col relative">
+      <div className="p-3">
+        <img
+          src={image}
+          alt={title}
+          className="h-40 w-full object-cover rounded-md"
+        />
       </div>
-      <div className="p-4 pb-2 pt-1">
-        <h3 className="text-lg font-semibold">{plan.name}</h3>
-        <p className="text-gray-500 text-sm">{plan.description}</p>
-        <p className="text-green-600 font-bold text-xl text-center py-3">
-          ₹{plan.price} <span className="text-gray-500 text-sm">/{plan.period}</span>
-        </p>
 
-        <div className="mt-3 border p-3 bg-white/20 backdrop-blur-md rounded-lg shadow-md">
-          <h4 className="text-gray-700 font-semibold mb-2">Features</h4>
-          <ul className="space-y-1 text-sm text-gray-600">
-            {plan.features.map((f, idx) => (
-              <li key={idx} className="flex items-center gap-2">
-                <span className="w-1 h-1 flex items-center p-2 justify-center border border-green-600 rounded-full text-green-600 text-xs font-bold">
-                  ✓
+      <div className="p-4 flex flex-col flex-grow">
+        <h3 className="text-lg font-semibold text-gray-800">{title}</h3>
+        <p className="text-sm text-gray-500">{description}</p>
+
+        <div className="mt-2 text-[#1D3A4E] font-bold text-xl flex justify-center items-center">
+          ₹{price}
+          <span className="text-gray-500 font-normal text-base">
+            /{duration}
+          </span>
+        </div>
+
+        <div className="mt-4 border p-3 rounded-md">
+          <h4 className="text-sm font-semibold text-gray-700 mb-2">FEATURES</h4>
+          <ul className="space-y-1">
+            {features.map((f, idx) => (
+              <li
+                key={idx}
+                className="flex items-center text-sm text-gray-600"
+              >
+                <span className="flex items-center justify-center w-3 h-3 rounded-full bg-[#68B39F] text-white mr-2">
+                  <Check size={12} strokeWidth={3} />
                 </span>
                 {f.label}: {f.value}
               </li>
@@ -65,45 +74,42 @@ const SubscriptionCard: React.FC<Props> = ({ plan, onToggleStatus }) => {
           </ul>
         </div>
 
-        <div className="flex justify-between items-center mt-4">
+        <div className="flex items-center justify-between mt-4 relative">
           <button
-            onClick={onToggleStatus}
-            className={`text-white text-xs rounded-tl-xl px-4 py-2 rounded-br-xl ${
-              plan.status === "Active" ? "bg-[#68B39F]" : "bg-red-400"
+            onClick={toggleActive}
+            className={`px-4 py-2 rounded-tl-xl rounded-br-xl text-sm font-medium transition-colors ${
+              active
+                ? "bg-[#68B39F] text-white"
+                : "bg-gray-300 text-gray-700"
             }`}
           >
-            {plan.status}
+            {active ? "Active" : "Inactive"}
           </button>
 
-          <div className="relative" ref={menuRef}>
-            <button
-              onClick={() => setMenuOpen((prev) => !prev)}
-              className="text-white cursor-pointer rounded-tl-xl px-2 py-2 rounded-br-xl bg-[#68B39F]"
-            >
-              <MoreVertical />
-            </button>
+          <div className="relative">
+            <MoreVertical
+              className="cursor-pointer bg-[#68B39F] text-white px-2 py-2 rounded-tl-xl rounded-br-xl"
+              onClick={() => setShowActions((prev) => !prev)}
+            />
 
-            {menuOpen && (
-              <div className="absolute right-full top-1/4 -translate-y-1/2 mr-2 w-32 bg-white border rounded-lg shadow-lg z-10">
+            {showActions && (
+              <div className="absolute bottom-full mb-2 right-0 bg-white border rounded-md shadow-md flex flex-col text-sm z-10">
                 <button
-                  className="w-full text-left px-4 py-1 hover:bg-gray-100"
-                  onClick={() => {
-                    navigate("/subscription-view");
-                    setMenuOpen(false);
-                  }}
+                  className="px-4 py-2 hover:bg-gray-100 text-left"
+                  onClick={() => navigate("/subscription-view")}
                 >
                   View
                 </button>
                 <button
-                  className="w-full text-left px-4 py-1 hover:bg-gray-100"
-                  onClick={() => {
-                    navigate("/subscription-Edit", { state: { plan } });
-                    setMenuOpen(false);
-                  }}
+                  className="px-4 py-2 hover:bg-gray-100 text-left"
+                  onClick={() => navigate("/subscription-Edit")}
                 >
                   Edit
                 </button>
-                <button className="w-full text-left px-4 py-1 hover:bg-gray-100">
+                <button
+                  className="px-4 py-2 hover:bg-gray-100 text-left text-red-500"
+                  onClick={onDelete}
+                >
                   Delete
                 </button>
               </div>
