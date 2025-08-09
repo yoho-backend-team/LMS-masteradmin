@@ -52,7 +52,7 @@ const SecurityTab: React.FC = () => {
       </div>
 
       <div className="flex justify-end">
-        <button className="px-5 py-2 bg-blue-900 text-white rounded-md hover:bg-blue-800 transition">
+        <button className="px-5 py-2 bg-[#68B39F] text-white rounded-tl-md rounded-br-md hover:bg-[#68B39F]/80 transition">
           Change Password
         </button>
       </div>

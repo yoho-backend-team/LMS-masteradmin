@@ -3,7 +3,7 @@ import { FiX } from 'react-icons/fi';
 import { Link } from 'react-router-dom';
 
 const EditDetail: React.FC = () => {
-  const [profileImage, setProfileImage] = useState<string>('https://via.placeholder.com/80');
+  const [profileImage, setProfileImage] = useState<string>('');
 
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files[0]) {
@@ -39,7 +39,7 @@ const EditDetail: React.FC = () => {
             className="hidden"
             onChange={handleImageChange}
           />
-          <span className="inline-block px-4 py-1 bg-blue-900 text-white text-lg rounded-md hover:bg-blue-800 transition">
+          <span className="inline-block px-4 py-1 bg-[#68B39F] text-white text-lg rounded-md hover:bg-[#68B39F]/80 transition">
             Upload New Image
           </span>
         </label>
@@ -73,14 +73,14 @@ const EditDetail: React.FC = () => {
       <div className="flex justify-between pt-4">
         <Link
   to="/profile"
-  className="px-4 py-2 bg-white text-gray-800 rounded-md border border-gray-300 hover:bg-gray-100"
+  className="px-4 py-2 bg-white text-gray-800 rounded-tl-md rounded-br-md border-2 border-[#68B39F] hover:bg-[#68B39F] hover:text-white"
 >
   Cancel
 </Link>
 
 <Link
   to="/profile"
-  className="px-5 py-2 bg-blue-900 text-white rounded-md hover:bg-blue-800 transition"
+  className="px-5 py-2 bg-[#68B39F] text-white rounded-tl-md rounded-br-md hover:bg-[#68B39F]/80 transition"
 >
   Submit
 </Link>
