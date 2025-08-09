@@ -1,12 +1,15 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import User from "../../assets/Profile/User.png";
 import { FONTS } from "@/constants/ui constants";
 import { MoreVertical, X } from "lucide-react";
 import { useForm } from "react-hook-form";
+import { getProfileThunks } from "@/features/Profile/reducers/thunks";
+import { useAppDispatch } from "@/hooks/reduxhooks";
 
 const ProfileDetails = () => {
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [previewImage, setPreviewImage] = useState(User); // default image
+    const dispatch = useAppDispatch()
 
     const handleImageChange = (e: any) => {
         const file = e.target.files[0];
@@ -25,7 +28,7 @@ const ProfileDetails = () => {
             email: "kamal@endhiran.com",
             status: "Active",
             contact: "1234567890000000",
-            image:User
+            image: User
         },
     });
 
@@ -38,6 +41,14 @@ const ProfileDetails = () => {
         reset();
         setIsModalOpen(true);
     };
+
+
+
+    useEffect(() => {
+        // dispatch(getProfileThunks({}));
+        dispatch(getProfileThunks({}))
+    }, [dispatch]);
+
 
     return (
         <div className="grid gap-4">
