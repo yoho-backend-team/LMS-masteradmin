@@ -1,3 +1,4 @@
+
 export const COLORS = {
 	primary: '#E0ECDE', //navba/sidebar bg-color
 	secondary: '#2D6974', //table headerbg, hover bg-color, mostly for header content bg
@@ -92,5 +93,50 @@ export const FONTS = {
 		fontFamily: 'Montserrat',
 		fontWeight: 400,
 		fontSize: '14px',
+	},
+
+	tableheader: {
+		fontFamily: 'Montserrat',
+		fontWeight: 600,
+		fontSize: '20px',
+		color: '#FFFFFF',
+	},
+
+	button: {
+		fontFamily: 'Montserrat',
+		fontWeight: 600,
+		fontSize: '16px',
+		color: '#ffffff',
+	},
+	text: {
+		fontFamily: 'Montserrat',
+		fontWeight: 700,
+		fontSize: '24px',
+	},
+	text1: {
+		fontFamily: 'Montserrat',
+		fontWeight: 400,
+		fontSize: '14px',
+	},
+	number: {
+		fontFamily: 'Montserrat',
+		fontWeight: 700,
+		fontSize: '40px',
+	},
+	text3: {
+		fontFamily: 'Montserrat',
+		fontWeight: 700,
+		fontSize: '14px',
+	},
+	text4: {
+		fontFamily: 'Montserrat',
+		fontWeight: 600,
+		fontSize: '14px',
+	},
+
+	text5: {
+		fontFamily: 'Montserrat',
+		fontWeight: 500,
+		fontSize: '18px',
 	},
 };
