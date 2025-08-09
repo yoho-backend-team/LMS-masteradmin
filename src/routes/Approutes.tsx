@@ -17,6 +17,9 @@ import UniversityDashboard from '@/components/institute/ViewInstituteDetails';
 import SignIn from '@/components/SignIn/SignIn'
 import OtpVerification from '@/components/SignIn/OtpVerification'
 import SendOtp from '@/components/SignIn/SendOtp'
+import AddSubscription from '../pages/subscription/AddSubscription'
+import SubscriptionView from '../pages/subscription/SubscriptionView'
+import SubscriptionEdit from '../pages/subscription/SubscriptionEdit'
 
 function Approutes() {
 	return (
@@ -32,9 +35,11 @@ function Approutes() {
 						<Route path='add' element={<StepperForm />} />
 						<Route path='view/:id' element={<UniversityDashboard />} />
 					</Route>
-
 					<Route path='payments' element={<Payments />} />
 					<Route path='subscriptions' element={<Subscription />} />
+					<Route path="/add-subscription" element={<AddSubscription />} />
+					<Route path='/subscription-view' element={<SubscriptionView />} />
+					<Route path='/subscription-Edit' element={<SubscriptionEdit />} />
 					<Route path='notifications' element={<Notifications />} />
 					<Route path='/profile' element={<Profile />} />
 					<Route path='helpcenter'>
