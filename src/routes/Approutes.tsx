@@ -46,4 +46,4 @@ function Approutes() {
   )
 }
 
-export default Approutes
+export default Approutes;

@@ -1,24 +1,48 @@
+import { Signin } from "@/features/SignIn/service";
+import { StoreLocalStorage } from "@/utils/localStorage";
 import React, { useState } from "react";
 import { CiCircleInfo } from "react-icons/ci";
 import { FiEyeOff, FiEye } from "react-icons/fi";
 import { useNavigate } from "react-router-dom";
 
 const SignIn = () => {
-  const [username, setUsername] = useState("Leo Das");
-  const [password, setPassword] = useState("1234");
+  const [email, setEmail] = useState("mernstackdev.yoho@gmail.com");
+  const [password, setPassword] = useState("Wecandoit@2025");
   const [showPassword, setShowPassword] = useState(false);
   const navigate = useNavigate();
 
-  const handleSignIn = (e: React.FormEvent) => {
-    e.preventDefault();
 
-    
-    if (username === "Leo Das" && password === "1234") {
-      navigate("/"); 
+
+const handleSignIn = async (e: React.FormEvent) => {
+  e.preventDefault();
+
+  if (!email || !password) {
+    alert("Please enter valid email and password");
+    return;
+  }
+
+  const params = { email, password };
+
+  try {
+    const response = await Signin(params); 
+
+
+    const token = response?.data?.data?.token;
+
+    if (token) {
+      localStorage.setItem("token", token);
+      localStorage.setItem("isAuthenticated", "true");
+
+      navigate("/");
     } else {
-     
+      alert("Invalid credentials. Please try again.");
     }
-  };
+  } catch (error: any) {
+    console.error("Sign-in error:", error);
+    alert("Login failed");
+  }
+};
+
 
   return (
     <div className="min-h-screen grid grid-cols-1 md:grid-cols-2">
@@ -43,8 +67,8 @@ const SignIn = () => {
             </label>
             <input
               type="text"
-              value={username}
-              onChange={(e) => setUsername(e.target.value)}
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
               className="mt-1 block w-full h-14 rounded-md border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#68B39F]"
               required
             />

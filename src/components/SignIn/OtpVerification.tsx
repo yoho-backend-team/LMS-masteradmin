@@ -1,9 +1,20 @@
+import { verifyOtpService } from "@/features/ForgotPassword/service";
 import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
+
+
+interface LocationState {
+  email: string;
+  otp: string;
+}
 
 const OtpVerification = () => {
-  const [otp, setOtp] = useState(["1", "2", "3", "4", "5", "6"]);
+  const [otp, setOtp] = useState(["", "", "", "", "", ""]);
   const navigate = useNavigate();
+ const location = useLocation();
+  const state = location.state as LocationState;
+
+  console.log("Received OTP:",state.otp);
 
   const handleChange = (value: string, index: number) => {
     if (/^[0-9]?$/.test(value)) { 
@@ -29,14 +40,24 @@ const OtpVerification = () => {
     }
   };
 
-  const handleVerify = () => {
-    const enteredOtp = otp.join("");
-    if (enteredOtp === "123456") {
+ const handleVerify = async () => {
+  const otpCode = otp.join("");
+
+  try {
+    const response = await verifyOtpService({
+      otp: otpCode
+    });
+
+    if (response.data?.success) {
       navigate("/");
     } else {
-      alert("Invalid OTP");
+      alert(response.data?.message || "Invalid OTP");
     }
-  };
+  } catch (err: any) {
+    alert(err.message || "Something went wrong");
+  }
+};
+
 
   return (
     <div className="grid grid-cols-2">

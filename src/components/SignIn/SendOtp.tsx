@@ -2,30 +2,42 @@ import React, { useState } from "react";
 import { CiCircleInfo } from "react-icons/ci";
 import { useNavigate } from "react-router-dom";
 
+import { SendOtps } from "@/features/ForgotPassword/service";
+
 const SendOtp = () => {
-  const [email, setEmail] = useState("pokkiripaiyan23@gmail.com");
+  const [email, setEmail] = useState("");
   const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
-  const validateEmail = (email: string) => {
-    const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    return re.test(email);
-  };
+ 
 
-  const handleSendOtp = () => {
-    if (!email) {
-      setError("Email is required");
-      return;
-    }
-    
-    if (!validateEmail(email)) {
-      setError("Please enter a valid email address");
-      return;
-    }
-    
+  const handleSendOtp = async () => {
+
     setError("");
-    console.log("Sending OTP to:", email);
-    navigate("/otp-verification");
+    setLoading(true);
+
+    try {
+      const response = await SendOtps({ email }); 
+      console.log("OTP API response:", response);
+
+      
+      if (!response) {
+      
+      } else {
+          navigate("/otp-verification", { 
+        state: { 
+          email, 
+          otp: response.data.otp 
+        } 
+      });
+        
+      }
+    } catch (err: any) {
+      setError(err.message || "Something went wrong");
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -35,8 +47,10 @@ const SendOtp = () => {
           <h1 className="text-9xl text-center tracking-widest text-[#2D6974]">
             Classie
           </h1>
-          
-          <p className="text-2xl mt-10 font-bold text-[#68B39F]">Forgot Password ?</p>
+
+          <p className="text-2xl mt-10 font-bold text-[#68B39F]">
+            Forgot Password ?
+          </p>
           <p className="text-lg mt-2 text-[#999999]">
             Enter your registered email to receive the OTP
           </p>
@@ -44,34 +58,36 @@ const SendOtp = () => {
           <div className="mt-6">
             <input
               type="email"
-              name="email"
               value={email}
               onChange={(e) => {
                 setEmail(e.target.value);
-                setError(""); // Clear error when typing
+                setError("");
               }}
               placeholder="Enter your email"
-              className={`w-full h-14 border ${error ? "border-red-500" : "border-[#68B39F]"} rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 ${error ? "focus:ring-red-500" : "focus:ring-[#68B39F]"}`}
+              className={`w-full h-14 border ${
+                error ? "border-red-500" : "border-[#68B39F]"
+              } rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 ${
+                error ? "focus:ring-red-500" : "focus:ring-[#68B39F]"
+              }`}
             />
-            {error && (
-              <p className="text-red-500 text-xs mt-1">{error}</p>
-            )}
+            {error && <p className="text-red-500 text-xs mt-1">{error}</p>}
           </div>
 
           <button
             onClick={handleSendOtp}
-            className="mt-6 w-full h-14 bg-[#68B39F] text-white py-2 rounded-md text-xl font-medium hover:bg-[#5aa18d] transition-colors"
+            disabled={loading}
+            className="mt-6 w-full h-14 bg-[#68B39F] text-white py-2 rounded-md text-xl font-medium hover:bg-[#5aa18d] transition-colors disabled:opacity-50"
           >
-            Send OTP
+            {loading ? "Sending..." : "Send OTP"}
           </button>
-          
-          <div className="text-center mt-5">
-            <button 
-              className="text-[#999999] text-sm hover:text-[#68B39F] transition-colors" 
-              onClick={() => navigate('/sign-in')}
+
+          <div className="text-center mr-3 mt-5">
+            <button
+              className="text-[#999999] text-sm hover:text-[#68B39F] transition-colors"
+              onClick={() => navigate("/sign-in")}
             >
               <span className="flex items-center justify-center">
-                <CiCircleInfo className="mt-1 mr-2"/> 
+                <CiCircleInfo className="mt-0.5 mr-2" />
                 Back to Login
               </span>
             </button>
