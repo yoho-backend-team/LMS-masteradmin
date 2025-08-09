@@ -146,7 +146,7 @@ const Subscription = () => {
                 </span>
               </p>
 
-              <div className="mt-4 p-4 rounded-md bg-gray-100 shadow-xl">
+              <div className="mt-4 p-4 rounded-md shadow-2xl">
                 <p className="text-sm font-semibold mb-2">FEATURES</p>
                 <ul className="text-sm space-y-1">
                   {Object.entries(plan.features).map(([feature, count]) => (

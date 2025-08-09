@@ -14,6 +14,7 @@ import Categories from '../pages/FaqManagement/Categories'
 import Profile from '../pages/profile/Profile'
 import SubscriptionForm from '../pages/subscription/SubscriptionForm'
 import AddNotificationForm from '../pages/notifications/AddNotificationForm'
+import EditDetail from '../pages/profile/EditDetail'
 
 function Approutes() {
   return (
@@ -26,8 +27,9 @@ function Approutes() {
         <Route path='subscriptions' element={<Subscription/>}/>
             <Route path='add-institute' element={<SubscriptionForm/>}/>
         <Route path='notifications' element={<Notifications/>}/>
-            <Route path='add-notificationform' element={<AddNotificationForm/>}/>
+            <Route path='add-notificationform' element={<AddNotificationForm />}/>
         <Route path="/profile" element={<Profile />} />
+        <Route path='edit-detail' element={<EditDetail/>}/>
         <Route path='helpcenter'>
             <Route path='faq' element={<HelpcenterFaq/>}/>
             <Route path='tickets' element={<HelpcenterTickets/>}/>
