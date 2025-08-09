@@ -5,6 +5,7 @@ import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { getPaymentThunks } from "@/features/Payments/Reducers/thunks";
 import { selectPayment } from "@/features/Payments/Reducers/selectors";
+import { GetImageUrl } from "@/utils/helper";
 
 export default function PaymentsTable() {
   const dispatch = useDispatch<any>();
@@ -40,7 +41,7 @@ export default function PaymentsTable() {
       {/* Table Header Card */}
       <Card className="bg-[#2d6974] text-white shadow-md">
         <CardContent
-          className="grid grid-cols-6 gap-2 py-2 px-1"
+          className="grid grid-cols-6 gap-2 py-2 px-1 text-center"
           style={{ ...FONTS.tableheader }}
         >
           <div className="px-2">ID</div>
@@ -48,7 +49,7 @@ export default function PaymentsTable() {
           <div className="px-2">Current Plan</div>
           <div className="px-2">Issue Date</div>
           <div className="px-2">Amount Paid</div>
-          <div className="px-2 text-right">Actions</div>
+          <div className="px-2">Actions</div>
         </CardContent>
       </Card>
 
@@ -59,18 +60,29 @@ export default function PaymentsTable() {
           className="shadow-md hover:shadow-md transition-shadow duration-200"
         >
           <CardContent
-            className="grid grid-cols-6 gap-2 py-1 px-1 items-center"
+            className="grid grid-cols-6 gap-2 py-1 px-1 items-center text-center"
             style={{ ...FONTS.description }}
           >
             <div className="px-2">{row.id}</div>
-            <div className="px-2">{row?.institute?.institute_name ?? "Institute"}</div>
+            <div className="flex items-center gap-2 px-2">
+  
+  <img
+    src={GetImageUrl (row?.institute?.logo )?? "/placeholder-logo.png"}
+    alt="Institute Logo"
+    className="w-10 h-10 rounded-full object-cover"
+  />
+  <span className="font-medium text-gray-800">
+    {row?.institute?.institute_name ?? "Institute"}
+  </span>
+</div>
+
             <div className="px-2 ml-6">{row?.status}</div>
             <div className="">
-              {row?.currentSubscriptionPlan?.startDate.split("T")[0]} /{" "}
+              {row?.currentSubscriptionPlan?.startDate.split("T")[0]} / &nbsp; &nbsp;
               {row?.currentSubscriptionPlan.endDate.split("T")[0]}
             </div>
             <div className="px-2 ml-10">{getAmountPaid(row?.paymentHistory)}</div>
-            <div className="px-2 flex justify-end">
+            <div className="px-2 flex justify-center">
               <Eye className="w-4 h-4 text-gray-600 cursor-pointer hover:text-black" />
             </div>
           </CardContent>
