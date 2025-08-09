@@ -1,4 +1,3 @@
-
 export const COLORS = {
 	primary: '#E0ECDE', //navba/sidebar bg-color
 	secondary: '#2D6974', //table headerbg, hover bg-color, mostly for header content bg
@@ -8,6 +7,7 @@ export const COLORS = {
 	gray_01: '#999',
 	gray_02: '#808191',
 };
+
 export const FONTS = {
 	bold_heading: {
 		fontFamily: 'Montserrat',
