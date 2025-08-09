@@ -65,7 +65,6 @@ export const FONTS = {
 		fontSize: '16px',
 		style: 'Bold',
 		text_size: '16px',
-		fontweight: 500,
 		button: '#68B39F',
 		color: '#FFFFFF',
 	},
@@ -185,5 +184,11 @@ export const FONTS = {
 		fontWeight: 500,
 		fontSize: '18px',
 		color: '#999999',
+	},
+	activity: {
+		fontFamily: 'Montserrat',
+		fontWeight: 600,
+		fontSize: '22px',
+		color: '#242731',
 	},
 };
