@@ -339,25 +339,40 @@ const HelpcenterTickets = () => {
   const [isProfileModalOpen, setIsProfileModalOpen] = useState(false)
   const [selectedUserProfile, setSelectedUserProfile] = useState<UserProfile | null>(null)
 
-  const handleSendMessage = () => {
-    if (messageInput.trim()) {
-      const newMessage: Message = {
-        id: `${selectedTicket.id}-${Date.now()}`,
-        ticketId: selectedTicket.id,
-        sender: 'Chandran',
-        content: messageInput,
-        timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
-        isUser: true
-      };
-      
-      setTicketMessages(prev => ({
-        ...prev,
-        [selectedTicket.id]: [...(prev[selectedTicket.id] || []), newMessage]
-      }));
-      
-      setMessageInput('');
-    }
+ const handleSendMessage = () => {
+  if (messageInput.trim()) {
+    const timestamp = new Date().toISOString(); // ISO format for timestamp
+    const userId = "66152b8fe43cda58126a2356";  // Hardcoded or dynamic
+    const ticketId = selectedTicket.id; // Assuming this is your UUID
+
+    const formattedMessage = {
+      senderType: "Users",
+      text: messageInput,
+      ticket_id: ticketId,
+      timestamp,
+      user: userId
+    };
+
+    console.log(formattedMessage); // 👉 logs to console
+ 
+    // Local UI update
+    const newMessage: Message = {
+      id: `${ticketId}-${Date.now()}`,
+      ticketId,
+      sender: selectedTicket.user,
+      content: messageInput,
+      timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+      isUser: true
+    };
+
+    setTicketMessages(prev => ({
+      ...prev,
+      [ticketId]: [...(prev[ticketId] || []), newMessage]
+    }));
+
+    setMessageInput('');
   }
+};
 
   const handleAvatarClick = (userName: string) => {
     const profile = userProfiles[userName]
@@ -475,7 +490,7 @@ const HelpcenterTickets = () => {
         </div>
 
         {/* Messages */}
-        <div className="flex-1 overflow-y-auto no-scrollbar px-6 py-4 bg-gray-50">
+        <div className="flex-1 overflow-y-auto no-scrollbar px-6 py-4 bg-white">
           <div className="space-y-4">
             {ticketMessages[selectedTicket.id]?.map((message) => (
               <div
