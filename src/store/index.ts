@@ -3,7 +3,7 @@ import ProfileSlice from '../features/Profile/reducers/ProfileSlice'
 
 export const store = configureStore({
     reducer: {
-        ProfileSlice:ProfileSlice
+        ProfileSlice: ProfileSlice
     },
 })
 
