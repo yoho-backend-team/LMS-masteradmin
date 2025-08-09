@@ -12,22 +12,19 @@ import clsimg from '../../assets/clsimg.png';
 const HelpcenterFaq: React.FC = () => {
 
   const [showModal, setShowModal] = useState(false);
-  const navigate = useNavigate()
-  const handleMenuToggle = (index: number) => {
 
-  };
   return (
-    <div className=" min-h-screen bg-white p-6 font-Montserrat text[#999999]">
+    <div className="h-[300px] w-auto bg-white p-2 font-Montserrat text-[#999999] flex flex-col">
       {/* Header Section */}
-      <div className="flex items-start justify-between mb-10 w-full">
+      <div className="flex items-start justify-between mb-7">
         {/* Left Section */}
-        <div className="w-full max-w-2xl">
+        <div className="w-auto max-w-2xl">
           {/* Row 1: Two Columns */}
-          <div className="flex items-center space-x-4">
+          <div className="flex items-center space-x-3">
             <img
               src={prfimg}
               alt="User Avatar"
-              className="w-[100px] h-[100px] rounded-full"
+              className="w-[70px] h-[70px] rounded-full"
             />
             <h1 className="text-xl font-semibold text-gray-700">
               Hello, How can we help?
@@ -35,7 +32,7 @@ const HelpcenterFaq: React.FC = () => {
           </div>
 
           {/* Row 2: Full-width input below both columns */}
-          <div className="mt-6">
+          <div className="mt-4">
             <input
               type="text"
               placeholder="Search"
@@ -51,16 +48,16 @@ const HelpcenterFaq: React.FC = () => {
         </div>
 
         {/* Right Section: Support Images */}
-        <div className="flex space-x-3">
+        <div className="flex space-x-5">
           <img
             src={backimg1}
             alt="Support 1"
-            className="rounded-lg w-[214px] h-[214px] object-cover"
+            className="rounded-lg w-[160px] h-[160px] object-cover"
           />
           <img
             src={backimg2}
             alt="Support 2"
-            className="rounded-lg w-[214px] h-[214px] object-cover"
+            className="rounded-lg w-[160px] h-[160px] object-cover"
           />
         </div>
       </div>
@@ -69,11 +66,11 @@ const HelpcenterFaq: React.FC = () => {
 
       {/* Button */}
 
-      <div className="flex justify-end mb-10">
+      <div className="flex justify-end mb-4">
         <button onClick={() => {
           setShowModal(true);
 
-        }} className="bg-teal-500 text-white px-5 py-2 rounded-tl-2xl rounded-br-2xl hover:bg-teal-600">
+        }} className="bg-teal-500 text-white px-3 py-1 rounded-tl-xl rounded-br-xl hover:bg-teal-600">
           <span className="flex items-center font-Montserrat">
             <img src={addimg} alt="plus icon" className="mr-2" />
             Add New
@@ -89,7 +86,7 @@ const HelpcenterFaq: React.FC = () => {
         showModal && (
 
           <div className="fixed inset-0 bg-black bg-opacity-30 flex items-center justify-center z-50">
-            <div className="bg-white rounded-lg shadow-lg w-full max-w-lg p-6 relative">
+            <div className="bg-white rounded-lg shadow-lg w-full max-w-3xl p-6 relative">
               {/* Close Button */}
               <button
                 // onClick={onClose}
@@ -145,13 +142,13 @@ const HelpcenterFaq: React.FC = () => {
                 <button
                   // onClick={onClose}
                   onClick={() => setShowModal(false)}
-                  className="border border-teal-500 text-teal-500 px-4 py-2 rounded hover:bg-teal-50"
+                  className="border border-teal-500 text-teal-500 px-4 py-2  rounded-tl-2xl rounded-br-2xl hover:bg-teal-50"
                 >
                   Cancel
                 </button>
                 <button
                   // onClick={handleSubmit}
-                  className="bg-teal-500 text-white px-6 py-2 rounded hover:bg-teal-600"
+                  className="bg-teal-500 text-white px-6 py-2 rounded-tl-2xl rounded-br-2xl hover:bg-teal-600"
                 >
                   Submit
                 </button>
@@ -163,37 +160,37 @@ const HelpcenterFaq: React.FC = () => {
 
       {/* Questions Section */}
       <div className="text-center">
-        <button className="bg-teal-700 text-white px-6 py-2 rounded-tl-2xl rounded-br-2xl mb-4">
+        <button className="bg-teal-700 text-white px-3 py-1 rounded-tl-xl rounded-br-xl mb-4 font-Montserrat">
           Questions
         </button>
-        <h2 className="text-xl font-semibold text-gray-700 mb-2">You still have a questions?</h2>
-        <p className="text-gray-500 mb-6 mx-auto">
+        <h2 className="text-md font-semibold text-gray-700 mb-1">You still have a questions?</h2>
+        <p className="text-gray-500 mb-4 mx-auto">
           If you cannot find a question in our FAQ, you can always contact us. We will answer to you shortly!
         </p>
 
         {/* Contact Info */}
         <div className="flex flex-col md:flex-row justify-between items-center gap-10">
-          <div className="flex flex-col items-center text-center space-y-2 mb-12">
+          <div className="flex flex-col items-center text-center space-y-2 mb-1">
 
             <div className="p-3">
               <img
-                src={callimg} />
+                src={callimg} className='h-[30px]' />
             </div>
             <div>
-              <p className="font-semibold">+ (810) 2548 2568</p>
-              <p className="text-sm text-gray-500 mb-10 ">We are always happy to help!</p>
+              <p className="font-semibold text-[#999999]">+ (810) 2548 2568</p>
+              <p className="text-sm text-gray-500 mb-1 ">We are always happy to help!</p>
             </div>
           </div>
 
-          <div className="flex flex-col items-center text-center p-4 space-y-2 mb-12">
-            <div className="text-green-700 p-3">
+          <div className="flex flex-col items-center text-center p-4 space-y-2 mb-1">
+            <div className="text-green-700 p-2">
 
               <img
-                src={smsimg} />
+                src={smsimg} className='h-[30px]' />
             </div>
             <div>
-              <p className="font-semibold">hello@help.com</p>
-              <p className="text-sm text-gray-500 mb-10 ">Best way to get answer faster!</p>
+              <p className="font-semibold text-[#999999]">hello@help.com</p>
+              <p className="text-sm text-gray-500 mb-1 ">Best way to get answer faster!</p>
             </div>
           </div>
         </div>
