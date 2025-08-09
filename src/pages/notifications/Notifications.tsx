@@ -99,11 +99,11 @@ const Notifications = () => {
         <div className="shadow rounded-lg overflow-hidden">
           <div className="bg-[#2D6974] text-white">
             <div className="flex justify-between items-center px-6 py-3">
-<div className="w-1/5 px-4 py-3">Title</div>
-          <div className="w-1/5 px-4 py-3">Body</div>
-          <div className="w-1/5 px-4 py-3">Institute</div>
-          <div className="w-1/5 px-4 py-3">Status</div>
-          <div className=" px-4 py-3">Actions</div>
+          <div className="w-1/5">Title</div>
+          <div className="w-1/5">Body</div>
+          <div className="w-1/5">Institute</div>
+          <div className="w-1/5">Status</div>
+          <div className="px-4">Actions</div>
             </div>
           </div>
           {[
