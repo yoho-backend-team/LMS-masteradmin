@@ -13,6 +13,7 @@ import HelpcenterTickets from '../pages/helpcenter/HelpcenterTickets';
 import Categories from '../pages/FaqManagement/Categories';
 import Profile from '../pages/profile/Profile';
 import StepperForm from '@/components/institute/AddInstitute';
+import UniversityDashboard from '@/components/institute/ViewInstituteDetails';
 
 function Approutes() {
 	return (
@@ -23,6 +24,7 @@ function Approutes() {
 					<Route path='institute'>
 						<Route index element={<Institute />} />
 						<Route path='add' element={<StepperForm />} />
+						<Route path='view/:id' element={<UniversityDashboard />} />
 					</Route>
 
 					<Route path='payments' element={<Payments />} />

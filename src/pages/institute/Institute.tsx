@@ -15,6 +15,7 @@ import {
 } from '@/components/ui/dropdown-menu';
 import { useNavigate } from 'react-router-dom';
 
+
 interface Institute {
 	id: number;
 	name: string;
@@ -593,6 +594,9 @@ const Institutes: React.FC = () => {
 														variant='outline'
 														className='!text-white bg-[#2D6974] px-4 flex items-center gap-2'
 														style={{ ...FONTS.pass_head_2 }}
+														onClick={() => {
+															navigate(`/institute/view/${institute.id}`);
+														}}
 													>
 														View
 													</Button>
