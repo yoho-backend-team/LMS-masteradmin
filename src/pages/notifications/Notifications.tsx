@@ -95,71 +95,68 @@ const Notifications = () => {
         </button>
       </div>
 
-      <div className="overflow-x-auto">
-        <div className="w-full bg-white shadow rounded-lg overflow-hidden">
+      <div className="space-y-4">
+        <div className="shadow rounded-lg overflow-hidden">
           <div className="bg-[#2D6974] text-white">
-            <div className="flex items-center text-center">
-              <div className="w-1/5 px-6 py-3">Title</div>
-              <div className="w-1/5 px-6 py-3">Body</div>
-              <div className="w-1/5 px-6 py-3">Institute</div>
-              <div className="w-1/5 px-6 py-3">Status</div>
-              <div className="w-1/5 px-6 py-3">Actions</div>
+            <div className="flex justify-between items-center px-6 py-3">
+<div className="w-1/5 px-4 py-3">Title</div>
+          <div className="w-1/5 px-4 py-3">Body</div>
+          <div className="w-1/5 px-4 py-3">Institute</div>
+          <div className="w-1/5 px-4 py-3">Status</div>
+          <div className=" px-4 py-3">Actions</div>
             </div>
           </div>
-
-          <div className="text-gray-700">
-            {[
-              {
-                title: 'Welcome',
-                body: 'Creating Web',
-                institute: 'Bharathidasan Uni',
-                status: 'Unnn....',
-              },
-              {
-                title: 'Design',
-                body: 'Its a Course',
-                institute: 'Bharathidasan Uni',
-                status: 'Unnn....',
-              },
-              {
-                title: 'Developing',
-                body: 'Its one type of course',
-                institute: 'Anna university',
-                status: 'Unnn....',
-              },
-              {
-                title: 'Datascience',
-                body: 'Computer',
-                institute: 'Bharathidasan Uni',
-                status: 'Unnn....',
-              },
-            ].map((item, idx) => (
-              <div
-                key={idx}
-                className="flex items-center text-center border-b hover:bg-gray-50 transition-all"
-              >
-                <div className="w-1/5 px-6 py-4">{item.title}</div>
-                <div className="w-1/5 px-6 py-4">{item.body}</div>
-                <div className="w-1/5 px-6 py-4">{item.institute}</div>
-                <div className="w-1/5 px-6 py-4">{item.status}</div>
-                <div className="w-1/5 px-6 py-4">
-                  <button className="bg-emerald-100 text-emerald-800 px-3 py-1 rounded-md font-medium hover:bg-emerald-200">
-                    Resend
-                  </button>
-                </div>
+          {[
+            {
+              title: 'Welcome',
+              body: 'Creating Web',
+              institute: 'Bharathidasan Uni',
+              status: 'Unnn....',
+            },
+            {
+              title: 'Design',
+              body: 'Its a Course',
+              institute: 'Bharathidasan Uni',
+              status: 'Unnn....',
+            },
+            {
+              title: 'Developing',
+              body: 'Its one type of course',
+              institute: 'Anna university',
+              status: 'Unnn....',
+            },
+            {
+              title: 'Datascience',
+              body: 'Computer',
+              institute: 'Bharathidasan Uni',
+              status: 'Unnn....',
+            },
+          ].map((item, idx) => (
+            <div
+              key={idx}
+              className="shadow flex justify-between items-center mx-2 my-4"
+            >
+            <div className="w-1/5 px-4 py-4">{item.title}</div>
+            <div className="w-1/5 px-4 py-4">{item.body}</div>
+            <div className="w-1/5 px-4 py-4">{item.institute}</div>
+            <div className="w-1/5 px-4 py-4">{item.status}</div>
+            <div className="px-4 py-4">
+                            <button className="bg-emerald-100 text-emerald-800 px-4 py-1 rounded-md font-medium hover:bg-emerald-200">
+                  Resend
+                </button>
               </div>
-            ))}
-          </div>
+            </div>
+          ))}
         </div>
-      </div>
 
-      {showForm && (
-        <div className="fixed inset-0 bg-black bg-opacity-40 flex justify-end z-50">
-          <div className="w-[400px] h-full bg-white shadow-lg overflow-y-auto transform translate-x-0 transition-transform duration-300 p-4">
-            <AddNotificationForm onClose={() => setShowForm(false)} />
+        {showForm && (
+          <div className="fixed inset-0 bg-black bg-opacity-40 flex justify-end z-50">
+            <div className="w-[400px] h-full bg-white shadow-lg overflow-y-auto transform translate-x-0 transition-transform duration-300 p-4">
+              <AddNotificationForm onClose={() => setShowForm(false)} />
+            </div>
           </div>
-        </div>
-      )}
+        )}
+      </div>
     </div>
   );
 };

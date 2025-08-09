@@ -129,7 +129,7 @@ const Subscription = () => {
         {currentPlans.map((plan, index) => (
           <div
             key={index}
-            className={`rounded-xl shadow-md border hover:bg-[#68B39F] hover:shadow-lg transform hover:-translate-y-1 transition duration-300 ${plan.bg}`}
+            className={`rounded-xl shadow-md border hover:bg-[#68B39F] hover:text-white hover:shadow-lg transform hover:-translate-y-1 transition duration-300 ${plan.bg}`}
           >
             <img
               src={plan.img}
@@ -138,15 +138,15 @@ const Subscription = () => {
             />
             <div className="p-4">
               <h3 className="text-lg font-semibold">{plan.name}</h3>
-              <p className="text-sm text-gray-600 mb-3">{plan.description}</p>
+              <p className="text-sm mb-3">{plan.description}</p>
               <p className="text-2xl font-bold">
                 {plan.price}
-                <span className="text-sm font-normal text-gray-500">
+                <span className="text-sm font-normal">
                   {" "} / {plan.frequency}
                 </span>
               </p>
 
-              <div className="mt-4 p-4 rounded-md bg-gray-100">
+              <div className="mt-4 p-4 rounded-md bg-gray-100 shadow-xl">
                 <p className="text-sm font-semibold mb-2">FEATURES</p>
                 <ul className="text-sm space-y-1">
                   {Object.entries(plan.features).map(([feature, count]) => (
@@ -171,7 +171,6 @@ const Subscription = () => {
         ))}
       </div>
 
-      {/* Pagination */}
       <div className="mt-10 flex justify-center items-center gap-2">
         <button
           onClick={handlePrev}
