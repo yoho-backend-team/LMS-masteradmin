@@ -4,21 +4,27 @@ import Institute from '../pages/institute/Institute';
 import Payments from '../pages/payments/Payments';
 import Subscription from '../pages/subscription/Subscription';
 import Notifications from '../pages/notifications/Notifications';
-import HelpCenter from '../pages/helpcenter/HelpcenterTickets';
+// import HelpCenter from '../pages/helpcenter/HelpcenterTickets';
 import Faq from '../pages/FaqManagement/Faq';
 import MainLayout from '../layout/MainLayout';
-import Settings from '../pages/settings/Settings';
+// import Settings from '../pages/settings/Settings';
 import HelpcenterFaq from '../pages/helpcenter/HelpcenterFaq';
 import HelpcenterTickets from '../pages/helpcenter/HelpcenterTickets';
 import Categories from '../pages/FaqManagement/Categories';
 import Profile from '../pages/profile/Profile';
 import StepperForm from '@/components/institute/AddInstitute';
 import UniversityDashboard from '@/components/institute/ViewInstituteDetails';
+import SignIn from '@/components/SignIn/SignIn'
+import OtpVerification from '@/components/SignIn/OtpVerification'
+import SendOtp from '@/components/SignIn/SendOtp'
 
 function Approutes() {
 	return (
 		<>
 			<Routes>
+				<Route path="/sign-in" element={<SignIn />} />
+				<Route path='/otp-verification' element={<OtpVerification />} />
+				<Route path='/send-otp' element={<SendOtp />} />
 				<Route path='/' element={<MainLayout />}>
 					<Route index element={<DashBoard />} />
 					<Route path='institute'>
@@ -35,15 +41,15 @@ function Approutes() {
 						<Route path='faq' element={<HelpcenterFaq />} />
 						<Route path='tickets' element={<HelpcenterTickets />} />
 					</Route>
+
 					<Route path='faq'>
 						<Route path='faqs' element={<Faq />} />
 						<Route path='categories' element={<Categories />} />
 					</Route>
-					{/* <Route path='settings' element={<Settings/>}/> */}
+
 				</Route>
 			</Routes>
 		</>
 	);
 }
-
 export default Approutes;

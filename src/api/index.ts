@@ -12,7 +12,8 @@ class Client {
         update_password: (data: any) => httpClient.post(API_END_POINTS.auth.update_password, data),
         get_profile: (data: any) => httpClient.get(API_END_POINTS.auth.get_profile, data),
         get_activity: (data: any) => httpClient.get(API_END_POINTS.auth.get_activity, data),
-        edit_profile: (data: any) => httpClient.patch(API_END_POINTS.auth.edit_profile, data)
+        edit_profile: (data: any) => httpClient.patch(API_END_POINTS.auth.edit_profile, data),
+        sign_in: (data: any) => httpClient.post(API_END_POINTS.auth.sign_in, data)
     }
     institute = {
         all: (params: any) => httpClient.get(API_END_POINTS.institute.getAll, params),
