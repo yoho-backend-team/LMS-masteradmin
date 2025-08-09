@@ -115,7 +115,7 @@ const HelpcenterFaq: React.FC = () => {
       
       {showModal && (
         <>
-          <div className="fixed inset-0 bg-black bg-opacity-40 backdrop-blur-sm z-40" />
+          <div className="fixed inset-0 bg-black bg-opacity-50 z-40 " />
           <div className="fixed inset-0 z-50 flex items-center justify-center">
             <AddHelpModal onClose={() => setShowModal(false)} />
           </div>
