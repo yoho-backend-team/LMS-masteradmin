@@ -12,6 +12,7 @@ import HelpcenterFaq from '../pages/helpcenter/HelpcenterFaq';
 import HelpcenterTickets from '../pages/helpcenter/HelpcenterTickets';
 import Categories from '../pages/FaqManagement/Categories';
 import Profile from '../pages/profile/Profile';
+import StepperForm from '@/components/institute/AddInstitute';
 
 function Approutes() {
 	return (
@@ -19,7 +20,11 @@ function Approutes() {
 			<Routes>
 				<Route path='/' element={<MainLayout />}>
 					<Route index element={<DashBoard />} />
-					<Route path='institute' element={<Institute />} />
+					<Route path='institute'>
+						<Route index element={<Institute />} />
+						<Route path='add' element={<StepperForm />} />
+					</Route>
+
 					<Route path='payments' element={<Payments />} />
 					<Route path='subscriptions' element={<Subscription />} />
 					<Route path='notifications' element={<Notifications />} />

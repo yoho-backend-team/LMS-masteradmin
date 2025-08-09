@@ -123,7 +123,7 @@ export const FONTS = {
 	},
 	percentage_text: {
 		fontFamily: 'Montserrat',
-		fontWeight: 700,
+		fontWeight: 600,
 		fontSize: '24px',
 	},
 	small_text: {
