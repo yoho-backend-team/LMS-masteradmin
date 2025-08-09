@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import {
   LayoutDashboard,
   Building,
@@ -7,7 +7,6 @@ import {
   Bell,
   HeartHandshake,
   ShieldQuestionMark,
-  Cog,
   LogOut,
   ChevronDown,
   ChevronUp,
@@ -60,7 +59,7 @@ const Sidebar = () => {
   };
 
   return (
-    <div className="w-70 h-screen bg-[#E0ECDE] p-4">
+    <div className=" h-screen bg-[#E0ECDE] p-4">
       <div className="flex h-[90%] flex-col justify-between">
         {/* Top Menu */}
         <div>
