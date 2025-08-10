@@ -15,6 +15,7 @@ import Profile from '../pages/profile/Profile'
 import SubscriptionForm from '../pages/subscription/SubscriptionForm'
 import AddNotificationForm from '../pages/notifications/AddNotificationForm'
 import EditDetail from '../pages/profile/EditDetail'
+import ViewPlan from '../pages/subscription/ViewPlan'
 
 function Approutes() {
   return (
@@ -26,6 +27,7 @@ function Approutes() {
         <Route path="payments" element={<Payments/>}/>
         <Route path='subscriptions' element={<Subscription/>}/>
             <Route path='add-institute' element={<SubscriptionForm/>}/>
+            <Route path="/view/:planName" element={<ViewPlan />} />
         <Route path='notifications' element={<Notifications/>}/>
             <Route path='add-notificationform' element={<AddNotificationForm />}/>
         <Route path="/profile" element={<Profile />} />

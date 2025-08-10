@@ -1,9 +1,11 @@
 import { useState } from 'react';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import { Link, useNavigate } from 'react-router-dom';
 
 const SubscriptionForm = () => {
   const [imagePreview, setImagePreview] = useState<string | null>(null);
+  const navigate = useNavigate();
 
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files && e.target.files[0];
@@ -17,10 +19,34 @@ const SubscriptionForm = () => {
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
+    const formData = new FormData(e.currentTarget);
+
+    const newPlan = {
+      name: formData.get("plan") as string,
+      description: formData.get("description") as string,
+      price: `₹${formData.get("price")}`,
+      frequency: formData.get("durationType") as string,
+      features: {
+        Students: Number(formData.get("students")),
+        Admins: Number(formData.get("admins")),
+        Teachers: Number(formData.get("teachers")),
+        Batches: Number(formData.get("batches")),
+        Courses: Number(formData.get("courses")),
+        Classes: Number(formData.get("classes")),
+      },
+      img: imagePreview || "https://via.placeholder.com/150",
+      bg: "bg-white",
+    };
+
+    const storedPlans = JSON.parse(localStorage.getItem("plans") || "[]");
+    storedPlans.push(newPlan);
+
+    localStorage.setItem("plans", JSON.stringify(storedPlans));
 
     toast.success("Subscription plan submitted successfully!", {
       position: "top-right",
-      autoClose: 3000,
+      autoClose: 2000,
+      onClose: () => navigate("/subscription"),
     });
   };
 
@@ -44,7 +70,7 @@ const SubscriptionForm = () => {
 
         <div className="flex items-center space-x-4">
           <img
-            src={imagePreview || "https://i.pravatar.cc/100"}
+            src={imagePreview || ""}
             alt="Profile"
             className="w-16 h-16 rounded-full object-cover"
           />
@@ -116,21 +142,21 @@ const SubscriptionForm = () => {
           ))}
         </div>
 
-        <div className="flex justify-between pt-4">
-          <button
-            type="button"
-            className="px-6 py-2 rounded-tl-md rounded-br-md border border-[#68B39F] text-[#68B39F] font-medium"
-          >
-            Cancel
-          </button>
-          <button
-            type="submit"
-            className="bg-[#68B39F] text-white px-6 py-2 rounded-tl-md rounded-br-md font-medium"
-          >
-            Submit
-          </button>
-        </div>
       </form>
+      <div className="flex justify-between py-6">
+        <Link
+          to="/subscriptions"
+          className="px-6 py-2 rounded-tl-md rounded-br-md border border-[#68B39F] text-[#68B39F] font-medium"
+        >
+          Cancel
+        </Link>
+        <Link
+          to="/subscriptions"
+          className="bg-[#68B39F] text-white px-6 py-2 rounded-tl-md rounded-br-md font-medium"
+        >
+          Submit
+        </Link>
+      </div>
 
       <ToastContainer />
     </div>
