@@ -2,51 +2,19 @@ import { useState } from 'react';
 import AddNotificationForm from './AddNotificationForm';
 
 const stats = [
-  {
-    title: 'Total Institute',
-    percentage: 45,
-    progressColor: 'stroke-red-500',
-    icon: '⚡',
-    bgColor: 'bg-white',
-    textColor: 'text-black',
-  },
-  {
-    title: 'Active Institute',
-    percentage: 9,
-    progressColor: 'stroke-purple-500',
-    icon: '🟣',
-    bgColor: 'bg-white',
-    textColor: 'text-black',
-  },
-  {
-    title: 'Blocked Institute',
-    percentage: 25,
-    progressColor: 'stroke-yellow-400',
-    icon: '🟡',
-    bgColor: 'bg-white',
-    textColor: 'text-black',
-  },
+  { title: 'Total Institute', percentage: 45, progressColor: 'stroke-red-500', icon: '⚡', bgColor: 'bg-white', textColor: 'text-black' },
+  { title: 'Active Institute', percentage: 9, progressColor: 'stroke-purple-500', icon: '🟣', bgColor: 'bg-white', textColor: 'text-black' },
+  { title: 'Blocked Institute', percentage: 25, progressColor: 'stroke-yellow-400', icon: '🟡', bgColor: 'bg-white', textColor: 'text-black' },
 ];
 
-const SemiCircleProgress = ({
-  percentage,
-  progressColor,
-}: {
-  percentage: number;
-  progressColor: string;
-}) => {
+const SemiCircleProgress = ({ percentage, progressColor }: { percentage: number; progressColor: string }) => {
   const radius = 40;
   const circumference = 2 * Math.PI * radius;
   const dash = (percentage / 100) * (circumference / 2);
 
   return (
     <svg viewBox="0 0 100 50" className="w-50 h-20">
-      <path
-        d="M10,50 A40,40 0 0,1 90,50"
-        fill="none"
-        stroke="#F3F4F6"
-        strokeWidth="10"
-      />
+      <path d="M10,50 A40,40 0 0,1 90,50" fill="none" stroke="#F3F4F6" strokeWidth="10" />
       <path
         d="M10,50 A40,40 0 0,1 90,50"
         fill="none"
@@ -62,6 +30,17 @@ const SemiCircleProgress = ({
 const Notifications = () => {
   const [showForm, setShowForm] = useState(false);
 
+  const [notifications, setNotifications] = useState([
+    { title: 'Welcome', body: 'Creating Web', institute: 'Bharathidasan Uni', status: 'Unnn....' },
+    { title: 'Design', body: 'Its a Course', institute: 'Bharathidasan Uni', status: 'Unnn....' },
+    { title: 'Developing', body: 'Its one type of course', institute: 'Anna university', status: 'Unnn....' },
+    { title: 'Datascience', body: 'Computer', institute: 'Bharathidasan Uni', status: 'Unnn....' },
+  ]);
+
+  const handleAddNotification = (newNotification: any) => {
+    setNotifications((prev) => [...prev, newNotification]);
+  };
+
   return (
     <div className="space-y-8 relative">
 
@@ -74,10 +53,7 @@ const Notifications = () => {
             <div className="text-2xl font-semibold mb-2">{item.icon}</div>
             <div className="text-lg font-medium">{item.title}</div>
             <div className="mt-4 relative">
-              <SemiCircleProgress
-                percentage={item.percentage}
-                progressColor={item.progressColor}
-              />
+              <SemiCircleProgress percentage={item.percentage} progressColor={item.progressColor} />
               <div className="absolute left-[120px] top-[40px] transform -translate-x-1/2 text-xl font-bold">
                 {item.percentage}%
               </div>
@@ -99,49 +75,21 @@ const Notifications = () => {
         <div className="shadow rounded-lg overflow-hidden">
           <div className="bg-[#2D6974] text-white">
             <div className="flex justify-between items-center px-6 py-3">
-          <div className="w-1/5">Title</div>
-          <div className="w-1/5">Body</div>
-          <div className="w-1/5">Institute</div>
-          <div className="w-1/5">Status</div>
-          <div className="px-4">Actions</div>
+              <div className="w-1/5">Title</div>
+              <div className="w-1/5">Body</div>
+              <div className="w-1/5">Institute</div>
+              <div className="w-1/5">Status</div>
+              <div className="px-4">Actions</div>
             </div>
           </div>
-          {[
-            {
-              title: 'Welcome',
-              body: 'Creating Web',
-              institute: 'Bharathidasan Uni',
-              status: 'Unnn....',
-            },
-            {
-              title: 'Design',
-              body: 'Its a Course',
-              institute: 'Bharathidasan Uni',
-              status: 'Unnn....',
-            },
-            {
-              title: 'Developing',
-              body: 'Its one type of course',
-              institute: 'Anna university',
-              status: 'Unnn....',
-            },
-            {
-              title: 'Datascience',
-              body: 'Computer',
-              institute: 'Bharathidasan Uni',
-              status: 'Unnn....',
-            },
-          ].map((item, idx) => (
-            <div
-              key={idx}
-              className="shadow flex justify-between items-center mx-2 my-4"
-            >
-            <div className="w-1/5 px-4 py-4">{item.title}</div>
-            <div className="w-1/5 px-4 py-4">{item.body}</div>
-            <div className="w-1/5 px-4 py-4">{item.institute}</div>
-            <div className="w-1/5 px-4 py-4">{item.status}</div>
-            <div className="px-4 py-4">
-                            <button className="bg-emerald-100 text-emerald-800 px-4 py-1 rounded-md font-medium hover:bg-emerald-200">
+          {notifications.map((item, idx) => (
+            <div key={idx} className="shadow flex justify-between items-center mx-2 my-4">
+              <div className="w-1/5 px-4 py-4">{item.title}</div>
+              <div className="w-1/5 px-4 py-4">{item.body}</div>
+              <div className="w-1/5 px-4 py-4">{item.institute}</div>
+              <div className="w-1/5 px-4 py-4">{item.status}</div>
+              <div className="px-4 py-4">
+                <button className="bg-emerald-100 text-emerald-800 px-4 py-1 rounded-md font-medium hover:bg-emerald-200">
                   Resend
                 </button>
               </div>
@@ -152,7 +100,10 @@ const Notifications = () => {
         {showForm && (
           <div className="fixed inset-0 bg-black bg-opacity-40 flex justify-end z-50">
             <div className="w-[400px] h-full bg-white shadow-lg overflow-y-auto transform translate-x-0 transition-transform duration-300 p-4">
-              <AddNotificationForm onClose={() => setShowForm(false)} />
+              <AddNotificationForm
+                onClose={() => setShowForm(false)}
+                onAdd={handleAddNotification}
+              />
             </div>
           </div>
         )}

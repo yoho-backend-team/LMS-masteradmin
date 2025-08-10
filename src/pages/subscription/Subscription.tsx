@@ -1,5 +1,6 @@
 import { Link } from "react-router-dom";
 import { useState } from "react";
+import { TbSquareRoundedCheck } from "react-icons/tb";
 
 const Subscription = () => {
   const [currentPage, setCurrentPage] = useState(1);
@@ -131,11 +132,12 @@ const Subscription = () => {
             key={index}
             className={`rounded-xl shadow-md border hover:bg-[#68B39F] hover:text-white hover:shadow-lg transform hover:-translate-y-1 transition duration-300 ${plan.bg}`}
           >
-            <img
-              src={plan.img}
-              alt={plan.name}
-              className="rounded-xl h-50 w-full object-cover p-4"
-            />
+            <div className="p-4">
+              <img
+                src={plan.img}
+                className="rounded-lg h-50 w-full object-cover"
+              />
+            </div>
             <div className="p-4">
               <h3 className="text-lg font-semibold">{plan.name}</h3>
               <p className="text-sm mb-3">{plan.description}</p>
@@ -151,7 +153,7 @@ const Subscription = () => {
                 <ul className="text-sm space-y-1">
                   {Object.entries(plan.features).map(([feature, count]) => (
                     <li key={feature} className="flex items-center gap-2">
-                      <span className="text-gray-600">•</span>
+                      <span className="text-gray-600"><TbSquareRoundedCheck /></span>
                       {feature}: {count}
                     </li>
                   ))}
