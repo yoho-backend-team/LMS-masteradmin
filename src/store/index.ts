@@ -7,6 +7,7 @@ import CategoriesSlice from '../features/FaqCategories/reducers/CategoriesSlice'
 import FaqReducer from '../features/Faq/slice';
 import InstituteReducer from '../features/institute/reducers/slices';
 import Branch from "../features/notification/redux/reduxSlice"
+import Notification from "../features/notification/redux/reduxSlice"
 
 export const store = configureStore({
     reducer: {
@@ -16,6 +17,7 @@ export const store = configureStore({
         dashboard,
         CategoriesSlice: CategoriesSlice,
         FaqReducer: FaqReducer,
+        Notification,
         Branch,
         InstituteReducer: InstituteReducer,
     },
