@@ -9,6 +9,7 @@ import { Upload, Check } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import toast from 'react-hot-toast';
 import { COLORS, FONTS } from '@/constants/ui constants';
+import DocumentsForm from './Doc-gst-Form';
 
 interface FormData {
 	// Personal Info
@@ -583,65 +584,115 @@ const StepperForm: React.FC = () => {
 					</div>
 				);
 			case 4:
-				return (
-					<div className='space-y-6'>
-						<div>
-							<h2
-								className='text-2xl font-bold text-gray-800 mb-2'
-								style={{ ...FONTS.heading }}
-							>
-								Documents
-							</h2>
-							<p className='text-gray-600 mb-6' style={{ ...FONTS.edit_form }}>
-								Add Institute Docs
-							</p>
+	return (
+		<div className="space-y-6">
+			<div>
+				<h2
+					className="text-2xl font-bold text-gray-800 mb-2"
+					style={{ ...FONTS.heading }}
+				>
+					Documents
+				</h2>
+				<p
+					className="text-gray-600 mb-6"
+					style={{ ...FONTS.edit_form }}
+				>
+					Add Institute Docs
+				</p>
+			</div>
+
+			<div className="space-y-6">
+				{/* GST */}
+				<Card className="p-4 shadow-md">
+					<h3
+						className="font-semibold text-gray-700 mb-4"
+						style={{ ...FONTS.tableheader, color: COLORS.secondary }}
+					>
+						GST Information
+					</h3>
+					<div className="flex items-center gap-4">
+						<div className="flex-1">
+							<InputField
+								label="GST Number"
+								field="gstNumber"
+								value={formData.gstNumber}
+								onChange={handleInputChange}
+							/>
 						</div>
-						<div className='space-y-6'>
-							<Card className='p-4 shdow-md'>
-								<h3
-									className='font-semibold text-gray-700 mb-4'
-									style={{ ...FONTS.tableheader, color: COLORS.secondary }}
-								>
-									GST Information
-								</h3>
-								<InputField
-									label='GST Number'
-									field='gstNumber'
-									value={formData.gstNumber}
-									onChange={handleInputChange}
-								/>
-							</Card>
-							<Card className='p-4 shadow-md'>
-								<h3
-									className='font-semibold text-gray-700 mb-4'
-									style={{ ...FONTS.tableheader, color: COLORS.secondary }}
-								>
-									PAN Information
-								</h3>
-								<InputField
-									label='PAN Number'
-									field='panNumber'
-									value={formData.panNumber}
-									onChange={handleInputChange}
-								/>
-							</Card>
-							<Card className='p-4 shadow-md'>
-								<h3
-									className='font-semibold text-gray-700 mb-4'
-									style={{ ...FONTS.tableheader, color: COLORS.secondary }}
-								>
-									License Information
-								</h3>
-								<InputField
-									label='License Number'
-									field='licenseNumber'
-									value={formData.licenseNumber}
-									onChange={handleInputChange}
-								/>
-							</Card>
-						</div>
+						<label className="flex items-center gap-2 px-4 py-2 bg-gray-100 border rounded cursor-pointer hover:bg-gray-200">
+							<input
+								type="file"
+								className="hidden"
+								accept=".pdf,.jpg,.jpeg,.png"
+								onChange={(e) => handleFileUpload(e, "gstFile")}
+							/>
+							<span className="text-sm text-gray-700"> GST Document</span>
+						</label>
 					</div>
-				);
+				</Card>
+
+				{/* PAN */}
+				<Card className="p-4 shadow-md">
+					<h3
+						className="font-semibold text-gray-700 mb-4"
+						style={{ ...FONTS.tableheader, color: COLORS.secondary }}
+					>
+						PAN Information
+					</h3>
+					<div className="flex items-center gap-4">
+						<div className="flex-1">
+							<InputField
+								label="PAN Number"
+								field="panNumber"
+								value={formData.panNumber}
+								onChange={handleInputChange}
+							/>
+						</div>
+						<label className="flex items-center gap-2 px-4 py-2 bg-gray-100 border rounded cursor-pointer hover:bg-gray-200">
+							<input
+								type="file"
+								className="hidden"
+								accept=".pdf,.jpg,.jpeg,.png"
+								onChange={(e) => handleFileUpload(e, "panFile")}
+							/>
+							<span className="text-sm text-gray-700"> PAN Document</span>
+						</label>
+					</div>
+				</Card>
+
+				{/* License */}
+				<Card className="p-4 shadow-md">
+					<h3
+						className="font-semibold text-gray-700 mb-4"
+						style={{ ...FONTS.tableheader, color: COLORS.secondary }}
+					>
+						License Information
+					</h3>
+					<div className="flex items-center gap-4">
+						<div className="flex-1">
+							<InputField
+								label="License Number"
+								field="licenseNumber"
+								value={formData.licenseNumber}
+								onChange={handleInputChange}
+							/>
+						</div>
+						<label className="flex items-center gap-2 px-4 py-2 bg-gray-100 border rounded cursor-pointer hover:bg-gray-200">
+							<input
+								type="file"
+								className="hidden"
+								accept=".pdf,.jpg,.jpeg,.png"
+								onChange={(e) => handleFileUpload(e, "licenseFile")}
+							/>
+							<span className="text-sm text-gray-700 "> License Document</span>
+						</label>
+					</div>
+				</Card>
+			</div>
+		</div>
+	
+	);
+
 			case 5:
 				return (
 					<div className='space-y-6'>
