@@ -1,15 +1,17 @@
 import { Card, CardContent } from '@/components/ui/card';
-import { Zap, Component, Droplet} from 'lucide-react';
+import { Zap, Component, Droplet } from 'lucide-react';
 import { FONTS } from '@/constants/ui constants';
 import { useEffect, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { GetAllNotificationThunks } from '@/features/notification/redux/thunks';
 
 
 const StatsCard: React.FC = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [hoveredCard, setHoveredCard] = useState<number | null>(null);
-  
 
-  // Simulate loading
+
+
   useEffect(() => {
     const timer = setTimeout(() => {
       setIsLoading(false);
@@ -17,14 +19,31 @@ const StatsCard: React.FC = () => {
     return () => clearTimeout(timer);
   }, []);
 
-  // Filter institutes based on selected filters
+  const dispatch = useDispatch();
 
-  const [kpiData, setKpiData] = useState([
+  const notifications = useSelector(
+    (state: any) => state.Notification.notification || []
+  );
+
+  useEffect(() => {
+    dispatch(GetAllNotificationThunks({}) as any);
+  }, [dispatch]);
+  console.log(notifications, "check")
+
+  const totalNotifications = notifications.length;
+  const seenNotifications = notifications.filter((n: any) => n.status === 'read').length;
+  const unseenNotifications = notifications.filter((n: any) => n.status === 'unread').length;
+
+  console.log('Total:', totalNotifications);
+  console.log('Seen:', seenNotifications);
+  console.log('Unseen:', unseenNotifications);
+  const maxNotifications = 100;
+
+  const kpiData = [
     {
       title: 'Total Notifications',
-      value: '45',
-      percentage: 45,
-      icon: Zap,
+      value: totalNotifications,
+      percentage: totalNotifications > 0 ? Math.min((totalNotifications / maxNotifications) * 100, 100) : 0, icon: Zap,
       bgColor: 'bg-teal-600',
       iconBg: 'bg-teal-100',
       iconColor: 'text-teal-600',
@@ -32,8 +51,8 @@ const StatsCard: React.FC = () => {
     },
     {
       title: 'Seen Notifications',
-      value: '9',
-      percentage: 9,
+      value: seenNotifications, // number count displayed
+      percentage: totalNotifications ? (seenNotifications / totalNotifications) * 100 : 0,
       icon: Component,
       bgColor: 'bg-white',
       iconBg: 'bg-purple-100',
@@ -42,15 +61,16 @@ const StatsCard: React.FC = () => {
     },
     {
       title: 'Unseen Notifications',
-      value: '25',
-      percentage: 25,
-      icon: Droplet,
+      value: unseenNotifications, // number count displayed
+      percentage: totalNotifications > 0 ? Math.min((totalNotifications / maxNotifications) * 100, 100) : 0, icon: Droplet,
       bgColor: 'bg-white',
       iconBg: 'bg-yellow-100',
       iconColor: 'text-yellow-500',
       progressColor: '#f59e0b',
     },
-  ]);
+  ];
+
+
 
 
   return (
@@ -65,66 +85,68 @@ const StatsCard: React.FC = () => {
             const IconComponent = kpi.icon;
 
             return (
-            <Card
-  key={index}
-  className={`
-    shadow-lg transition-all duration-300 cursor-pointer border-0
-    rounded-tl-3xl rounded-br-3xl rounded-bl-none rounded-tr-none
-    ${hoveredCard === index
-      ? 'bg-[#2D6974] text-white hover:scale-105'
-      : 'bg-white text-gray-900 hover:scale-100'
-    }
-  `}
-  onMouseEnter={() => setHoveredCard(index)}
-  onMouseLeave={() => setHoveredCard(null)}
->
-  <CardContent className='p-6'>
-    <div className='flex flex-col items-center text-center space-y-4'>
-      {/* Icon with background circle */}
-      <div
-        className={`
-          w-12 h-12 rounded-full flex items-center justify-center
-          ${hoveredCard === index ? 'bg-white/20' : kpi.iconBg}
-        `}
-      >
-        <IconComponent
-          className={`
-            w-6 h-6
-            ${hoveredCard === index
-              ? 'text-white'
-              : kpi.iconColor
-            }
-          `}
-        />
-      </div>
+              <Card
+                key={index}
+                className={`
+                  shadow-lg transition-all duration-300 cursor-pointer border-0
+                  rounded-tl-3xl rounded-br-3xl rounded-bl-none rounded-tr-none
+                  ${isHovered || index === 0
+                    ? 'bg-[#2D6974] text-white hover:scale-105'
+                    : 'bg-white text-gray-900 hover:scale-100'
+                  }
+                `}
+                onMouseEnter={() => setHoveredCard(index)}
+                onMouseLeave={() => setHoveredCard(null)}
+              >
+                <CardContent className='p-6'>
+                  <div className='flex flex-col items-center text-center space-y-4'>
+                    {/* Icon with background circle */}
+                    <div
+                      className={`
+                        w-12 h-12 rounded-full flex items-center justify-center
+                        ${isHovered || index === 0 ? 'bg-white/20' : kpi.iconBg}
+                      `}
+                    >
+                      <IconComponent
+                        className={`
+                          w-6 h-6
+                          ${isHovered || index === 0
+                            ? 'text-white'
+                            : kpi.iconColor
+                          }
+                        `}
+                      />
+                    </div>
 
-      {/* Title */}
-      <h3
-        className={`
-          text-sm font-medium leading-tight
-          ${hoveredCard === index
-            ? 'text-white/90'
-            : 'text-gray-600'
-          }
-        `}
-        style={{ ...FONTS.card_text }}
-      >
-        {kpi.title}
-      </h3>
+                    {/* Title */}
+                    <h3
+                      className={`
+                        text-sm font-medium leading-tight
+                        ${isHovered || index === 0
+                          ? 'text-white/90'
+                          : 'text-gray-600'
+                        }
+                      `}
+                      style={{ ...FONTS.card_text }}
+                    >
+                      <div className='grid'>
+                        <div>{kpi.title}</div>
+                        <div>{kpi.value}</div>
+                      </div>
+                    </h3>
 
-      {/* Circular progress */}
-      <div className='flex flex-col items-center'>
-        <CircularProgress
-          percentage={kpi.percentage}
-          progressColor={kpi.progressColor}
-          isLoading={isLoading}
-          isHovered={hoveredCard === index}
-        />
-      </div>
-    </div>
-  </CardContent>
-</Card>
-
+                    {/* Circular progress */}
+                    <div className='flex flex-col items-center'>
+                      <CircularProgress
+                        percentage={kpi.percentage}
+                        progressColor={kpi.progressColor}
+                        isLoading={isLoading}
+                        isHovered={isHovered || index === 0}
+                      />
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
             );
           })}
         </div>

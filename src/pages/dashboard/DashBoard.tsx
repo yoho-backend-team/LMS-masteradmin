@@ -652,7 +652,7 @@ const Dashboard = () => {
 
 										<Line
 											type='monotone'
-											dataKey='subscriptions'
+										dataKey='subscriptions'
 											stroke='#2D6974'
 											strokeWidth={3}
 											strokeOpacity={0.2}

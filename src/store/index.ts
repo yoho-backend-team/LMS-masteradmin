@@ -8,15 +8,15 @@ import FaqReducer from '../features/Faq/slice';
 import InstituteReducer from '../features/institute/reducers/slices';
 
 export const store = configureStore({
-	reducer: {
-		ProfileSlice: ProfileSlice,
-		PaymentReducer: PaymentReducer,
-		HelpcenterTicketSlice: HelpcenterTicketSlice,
-		dashboard,
-		CategoriesSlice: CategoriesSlice,
-		FaqReducer: FaqReducer,
-		InstituteReducer: InstituteReducer,
-	},
+    reducer: {
+        ProfileSlice: ProfileSlice,
+        PaymentReducer: PaymentReducer,
+        HelpcenterTicketSlice: HelpcenterTicketSlice,
+        dashboard,
+        CategoriesSlice: CategoriesSlice,
+        FaqReducer: FaqReducer,
+        InstituteReducer: InstituteReducer,
+    },
 });
 
 export type RootState = ReturnType<typeof store.getState>;
