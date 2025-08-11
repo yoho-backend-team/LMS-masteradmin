@@ -10,26 +10,25 @@ const Axios = axios.create({
 })
 
 Axios.interceptors.request.use((config: any) => {
-    const token = localStorage.getItem("token")
-    
-    if (token) {
-        config.headers["Authorization"] = `Token ${token ? token : " "}`
-    }
+    // const token = localStorage.getItem("token")
+    // if (token) {
+    config.headers["Authorization"] = `Token eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6Im1lcm5zdGFja2Rldi55b2hvQGdtYWlsLmNvbSIsInJvbGUiOjEsInV1aWQiOiJjY2QzZTRkMC1mOWM5LTQ0MzEtYmIyMi01ODhhY2NmYzYwMjIiLCJ1c2VyX3R5cGUiOiJwbGF0Zm9ybSIsImlhdCI6MTc1NDg5NDgxOCwiZXhwIjoxNzU0OTgxMjE4fQ.nH4mIX_4LnOENVV-j3vgzstRFjpLZGe9nEBp_F3CcLU`
+    // }
     return config
 })
 
-Axios.interceptors.response.use((response: any) => response,
-    (error) => {
-        if (error?.response && error?.response?.status === 401 && error?.response?.statusText === "Unauthorized") {
-            localStorage.removeItem("isAuthenticated")
-            localStorage.removeItem("permissions")
-            localStorage.removeItem("token")
-            localStorage.removeItem("userData")
-            window.location.href = "/"
-        }
-        return Promise.reject(error)
-    }
-)
+// Axios.interceptors.response.use((response: any) => response,
+//     (error) => {
+//         if (error?.response && error?.response?.status === 401 && error?.response?.statusText === "Unauthorized") {
+//             localStorage.removeItem("isAuthenticated")
+//             localStorage.removeItem("permissions")
+//             localStorage.removeItem("token")
+//             localStorage.removeItem("userData")
+//             window.location.href = "/"
+//         }
+//         return Promise.reject(error)
+//     }
+// )
 
 class HttpClient {
     async get(url: string, params?: any) {
