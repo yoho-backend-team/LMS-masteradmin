@@ -22,16 +22,25 @@ export const getAllSubscriptions = async (params?: any) => {
 	}
 };
 
-export const  getInstituteDetails = async (params:any)=>{
-	try{
-   const response = await Client.institute.getWithId(params)
-   if(response)
-   {
-	return response;
-   }
+export const getInstituteDetails = async (params: any) => {
+	try {
+		const response = await Client.institute.getWithId(params)
+		if (response) {
+			return response;
+		}
 	}
-	catch(error){
-    console.error('Error fetching for Institute:',error)
+	catch (error) {
+		console.error('Error fetching for Institute:', error)
 	}
 }
 
+export const createInstitute = async (data: any) => {
+	try {
+		const response = await Client.institute.create(data);
+		if (response) {
+			return response;
+		}
+	} catch (error) {
+		console.error('Error:', error);
+	}
+};

@@ -10,8 +10,12 @@ import { useNavigate } from 'react-router-dom';
 import toast from 'react-hot-toast';
 import { COLORS, FONTS } from '@/constants/ui constants';
 import uploadImg from '../../assets/institute/upload.png';
-import { getAllSubscriptions } from '@/features/institute/services';
+import {
+	createInstitute,
+	getAllSubscriptions,
+} from '@/features/institute/services';
 import { fetchCities, fetchCountries, fetchStates } from '@/utils/locationApi';
+import { UploadImage, UploadMultipleImages } from '@/utils/helper';
 
 interface FormData {
 	// Personal Info
@@ -35,6 +39,7 @@ interface FormData {
 	instituteImage: File | null;
 	imageDescription: string;
 	instituteLogoSecond: File | null;
+	galleryImages: File[] | null;
 	// Social Links
 	twitter: string;
 	facebook: string;
@@ -45,6 +50,9 @@ interface FormData {
 	gstNumber: string;
 	panNumber: string;
 	licenseNumber: string;
+	gstFile: File | null;
+	panFile: File | null;
+	licenseFile: File | null;
 	// Account Details
 	branchName: string;
 	phone: string;
@@ -62,38 +70,43 @@ interface FormData {
 	profileImage: File | null;
 }
 
-// Move components outside to prevent recreation on every render
 const FileUploadBox = ({
 	field,
 	title,
 	description,
 	file,
+	files,
+	multiple = false,
 	onFileChange,
+	onFilesChange,
 }: {
 	field: keyof FormData;
 	title: string;
 	description: string;
-	file: File | null;
-	onFileChange: (
+	file?: File | null;
+	files?: File[] | null;
+	multiple?: boolean;
+	onFileChange?: (
+		field: keyof FormData
+	) => (event: React.ChangeEvent<HTMLInputElement>) => void;
+	onFilesChange?: (
 		field: keyof FormData
 	) => (event: React.ChangeEvent<HTMLInputElement>) => void;
 }) => {
 	const id = `file-${field}`;
 	return (
 		<div className='space-y-2'>
-			<Label
-				className='text-sm font-medium text-gray-700 mb-4'
-				style={{ ...FONTS.text5, color: COLORS.black }}
-			>
+			<Label className='mb-4' style={{ ...FONTS.text5, color: COLORS.black }}>
 				{title}
 			</Label>
 			<div className='border-2 border-dashed border-gray-300 rounded-lg p-8 text-center hover:border-gray-400 transition-colors'>
 				<input
 					type='file'
-					onChange={onFileChange(field)}
+					onChange={multiple ? onFilesChange?.(field) : onFileChange?.(field)}
 					className='hidden'
 					id={id}
 					accept='image/*'
+					multiple={multiple}
 				/>
 				<label htmlFor={id} className='cursor-pointer'>
 					<Upload className='w-8 h-8 mx-auto mb-2 text-gray-400' />
@@ -106,7 +119,18 @@ const FileUploadBox = ({
 					>
 						{description}
 					</p>
-					{file && <p className='text-sm text-teal-600 mt-2'>{file.name}</p>}
+					{!multiple && file && (
+						<p className='text-sm text-teal-600 mt-2'>{file.name}</p>
+					)}
+					{multiple && files && (
+						<div className='mt-2 space-y-1'>
+							{files.map((f, i) => (
+								<p key={i} className='text-sm text-teal-600'>
+									{f.name}
+								</p>
+							))}
+						</div>
+					)}
 				</label>
 			</div>
 		</div>
@@ -135,7 +159,7 @@ const InputField = ({
 		<div className={className}>
 			<Label
 				htmlFor={id}
-				className='text-sm font-medium text-gray-700 mb-4'
+				className='mb-4'
 				style={{ ...FONTS.text5, color: COLORS.black }}
 			>
 				{label}
@@ -213,6 +237,7 @@ const StepperForm: React.FC = () => {
 		instituteImage: null,
 		imageDescription: '',
 		instituteLogoSecond: null,
+		galleryImages: null,
 		twitter: '',
 		facebook: '',
 		instagram: '',
@@ -221,6 +246,9 @@ const StepperForm: React.FC = () => {
 		gstNumber: '',
 		panNumber: '',
 		licenseNumber: '',
+		gstFile: null,
+		panFile: null,
+		licenseFile: null,
 		branchName: '',
 		phone: '',
 		alternativePhone: '',
@@ -272,7 +300,6 @@ const StepperForm: React.FC = () => {
 	const [loadingBranchStates, setLoadingBranchStates] = useState(false);
 	const [loadingBranchCities, setLoadingBranchCities] = useState(false);
 
-	// Add these useEffect hooks to fetch countries on component mount
 	useEffect(() => {
 		const loadCountries = async () => {
 			setLoadingCountries(true);
@@ -283,7 +310,6 @@ const StepperForm: React.FC = () => {
 		loadCountries();
 	}, []);
 
-	// Add this handler for country selection (for both main and branch address)
 	const handleCountryChange = async (value: string, isBranch = false) => {
 		handleInputChange(isBranch ? 'country' : 'state', value);
 		if (isBranch) {
@@ -291,7 +317,6 @@ const StepperForm: React.FC = () => {
 			const data = await fetchStates(value);
 			setBranchStates(data);
 			setLoadingBranchStates(false);
-			// Reset state and city when country changes
 			handleInputChange('stateBranch', '');
 			handleInputChange('cityBranch', '');
 			setBranchCities([]);
@@ -300,7 +325,6 @@ const StepperForm: React.FC = () => {
 			const data = await fetchStates(value);
 			setStates(data);
 			setLoadingStates(false);
-			// Reset state and city when country changes
 			handleInputChange('state', '');
 			handleInputChange('city', '');
 			setCities([]);
@@ -319,14 +343,12 @@ const StepperForm: React.FC = () => {
 			const data = await fetchCities(countryCode, value);
 			setBranchCities(data);
 			setLoadingBranchCities(false);
-			// Reset city when state changes
 			handleInputChange('cityBranch', '');
 		} else {
 			setLoadingCities(true);
 			const data = await fetchCities(countryCode, value);
 			setCities(data);
 			setLoadingCities(false);
-			// Reset city when state changes
 			handleInputChange('city', '');
 		}
 	};
@@ -342,19 +364,99 @@ const StepperForm: React.FC = () => {
 	);
 
 	const handleFileUpload = useCallback(
-		(field: keyof FormData) => (event: React.ChangeEvent<HTMLInputElement>) => {
-			const file = event.target.files?.[0] || null;
-			handleInputChange(field, file);
-		},
+		(field: keyof FormData) =>
+			async (event: React.ChangeEvent<HTMLInputElement>) => {
+				const files = event.target.files;
+				if (!files || files.length === 0) return;
+
+				if (field === 'galleryImages') {
+					// Handle multiple files for galleryImages
+					const fileList = Array.from(files);
+					console.log(`Files selected for ${field}:`, fileList);
+					handleInputChange(field, fileList);
+
+					try {
+						const formData = new FormData();
+						fileList.forEach((file) => {
+							formData.append('files', file);
+						});
+
+						const response = await UploadMultipleImages(formData); // Use the multiple upload function
+						console.log(`Files uploaded for ${field}:`, response);
+						if (response) {
+							toast.success(
+								`${fileList.length} files uploaded successfully for ${field}`
+							);
+						}
+					} catch (error) {
+						toast.error(`Error uploading files for ${field}: ${error}`);
+					}
+				} else {
+					const file = files[0];
+					handleInputChange(field, file);
+					if (file) {
+						const fileData = new FormData();
+						fileData.append('file', file);
+						try {
+							const response = await UploadImage(fileData);
+							console.log(response, `File uploaded for ${field}:`, response);
+							if (response) {
+								toast.success(`File uploaded successfully for ${field}`);
+							}
+						} catch (error) {
+							toast.error(`Error uploading file for ${field}: ${error}`);
+						}
+					}
+				}
+			},
 		[handleInputChange]
 	);
 
-	const nextStep = () => {
+	const handleMultipleFileUpload = useCallback(
+		(field: keyof FormData) =>
+			async (event: React.ChangeEvent<HTMLInputElement>) => {
+				const files = event.target.files;
+				if (!files || files.length === 0) return;
+
+				const fileList = Array.from(files);
+				handleInputChange(field, fileList);
+
+				try {
+					const formData = new FormData();
+					fileList.forEach((file) => {
+						formData.append('files', file);
+					});
+
+					const response = await UploadMultipleImages(formData);
+					console.log(`Files uploaded for ${field}:`, response);
+					if (response) {
+						toast.success(
+							`${fileList.length} files uploaded successfully for ${field}`
+						);
+					}
+				} catch (error) {
+					toast.error(`Error uploading files for ${field}: ${error}`);
+				}
+			},
+		[handleInputChange]
+	);
+
+	const nextStep = async () => {
 		if (currentStep < 5) {
 			setCurrentStep(currentStep + 1);
 		} else {
-			toast.success('Institute added successfully');
-			navigate('/institute');
+			console.log('Institute Data:', formData);
+			try {
+				const response = await createInstitute(formData);
+				if (response) {
+					toast.success('Institute added successfully');
+					navigate('/institute');
+				} else {
+					toast.error('Failed to add institute');
+				}
+			} catch (error) {
+				toast.error('Failed to add institute');
+			}
 		}
 	};
 
@@ -364,7 +466,6 @@ const StepperForm: React.FC = () => {
 		}
 	};
 
-	// Create a new DropdownField component
 	const DropdownField = ({
 		label,
 		field,
@@ -682,14 +783,6 @@ const StepperForm: React.FC = () => {
 								/>
 							</Card>
 							<Card className='p-4 shadow-md'>
-								<TextareaField
-									label='Description'
-									field='logoDescription'
-									value={formData.logoDescription}
-									onChange={handleInputChange}
-								/>
-							</Card>
-							<Card className='p-4 shadow-md'>
 								<FileUploadBox
 									field='instituteImage'
 									title='Institute Image'
@@ -699,11 +792,13 @@ const StepperForm: React.FC = () => {
 								/>
 							</Card>
 							<Card className='p-4 shadow-md'>
-								<TextareaField
-									label='Description'
-									field='imageDescription'
-									value={formData.imageDescription}
-									onChange={handleInputChange}
+								<FileUploadBox
+									field='galleryImages'
+									title='Gallery Images'
+									description='Upload your institute gallery images Size 300X300 px (Max 1 Mb)'
+									files={formData.galleryImages}
+									multiple={true}
+									onFilesChange={handleFileUpload}
 								/>
 							</Card>
 						</div>
@@ -771,6 +866,7 @@ const StepperForm: React.FC = () => {
 						</Card>
 					</div>
 				);
+
 			case 4:
 				return (
 					<div className='space-y-6'>
@@ -788,7 +884,7 @@ const StepperForm: React.FC = () => {
 
 						<div className='space-y-6'>
 							{/* GST */}
-							<Card className='p-4 shadow-md'>
+							<Card className='p-4 shadow-md relative'>
 								<h3
 									className=' mb-4'
 									style={{ ...FONTS.tableheader, color: COLORS.secondary }}
@@ -814,19 +910,25 @@ const StepperForm: React.FC = () => {
 												type='file'
 												className='hidden'
 												accept='.pdf,.jpg,.jpeg,.png'
-												onChange={(e) => handleFileUpload(e, 'gstFile')}
+												onChange={handleFileUpload('gstFile')}
 											/>
 											<span style={{ ...FONTS.text4, color: COLORS.button }}>
-												{' '}
 												GST Document
 											</span>
 										</label>
 									</div>
 								</div>
+								{formData.gstFile && (
+									<div className='absolute right-15 bottom-22'>
+										<p style={{ ...FONTS.small_text }}>
+											{formData.gstFile.name.substring(0, 20)}
+										</p>
+									</div>
+								)}
 							</Card>
 
 							{/* PAN */}
-							<Card className='p-4 shadow-md'>
+							<Card className='p-4 shadow-md relative'>
 								<h3
 									className=' mb-4'
 									style={{ ...FONTS.tableheader, color: COLORS.secondary }}
@@ -852,19 +954,25 @@ const StepperForm: React.FC = () => {
 												type='file'
 												className='hidden'
 												accept='.pdf,.jpg,.jpeg,.png'
-												onChange={(e) => handleFileUpload(e, 'panFile')}
+												onChange={handleFileUpload('panFile')}
 											/>
 											<span style={{ ...FONTS.text4, color: COLORS.button }}>
-												{' '}
 												PAN Document
 											</span>
 										</label>
 									</div>
 								</div>
+								{formData.panFile && (
+									<div className='absolute right-15 bottom-22'>
+										<p style={{ ...FONTS.small_text }}>
+											{formData.panFile.name.substring(0, 20)}
+										</p>
+									</div>
+								)}
 							</Card>
 
 							{/* License */}
-							<Card className='p-4 shadow-md'>
+							<Card className='p-4 shadow-md relative'>
 								<h3
 									className=' mb-4'
 									style={{ ...FONTS.tableheader, color: COLORS.secondary }}
@@ -890,15 +998,23 @@ const StepperForm: React.FC = () => {
 												type='file'
 												className='hidden'
 												accept='.pdf,.jpg,.jpeg,.png'
-												onChange={(e) => handleFileUpload(e, 'licenseFile')}
+												onChange={handleFileUpload('licenseFile')}
 											/>
 											<span style={{ ...FONTS.text4, color: COLORS.button }}>
-												{' '}
-												License Document
+												{formData.licenseFile
+													? formData.licenseFile.name
+													: 'License Document'}
 											</span>
 										</label>
 									</div>
 								</div>
+								{formData.licenseFile && (
+									<div className='absolute right-15 bottom-22'>
+										<p style={{ ...FONTS.small_text }}>
+											{formData.licenseFile.name.substring(0, 20)}
+										</p>
+									</div>
+								)}
 							</Card>
 						</div>
 					</div>
@@ -958,24 +1074,43 @@ const StepperForm: React.FC = () => {
 									value={formData.addressLin2}
 									onChange={handleInputChange}
 								/>
-								<InputField
+
+								{/* Country Dropdown */}
+								<DropdownField
 									label='Country'
 									field='country'
+									options={countries}
+									loading={loadingCountries}
 									value={formData.country}
-									onChange={handleInputChange}
+									onChange={(field, value) => handleCountryChange(value, true)}
 								/>
-								<InputField
-									label='State'
-									field='stateBranch'
-									value={formData.stateBranch}
-									onChange={handleInputChange}
-								/>
-								<InputField
-									label='City'
-									field='cityBranch'
-									value={formData.cityBranch}
-									onChange={handleInputChange}
-								/>
+
+								{/* State Dropdown (only shown when country is selected) */}
+								{formData.country && branchStates.length > 0 && (
+									<DropdownField
+										label='State'
+										field='stateBranch'
+										options={branchStates}
+										loading={loadingBranchStates}
+										value={formData.stateBranch}
+										onChange={(field, value) =>
+											handleStateChange(value, formData.country, true)
+										}
+									/>
+								)}
+
+								{/* City Dropdown (only shown when state is selected) */}
+								{formData.stateBranch && branchCities.length > 0 && (
+									<DropdownField
+										label='City'
+										field='cityBranch'
+										options={branchCities}
+										loading={loadingBranchCities}
+										value={formData.cityBranch}
+										onChange={handleInputChange}
+									/>
+								)}
+
 								<InputField
 									label='Pin Code'
 									field='pinCodeBranch'
@@ -1019,19 +1154,36 @@ const StepperForm: React.FC = () => {
 									onChange={handleInputChange}
 								/>
 							</div>
-							<div className='mt-4 '>
+							<div className='mt-4'>
 								<Label
 									className='text-sm font-medium text-gray-700 mb-4'
 									style={{ ...FONTS.text5 }}
 								>
 									Profile Image
 								</Label>
-								<Input
-									type='file'
-									onChange={handleFileUpload('profileImage')}
-									className='mt-1'
-									accept='image/*'
-								/>
+								<div className='flex items-center gap-4'>
+									<label className='flex items-center gap-2 px-4 py-2 bg-[#E0ECDE] border rounded-lg cursor-pointer hover:bg-[#E0ECDE] w-52 h-10 justify-center'>
+										<img
+											src={uploadImg}
+											alt='upload image'
+											className='w-6 h-6'
+										/>
+										<input
+											type='file'
+											className='hidden'
+											accept='image/*'
+											onChange={handleFileUpload('profileImage')}
+										/>
+										<span style={{ ...FONTS.text4, color: COLORS.button }}>
+											Upload Image
+										</span>
+									</label>
+									{formData.profileImage && (
+										<p style={{ ...FONTS.small_text }}>
+											{formData.profileImage.name.substring(0, 20)}
+										</p>
+									)}
+								</div>
 							</div>
 						</Card>
 					</div>
