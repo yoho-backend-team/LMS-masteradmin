@@ -207,7 +207,7 @@ const Subscription = () => {
                   </button>
 
                   {isOpen === index && (
-                    <div className="absolute top-5 right-10 bg-[#68B39F] p-3 rounded-md w-28 flex flex-col gap-4">
+                    <div className="absolute bottom-15 right-5 bg-[#68B39F] shadow-2xl p-3 rounded-md w-28 flex flex-col gap-4">
                       <Link
                         to={`/view/${encodeURIComponent(plan.name)}`}
                         state={{ plan }}
@@ -216,7 +216,8 @@ const Subscription = () => {
                         View
                       </Link>
                       <Link
-                        to="/edit"
+                        to="/edit-subscription"
+                        state={{ editPlan: plan }}
                         className="bg-white text-[#68B39F] px-4 py-2 rounded-md w-full hover:bg-[#559d88] hover:text-white"
                       >
                         Edit

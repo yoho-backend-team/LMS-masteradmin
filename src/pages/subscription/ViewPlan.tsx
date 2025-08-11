@@ -37,7 +37,7 @@ const ViewPlan = () => {
 
             <div className="mt-6">
                 <Link
-                    to="/"
+                    to="/add-institute"
                     className="bg-[#68B39F] text-white px-4 py-2 rounded-md shadow hover:bg-emerald-500"
                 >
                     Back to Plans

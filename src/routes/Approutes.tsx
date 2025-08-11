@@ -16,33 +16,41 @@ import SubscriptionForm from '../pages/subscription/SubscriptionForm'
 import AddNotificationForm from '../pages/notifications/AddNotificationForm'
 import EditDetail from '../pages/profile/EditDetail'
 import ViewPlan from '../pages/subscription/ViewPlan'
+import EditSubscription from '../pages/subscription/EditSubscription'
+import OtpVerification from '../pages/signin/OtpVerification'
+import ForgotPassword from '../pages/signin/ForgotPassword'
+import SignIn from '../pages/signin/SignIn'
 
 function Approutes() {
   return (
     <>
-    <Routes>
-       <Route path='/' element={<MainLayout />}>
-        <Route index element={<DashBoard/>} />
-        <Route path='institute' element={<Institute/>}/>
-        <Route path="payments" element={<Payments/>}/>
-        <Route path='subscriptions' element={<Subscription/>}/>
-            <Route path='add-institute' element={<SubscriptionForm/>}/>
-            <Route path="/view/:planName" element={<ViewPlan />} />
-        <Route path='notifications' element={<Notifications/>}/>
-            <Route path='add-notificationform' element={<AddNotificationForm />}/>
-        <Route path="/profile" element={<Profile />} />
-        <Route path='edit-detail' element={<EditDetail/>}/>
-        <Route path='helpcenter'>
-            <Route path='faq' element={<HelpcenterFaq/>}/>
-            <Route path='tickets' element={<HelpcenterTickets/>}/>
+      <Routes>
+        <Route path='/' element={<SignIn />} />
+        <Route path='/forgot-password' element={<ForgotPassword />} />
+        <Route path='/otp-verification' element={<OtpVerification />} />
+        <Route path='/' element={<MainLayout />}>
+          <Route index element={<DashBoard />} />
+          <Route path='institute' element={<Institute />} />
+          <Route path="payments" element={<Payments />} />
+          <Route path='subscriptions' element={<Subscription />} />
+          <Route path='add-institute' element={<SubscriptionForm />} />
+          <Route path="/view/:planName" element={<ViewPlan />} />
+          <Route path="/edit-subscription" element={<EditSubscription />} />
+          <Route path='notifications' element={<Notifications />} />
+          <Route path='add-notificationform' element={<AddNotificationForm />} />
+          <Route path="/profile" element={<Profile />} />
+          <Route path='edit-detail' element={<EditDetail />} />
+          <Route path='helpcenter'>
+            <Route path='faq' element={<HelpcenterFaq />} />
+            <Route path='tickets' element={<HelpcenterTickets />} />
+          </Route>
+          <Route path='faq'>
+            <Route path='faqs' element={<Faq />} />
+            <Route path='categories' element={<Categories />} />
+          </Route>
+          {/* <Route path='settings' element={<Settings/>}/> */}
         </Route>
-        <Route path='faq'>
-                <Route path='faqs' element={<Faq/>}/>
-                <Route path='categories' element={<Categories/>}/>
-        </Route>
-        {/* <Route path='settings' element={<Settings/>}/> */}
-        </Route>
-    </Routes>
+      </Routes>
     </>
   )
 }
