@@ -1,4 +1,3 @@
-import React from "react";
 import { useNavigate } from "react-router-dom";
 import subcard1 from "../../assets/subcard1.png";
 

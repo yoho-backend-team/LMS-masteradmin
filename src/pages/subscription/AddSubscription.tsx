@@ -141,6 +141,7 @@ const AddSubscription: React.FC<AddSubscriptionProps> = ({ onCancel, onSubmit })
             <option value="Premium">Premium</option>
           </select>
         </div>
+        
       </div>
 
       <div className="flex flex-col mb-4">

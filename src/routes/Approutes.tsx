@@ -12,7 +12,7 @@ import HelpcenterFaq from '../pages/helpcenter/HelpcenterFaq'
 import HelpcenterTickets from '../pages/helpcenter/HelpcenterTickets'
 import Categories from '../pages/FaqManagement/Categories'
 import Profile from '../pages/profile/Profile'
-import AddSubscription from '../pages/subscription/AddSubscription'
+// import AddSubscription from '../pages/subscription/AddSubscription'
 import SubscriptionView from '../pages/subscription/SubscriptionView'
 import SubscriptionEdit from '../pages/subscription/SubscriptionEdit'
 
@@ -25,7 +25,7 @@ function Approutes() {
         <Route path='institute' element={<Institute/>}/>
         <Route path="payments" element={<Payments/>}/>
         <Route path='subscriptions' element={<Subscription/>}/>
-        <Route path="/add-subscription" element={<AddSubscription />} />
+        {/* <Route path="/add-subscription" element={<AddSubscription />} /> */}
         <Route path='/subscription-view' element={<SubscriptionView/>}/>
         <Route path='/subscription-Edit' element={<SubscriptionEdit/>}/>
 
