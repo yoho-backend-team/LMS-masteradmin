@@ -31,6 +31,7 @@ import { COLORS, FONTS } from '@/constants/ui constants';
 import { useNavigate } from 'react-router-dom';
 import EditInstituteForm from '../../components/institute/EditInstitute';
 import DocumentsPage from './Documents';
+import { TimelineComponent } from './activity';
 
 type ActiveSection = 'about' | 'profile' | 'courses';
 type ProfileSection =
@@ -498,9 +499,11 @@ const [isEditing, setIsEditing] = useState(false);
 						<h2 className='text-xl font-semibold mb-4'>
 							Institute Activity Logs
 						</h2>
+
 						<p className='text-gray-600'>
 							View your recent activity and system logs.
 						</p>
+						<TimelineComponent/>
 					</div>
 				);
 			default:
