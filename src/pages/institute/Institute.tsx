@@ -540,7 +540,7 @@ const Institutes: React.FC = () => {
 														className='!text-white bg-[#2D6974] px-4 flex items-center gap-2'
 														style={{ ...FONTS.pass_head_2 }}
 														onClick={() => {
-															navigate(`/institute/view/${institute.id}`);
+															navigate(`/institute/view/${institute?.uuid}`);
 														}}
 													>
 														View
