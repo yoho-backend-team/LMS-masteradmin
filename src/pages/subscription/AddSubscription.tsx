@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { SubscriptionPlanProps } from "../../components/SubscriptionPlan/SubscriptionCard";
-import subcard1 from "../../assets/subcard1.png"
+import subcard1 from "../../assets/subcard1.png";
 
 interface AddSubscriptionProps {
   onCancel: () => void;
@@ -64,39 +64,49 @@ const AddSubscription: React.FC<AddSubscriptionProps> = ({ onCancel, onSubmit })
   };
 
   return (
-    <div className="bg-white rounded-xl shadow p-6">
+    <div className="bg-white rounded-xl border shadow p-6">
       <h2 className="text-teal-700 text-lg font-semibold mb-6">
         Enter your Address Information Here
       </h2>
-      <div className="flex items-center mb-6">
-        <img
-          src={form.image}
-          alt="Profile"
-          className="w-16 h-16 rounded-full mr-4 object-cover"
-        />
-        <div>
-          <p
-            className="font-semibold text-green-800 cursor-pointer"
-            onClick={() => document.getElementById("fileInput")?.click()}
-          >
-            Upload Profile Picture
-          </p>
-          <p className="text-sm text-gray-500">PNG or JPEG (Max 800KB)</p>
-
-          <input
-            id="fileInput"
-            type="file"
-            accept="image/png, image/jpeg"
-            onChange={(e) => {
-              const file = e.target.files?.[0];
-              if (file) {
-                const previewUrl = URL.createObjectURL(file);
-                setForm((prev) => ({ ...prev, image: previewUrl }));
-              }
-            }}
-            style={{ display: "none" }}
+      <div className="flex items-center justify-between mb-6">
+        <div className="flex items-center">
+          <img
+            src={form.image}
+            alt="Profile"
+            className="w-16 h-16 rounded-full mr-4 object-cover"
           />
+          <div>
+            <p className="font-semibold text-green-800">Upload Profile Picture</p>
+            <p className="text-sm text-gray-500">PNG or JPEG (Max 800KB)</p>
+          </div>
         </div>
+        <div className="flex gap-2">
+          <button
+            onClick={() => document.getElementById("fileInput")?.click()}
+            className="px-4 py-2 rounded-tl-xl rounded-br-xl bg-[#68B39F] text-white hover:bg-[#58a18e] transition-colors"
+          >
+            Upload
+          </button>
+          <button
+            onClick={() => setForm((prev) => ({ ...prev, image: subcard1 }))}
+            className="px-4 py-2 rounded-tl-xl rounded-br-xl bg-gray-200 hover:bg-gray-300 transition-colors"
+          >
+            Reset
+          </button>
+        </div>
+        <input
+          id="fileInput"
+          type="file"
+          accept="image/png, image/jpeg"
+          onChange={(e) => {
+            const file = e.target.files?.[0];
+            if (file) {
+              const previewUrl = URL.createObjectURL(file);
+              setForm((prev) => ({ ...prev, image: previewUrl }));
+            }
+          }}
+          style={{ display: "none" }}
+        />
       </div>
       <div className="grid grid-cols-3 gap-4 mb-4">
         <div className="flex flex-col">
@@ -141,9 +151,7 @@ const AddSubscription: React.FC<AddSubscriptionProps> = ({ onCancel, onSubmit })
             <option value="Premium">Premium</option>
           </select>
         </div>
-        
       </div>
-
       <div className="flex flex-col mb-4">
         <label htmlFor="description" className="text-sm font-medium text-gray-700 mb-1">
           Plan Description

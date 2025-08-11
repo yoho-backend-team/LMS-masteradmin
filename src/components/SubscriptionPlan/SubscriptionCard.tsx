@@ -47,7 +47,7 @@ const SubscriptionCard: React.FC<SubscriptionPlanProps> = ({
                 <img
                     src={image}
                     alt={title}
-                    className="h-40 w-full object-cover rounded-md"
+                    className="h-40 w-full object-cover border border-[#68B39F] rounded-md"
                 />
             </div>
 
@@ -60,7 +60,7 @@ const SubscriptionCard: React.FC<SubscriptionPlanProps> = ({
                     <span className="font-normal text-base">/{duration}</span>
                 </div>
 
-                <div className="mt-4 border p-3 rounded-md hover:border-white transition-colors">
+                <div className="mt-4 border p-3 rounded-md hover:border-white bg-white/20 transition-colors">
                     <h4 className="text-sm font-semibold mb-2">FEATURES</h4>
                     <ul className="space-y-1">
                         {features.map((f, idx) => (
