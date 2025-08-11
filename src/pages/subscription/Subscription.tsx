@@ -4,6 +4,7 @@ import SubscriptionCard, { SubscriptionPlanProps } from "../../components/Subscr
 import AddSubscription from "../../pages/subscription/AddSubscription";
 import ConfirmDeleteModal from "../../components/SubscriptionPlan/ConfirmDeleteModal";
 import subcard1 from '../../assets/subcard1.png'
+import { FONTS } from "@/constants/ui constants";
 
 const Subscription: React.FC = () => {
   const [showForm, setShowForm] = useState(false);
@@ -57,10 +58,11 @@ const Subscription: React.FC = () => {
   };
 
   return (
-    <div className="p-6">
+    <div className="p-2">
       {!showForm && (
         <div className="flex justify-between items-center mb-2">
-          <h1 className="text-2xl font-semibold text-gray-800">Subscription Plan</h1>
+          <h1 className="text-2xl font-semibold text-gray-800"
+          style={{...FONTS.heading}}>Subscription Plan</h1>
           <button
             onClick={() => setShowForm(true)}
             className="flex items-center gap-2 bg-[#68B39F] px-4 py-2 rounded-tl-xl rounded-br-xl text-white hover:bg-[#58a18e] transition"

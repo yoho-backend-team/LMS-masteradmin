@@ -6,8 +6,8 @@ import Client from '../api/index'
 
 function MainLayout() {
 
-	
-	const publicVapidKey = import.meta.env.VITE_PUBLIC_VAPI_KEY;
+
+	const publicVapidKey = import.meta.env.VITE_WEBPUSH_PUBLIC_KEY;
 
 	function urlBase64ToUint8Array(base64String: string) {
 		const padding = '='.repeat((4 - (base64String.length % 4)) % 4);
@@ -65,7 +65,7 @@ function MainLayout() {
 					>
 						<Sidebar isOpen={isSidebarOpen} setIsOpen={setIsSidebarOpen} />
 					</div>
-					<div className='flex-1 overflow-y-auto p-3 bg-white'>
+					<div className='flex-1 overflow-y-auto p-3 bg-white no-scrollbar'>
 						<Outlet />
 					</div>
 				</div>

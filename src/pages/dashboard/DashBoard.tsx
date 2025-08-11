@@ -382,8 +382,8 @@ const Dashboard = () => {
 	};
 
 	return (
-		<div className='p-6 bg-gray-50 min-h-screen'>
-			<div className='max-w-7xl mx-auto space-y-6'>
+		<div className='p-3 min-h-screen'>
+			<div className=' mx-auto space-y-6'>
 				{/* Header with Filter Button */}
 				<div className='flex justify-start'>
 					<Button
@@ -652,7 +652,7 @@ const Dashboard = () => {
 
 										<Line
 											type='monotone'
-											dataKey='subscriptions'
+										dataKey='subscriptions'
 											stroke='#2D6974'
 											strokeWidth={3}
 											strokeOpacity={0.2}

@@ -21,3 +21,17 @@ export const getAllSubscriptions = async (params?: any) => {
 		console.error('Error fetching subscriptions:', error);
 	}
 };
+
+export const  getInstituteDetails = async (params:any)=>{
+	try{
+   const response = await Client.institute.getWithId(params)
+   if(response)
+   {
+	return response;
+   }
+	}
+	catch(error){
+    console.error('Error fetching for Institute:',error)
+	}
+}
+

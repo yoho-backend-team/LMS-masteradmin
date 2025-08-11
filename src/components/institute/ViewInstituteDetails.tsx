@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Button } from '@/components/ui/button';
 import {
 	Card,
@@ -28,9 +28,36 @@ import phoneImg from '../../assets/institute/Call.png';
 import messageImg from '../../assets/institute/Mail.png';
 import courseImg from '../../assets/institute/courseImage.png';
 import { COLORS, FONTS } from '@/constants/ui constants';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import EditInstituteForm from '../../components/institute/EditInstitute';
 import DocumentsPage from './Documents';
+import { TimelineComponent } from './activity';
+import { getInstituteDetails } from '@/features/institute/services';
+
+type Institute = {
+  id: string;
+  name: string;
+  code: string;
+  email: string;
+  contact: string;
+  altContact?: string;
+address: any;
+  status: string;
+  registeredDate: string;
+logo : string;
+institute_name:string;
+contact_info:string;
+phone_no:any;
+  bannerUrl: string;
+  about: string;
+  socialLinks: {
+    facebook?: string;
+    linkedin?: string;
+    instagram?: string;
+    twitter?: string;
+  };
+  galleryImages: string[];
+};
 
 type ActiveSection = 'about' | 'profile' | 'courses';
 type ProfileSection =
@@ -46,8 +73,27 @@ export default function UniversityDashboard() {
 	const [activeProfileSection, setActiveProfileSection] =
 		useState<ProfileSection>('personal-info');
 	const navigate = useNavigate();
+	const params = useParams();
 const [isEditing, setIsEditing] = useState(false);
+const [institute, setInstitute] = useState<Institute | null>(null);
 
+useEffect(() => {
+    const fetchInstituteData = async () => {
+      try {
+        
+        const response:any = await getInstituteDetails({id: params.id});
+        setInstitute(response?.data?.data);
+      } catch (err) {
+       
+        console.error('Error fetching institute:', err);
+      }
+    };
+
+    fetchInstituteData();
+  }, [params.id]);
+
+ if (!institute) return <div className="p-6">No institute data available</div>;
+console.log(institute,'institute................')
 	const Header = () => (
 		<div className='bg-[#2D6974] text-white rounded-xl'>
 			<div className='flex items-center px-4 py-3'>
@@ -58,12 +104,13 @@ const [isEditing, setIsEditing] = useState(false);
 				<div className='flex items-center'>
 					<div className='w-12 h-12 rounded-full flex items-center justify-center mr-3'>
 						<img
-							src={logoImg}
+							src={institute.logo || logoImg}
+                  alt={institute.institute_name}
 							className='w-full h-full bg-[#2D6974] rounded-full object-cover'
 						/>
 					</div>
 					<span style={{ ...FONTS.profile_head, color: COLORS.white }}>
-						Bharathidasan University
+						{institute.institute_name}
 					</span>
 				</div>
 			</div>
@@ -123,13 +170,15 @@ const [isEditing, setIsEditing] = useState(false);
 						<div className='w-2/3 flex flex-col items-center justify-center'>
 							<div className='w-32 h-32 rounded-full overflow-hidden'>
 								<img
-									src={logoImg}
-									alt='Bharathidasan University'
+									 src={institute.logo}
+                  alt={institute.institute_name}
 									className='w-full h-full object-cover rounded-full mb-2'
 								/>
 							</div>
 							<div className='text-center mt-3'>
-								<p style={{ ...FONTS.pass_head_2 }}>Bharathidasan University</p>
+								<p style={{ ...FONTS.pass_head_2 }}>{institute.institute_name}
+									{/* Bharathidasan University */}
+									</p>
 								<p
 									style={{
 										...FONTS.button_text,
@@ -137,7 +186,7 @@ const [isEditing, setIsEditing] = useState(false);
 										fontWeight: 500,
 									}}
 								>
-									aureg@bdu.ac.in
+									  {institute.email}
 								</p>
 							</div>
 						</div>
@@ -153,7 +202,11 @@ const [isEditing, setIsEditing] = useState(false);
 											fontWeight: 500,
 										}}
 									>
-										Palkalaiperur, Tiruchirappalli-620024, Tamil Nadu
+				    {`${institute?.contact_info?.address?.address1}, 
+                    ${institute?.contact_info?.address?.address2}, 
+                    ${institute?.contact_info?.address?.city}, 
+                    ${institute?.contact_info?.address?.state} - 
+                    ${institute?.contact_info?.address?.pincode}`}
 									</span>
 								</div>
 								<div className='flex items-center gap-3'>
@@ -165,7 +218,7 @@ const [isEditing, setIsEditing] = useState(false);
 											fontWeight: 500,
 										}}
 									>
-										aureg@bdu.ac.in
+										  {institute.email}
 									</span>
 								</div>
 								<div className='flex items-center gap-3'>
@@ -177,7 +230,7 @@ const [isEditing, setIsEditing] = useState(false);
 											fontWeight: 500,
 										}}
 									>
-										9632407092
+										 {institute?.contact_info?.phone_no || 'Not available'}
 									</span>
 								</div>
 							</div>
@@ -194,14 +247,14 @@ const [isEditing, setIsEditing] = useState(false);
 								color: COLORS.gray_01,
 								fontWeight: 500,
 							}}
-						>
-							Bharathidasan University established in February 1982, and was
+						>{institute?.description}
+							{/* Bharathidasan University established in February 1982, and was
 							named after the great revolutionary Tamil Poet, Bharathidasan
 							(1891-1964). The motto of the University "We will create a brave
 							new world" has been framed from Bharathidasan's poetic words
 							"புதியுலகம் புதுமையுடன் படைப்போம்". The University endeavours to
 							be true to such a vision by creating in the region a brave new
-							world of academic innovation for social change.
+							world of academic innovation for social change. */}
 						</p>
 					</div>
 				</Card>
@@ -307,7 +360,7 @@ const [isEditing, setIsEditing] = useState(false);
 			<div className='grid grid-cols-2 gap-6'>
 				<div className='space-y-2'>
 					<Label htmlFor='institute-id'>Institute ID</Label>
-					<Input id='institute-id' placeholder='Enter Institute ID' />
+					<Input id='institute-id' placeholder={institute.id} />
 				</div>
 				<div className='space-y-2'>
 					<Label htmlFor='institute-code'>Institute Code</Label>
@@ -315,40 +368,49 @@ const [isEditing, setIsEditing] = useState(false);
 				</div>
 				<div className='space-y-2'>
 					<Label htmlFor='institute-name'>Institute Name</Label>
-					<Input id='institute-name' placeholder='Enter Institute Name' />
+					<Input id='institute-name' placeholder={institute.institute_name} />
 				</div>
 				<div className='space-y-2'>
 					<Label htmlFor='official-email'>Official Email</Label>
 					<Input
 						id='official-email'
 						type='email'
-						placeholder='Enter Official Email'
+						placeholder= {institute.email}
 					/>
 				</div>
 				<div className='space-y-2'>
 					<Label htmlFor='status'>Status</Label>
-					<Input id='status' placeholder='Enter Status' />
+					<Input id='status' placeholder=  {institute.Institute_Status.toUpperCase()}/>
 				</div>
 				<div className='space-y-2'>
 					<Label htmlFor='contact'>Contact</Label>
-					<Input id='contact' placeholder='Enter Contact' />
+					<Input id='contact' placeholder={institute?.contact_info?.phone_no || 'Not available'} />
 				</div>
 				<div className='space-y-2'>
 					<Label htmlFor='alternative-number'>Alternative Number</Label>
 					<Input
 						id='alternative-number'
-						placeholder='Enter Alternative Number'
+						placeholder={institute?.contact_info?.alternate_no || 'Not available'}
 					/>
 				</div>
 				<div className='space-y-2'>
-					<Label htmlFor='registered-date'>Registered Date</Label>
-					<Input id='registered-date' type='date' />
-				</div>
+  <Label htmlFor='registered-date'>Registered Date</Label>
+  <Input 
+    id='registered-date'
+    type="date"
+    value={new Date(institute.registered_date).toISOString().split('T')[0]}
+    readOnly
+  />
+</div>
 				<div className='col-span-2 space-y-2'>
 					<Label htmlFor='address'>Address</Label>
 					<Textarea
 						id='address'
-						placeholder='Enter Address'
+						placeholder= {`${institute?.contact_info.address.address1}, 
+                    ${institute?.contact_info.address.address2}, 
+                    ${institute?.contact_info.address.city}, 
+                    ${institute?.contact_info.address.state} - 
+                    ${institute?.contact_info.address.pincode}`}
 						className='min-h-[100px]'
 					/>
 				</div>
@@ -498,9 +560,11 @@ const [isEditing, setIsEditing] = useState(false);
 						<h2 className='text-xl font-semibold mb-4'>
 							Institute Activity Logs
 						</h2>
+
 						<p className='text-gray-600'>
 							View your recent activity and system logs.
 						</p>
+						<TimelineComponent/>
 					</div>
 				);
 			default:
