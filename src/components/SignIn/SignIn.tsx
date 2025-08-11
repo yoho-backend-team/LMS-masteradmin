@@ -4,12 +4,14 @@ import React, { useState } from "react";
 import { CiCircleInfo } from "react-icons/ci";
 import { FiEyeOff, FiEye } from "react-icons/fi";
 import { useNavigate } from "react-router-dom";
+import { useAuth } from "./AuthContext";
 
 const SignIn = () => {
   const [email, setEmail] = useState("mernstackdev.yoho@gmail.com");
-  const [password, setPassword] = useState("Wecandoit@2025");
+  const [password, setPassword] = useState("Wecandoit@2024");
   const [showPassword, setShowPassword] = useState(false);
   const navigate = useNavigate();
+  const {login}=useAuth()
 
 
 
@@ -30,8 +32,7 @@ const handleSignIn = async (e: React.FormEvent) => {
     const token = response?.data?.data?.token;
 
     if (token) {
-      localStorage.setItem("token", token);
-      localStorage.setItem("isAuthenticated", "true");
+      login(token)
 
       navigate("/");
     } else {

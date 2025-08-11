@@ -1,4 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
+import { GetLocalStorage } from "@/utils/localStorage";
 import axios from "axios";
 
 const Axios = axios.create({
@@ -10,10 +11,10 @@ const Axios = axios.create({
 })
 
 Axios.interceptors.request.use((config: any) => {
-    // const token = localStorage.getItem("token")
-    // if (token) {
-        config.headers["Authorization"] = `Token eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6Im1lcm5zdGFja2Rldi55b2hvQGdtYWlsLmNvbSIsInJvbGUiOjEsInV1aWQiOiJjY2QzZTRkMC1mOWM5LTQ0MzEtYmIyMi01ODhhY2NmYzYwMjIiLCJ1c2VyX3R5cGUiOiJwbGF0Zm9ybSIsImlhdCI6MTc1NDg4NjA3NSwiZXhwIjoxNzU0OTcyNDc1fQ.TNOg-3l2kDyoeeCSr-iJnbwGNeAtA-gK3IeW3eDFOr4`
-    // }
+    const token = GetLocalStorage("AdminToken")
+    if (token) {
+        config.headers["Authorization"] = `Token ${token}`
+    }
     return config
 })
 
