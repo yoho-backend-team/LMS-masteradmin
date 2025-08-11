@@ -1,4 +1,4 @@
-import AddInstituteNotify from '@/features/Notifications/components/AddInstituteNotify';
+import AddInstituteNotify from '@/components/Notifications/components/AddInstituteNotify';
 import NotifyTable from '@/features/Notifications/components/notifyTable';
 import StatsCard from '@/features/Notifications/components/StatsCard';
 import { useState } from 'react';
