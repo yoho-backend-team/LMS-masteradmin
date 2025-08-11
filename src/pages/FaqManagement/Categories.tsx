@@ -1,7 +1,6 @@
 import React, { useState } from "react";
-import { FiEdit, FiTrash2 } from "react-icons/fi";
+import { FiEdit, FiTrash2, FiXCircle, FiCheckCircle } from "react-icons/fi";
 import { COLORS, FONTS } from "../../constants/ui constants";
-import { FiXCircle, FiCheckCircle } from "react-icons/fi";
 
 interface Category {
   id: number;
@@ -22,12 +21,15 @@ const Categories: React.FC = () => {
   const [showModal, setShowModal] = useState(false);
   const [editCategory, setEditCategory] = useState<Category | null>(null);
   const [deleteId, setDeleteId] = useState<number | null>(null);
+  const [statusConfirmId, setStatusConfirmId] = useState<number | null>(null);
 
   const [showSuccessPopup, setShowSuccessPopup] = useState(false);
+  const [statusSuccessPopup, setStatusSuccessPopup] = useState(false);
 
   const [currentPage, setCurrentPage] = useState(1);
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
+
   const rowsPerPage = 5;
 
   const filtered = categories.filter((c) =>
@@ -39,6 +41,14 @@ const Categories: React.FC = () => {
     (currentPage - 1) * rowsPerPage,
     currentPage * rowsPerPage
   );
+
+  const goToPrevPage = () => {
+    if (currentPage > 1) setCurrentPage((prev) => prev - 1);
+  };
+
+  const goToNextPage = () => {
+    if (currentPage < totalPages) setCurrentPage((prev) => prev + 1);
+  };
 
   const handleSave = () => {
     if (editCategory) {
@@ -59,7 +69,6 @@ const Categories: React.FC = () => {
     setDescription("");
   };
 
-  // Modified handleDelete to show success popup
   const handleDelete = () => {
     if (deleteId !== null) {
       setCategories((prev) => prev.filter((c) => c.id !== deleteId));
@@ -76,9 +85,21 @@ const Categories: React.FC = () => {
     );
   };
 
+  const handleStatusClick = (cat: Category) => {
+    setStatusConfirmId(cat.id);
+  };
+
+  const confirmStatusChange = () => {
+    if (statusConfirmId !== null) {
+      toggleStatus(statusConfirmId);
+      setStatusConfirmId(null);
+      setStatusSuccessPopup(true);
+    }
+  };
+
   return (
     <div className="p-4">
-    
+      
       <div className="flex justify-between mb-4">
         <input
           type="text"
@@ -90,10 +111,10 @@ const Categories: React.FC = () => {
         />
         <button
           onClick={() => {
-  setEditCategory(null);
-  setTitle("");
-  setShowModal(true);
-}}
+            setEditCategory(null);
+            setTitle("");
+            setShowModal(true);
+          }}
           style={{
             backgroundColor: COLORS.button,
             color: "#fff",
@@ -106,14 +127,14 @@ const Categories: React.FC = () => {
         </button>
       </div>
 
-      
+    
       <div
-style={{
-  ...FONTS.models,
-   fontSize: 18,
-  backgroundColor: COLORS.button,
-  color: "#fff"
-}}
+        style={{
+          ...FONTS.models,
+          fontSize: 18,
+          backgroundColor: COLORS.button,
+          color: "#fff",
+        }}
         className="flex justify-between px-4 py-4 rounded mb-3 shadow-xl"
       >
         <span className="w-1/3">Category Name</span>
@@ -135,7 +156,7 @@ style={{
               <input
                 type="checkbox"
                 checked={cat.status}
-                onChange={() => toggleStatus(cat.id)}
+                onChange={() => handleStatusClick(cat)}
                 className="sr-only"
               />
               <div
@@ -153,11 +174,11 @@ style={{
           </div>
           <div className="w-1/3 flex justify-end gap-3">
             <button
-             onClick={() => {
-  setEditCategory(cat);
-  setTitle(cat.name);
-  setShowModal(true);
-}}
+              onClick={() => {
+                setEditCategory(cat);
+                setTitle(cat.name);
+                setShowModal(true);
+              }}
               style={{ color: COLORS.secondary }}
             >
               <FiEdit size={18} />
@@ -172,25 +193,40 @@ style={{
         </div>
       ))}
 
-   
-      <div className="flex space-x-2 mt-4">
-        {Array.from({ length: totalPages }, (_, i) => i + 1).map((p) => (
+     
+      <div className="mt-4 flex justify-end">
+        <div className="flex items-center space-x-2">
           <button
-            key={p}
-            onClick={() => setCurrentPage(p)}
-            style={
-              currentPage === p
-                ? { backgroundColor: COLORS.button, color: "#fff" }
-                : {}
-            }
-            className="px-3 py-1 border rounded"
+            onClick={goToPrevPage}
+            disabled={currentPage === 1}
+            style={{
+              backgroundColor: currentPage === 1 ? "#ccc" : COLORS.button,
+              color: "#fff",
+              ...FONTS.models,
+            }}
+            className="px-3 py-1 rounded disabled:opacity-50"
           >
-            {p}
+            Prev
           </button>
-        ))}
+          <span style={FONTS.description} className="px-2">
+            Page {currentPage} of {totalPages}
+          </span>
+          <button
+            onClick={goToNextPage}
+            disabled={currentPage === totalPages}
+            style={{
+              backgroundColor:
+                currentPage === totalPages ? "#ccc" : COLORS.button,
+              color: "#fff",
+              ...FONTS.models,
+            }}
+            className="px-3 py-1 rounded disabled:opacity-50"
+          >
+            Next
+          </button>
+        </div>
       </div>
 
-     
       {showModal && (
         <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
           <div
@@ -200,8 +236,6 @@ style={{
             <h2 style={FONTS.models} className="mb-4">
               {editCategory ? "Edit FAQ Category" : "Add FAQ Category"}
             </h2>
-
-            {/* Title */}
             <label className="block mb-2 text-sm font-medium">Title</label>
             <input
               type="text"
@@ -211,8 +245,6 @@ style={{
               className="w-full border border-gray-300 rounded-md px-3 py-2 mb-4"
               style={FONTS.description}
             />
-
-            {/* Description */}
             <label className="block mb-2 text-sm font-medium">Description</label>
             <textarea
               value={description}
@@ -222,8 +254,6 @@ style={{
               rows={3}
               style={FONTS.description}
             />
-
-            {/* Actions */}
             <div className="flex justify-end gap-2">
               <button
                 onClick={() => setShowModal(false)}
@@ -252,77 +282,136 @@ style={{
         </div>
       )}
 
-     {deleteId !== null && (
-  <div className="fixed inset-0 bg-black bg-opacity-40 flex justify-center items-center z-50">
-    <div
-      className="bg-white p-6 rounded w-96 flex flex-col items-center"
-      style={FONTS.description}
-    >
-      
-      <FiXCircle size={64} color="red" className="mb-4" />
-      
-      <h2 className="text-lg font-bold mb-4" style={FONTS.models}>
-        Are you sure you want to delete?
-      </h2>
-      <div className="flex justify-center gap-4 w-full">
-        <button
-          onClick={() => setDeleteId(null)}
-          style={{
-            backgroundColor: "#E5E5E5",
-            color: COLORS.secondary,
-            ...FONTS.models,
-          }}
-          className="px-4 py-2 rounded-tl-[10px] rounded-br-[10px]"
-        >
-          Cancel
-        </button>
-        <button
-          onClick={handleDelete}
-          style={{
-            backgroundColor: "red",
-            color: "#fff",
-            ...FONTS.models,
-          }}
-          className="px-4 py-2 rounded-tl-[10px] rounded-br-[10px]"
-        >
-          Delete
-        </button>
-      </div>
-    </div>
-  </div>
-)}
+      {deleteId !== null && (
+        <div className="fixed inset-0 bg-black bg-opacity-40 flex justify-center items-center z-50">
+          <div
+            className="bg-white p-6 rounded w-96 flex flex-col items-center"
+            style={FONTS.description}
+          >
+            <FiXCircle size={64} color="red" className="mb-4" />
+            <h2 className="text-lg font-bold mb-4" style={FONTS.models}>
+              Are you sure you want to delete?
+            </h2>
+            <div className="flex justify-center gap-4 w-full">
+              <button
+                onClick={() => setDeleteId(null)}
+                style={{
+                  backgroundColor: "#E5E5E5",
+                  color: COLORS.secondary,
+                  ...FONTS.models,
+                }}
+                className="px-4 py-2 rounded-tl-[10px] rounded-br-[10px]"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={handleDelete}
+                style={{
+                  backgroundColor: "red",
+                  color: "#fff",
+                  ...FONTS.models,
+                }}
+                className="px-4 py-2 rounded-tl-[10px] rounded-br-[10px]"
+              >
+                Delete
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
 
+      
+      {statusConfirmId !== null && (
+        <div className="fixed inset-0 bg-black bg-opacity-40 flex justify-center items-center z-50">
+          <div
+            className="bg-white p-6 rounded w-96 flex flex-col items-center"
+            style={FONTS.description}
+          >
+            <FiXCircle size={64} color="red" className="mb-4" />
+            <h2 className="text-lg font-bold mb-4" style={FONTS.models}>
+              Do you want to change status?
+            </h2>
+            <div className="flex justify-center gap-4 w-full">
+              <button
+                onClick={() => setStatusConfirmId(null)}
+                style={{
+                  backgroundColor: "#E5E5E5",
+                  color: COLORS.secondary,
+                  ...FONTS.models,
+                }}
+                className="px-4 py-2 rounded-tl-[10px] rounded-br-[10px]"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={confirmStatusChange}
+                style={{
+                  backgroundColor: COLORS.button,
+                  color: "#fff",
+                  ...FONTS.models,
+                }}
+                className="px-4 py-2 rounded-tl-[10px] rounded-br-[10px]"
+              >
+                Change
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
 
-{showSuccessPopup && (
-  <div className="fixed inset-0 bg-black bg-opacity-40 flex justify-center items-center z-50">
-    <div
-      className="bg-white p-6 rounded w-80 flex flex-col items-center"
-      style={FONTS.description}
-    >
      
-      <FiCheckCircle size={64} color="green" className="mb-4" />
-      
-      <h2 className="text-lg font-bold mb-4" style={FONTS.models}>
-        Deleted Successfully!
-      </h2>
-      <button
-        onClick={() => setShowSuccessPopup(false)}
-        style={{
-          backgroundColor: COLORS.button,
-          color: "#fff",
-          ...FONTS.models,
-        }}
-        className="px-6 py-2 rounded-tl-[10px] rounded-br-[10px]"
-      >
-        OK
-      </button>
+      {showSuccessPopup && (
+        <div className="fixed inset-0 bg-black bg-opacity-40 flex justify-center items-center z-50">
+          <div
+            className="bg-white p-6 rounded w-80 flex flex-col items-center"
+            style={FONTS.description}
+          >
+            <FiCheckCircle size={64} color="green" className="mb-4" />
+            <h2 className="text-lg font-bold mb-4" style={FONTS.models}>
+              Deleted Successfully!
+            </h2>
+            <button
+              onClick={() => setShowSuccessPopup(false)}
+              style={{
+                backgroundColor: COLORS.button,
+                color: "#fff",
+                ...FONTS.models,
+              }}
+              className="px-6 py-2 rounded-tl-[10px] rounded-br-[10px]"
+            >
+              OK
+            </button>
+          </div>
+        </div>
+      )}
+
+     
+      {statusSuccessPopup && (
+        <div className="fixed inset-0 bg-black bg-opacity-40 flex justify-center items-center z-50">
+          <div
+            className="bg-white p-6 rounded w-80 flex flex-col items-center"
+            style={FONTS.description}
+          >
+            <FiCheckCircle size={64} color="green" className="mb-4" />
+            <h2 className="text-lg font-bold mb-4" style={FONTS.models}>
+              Status Changed Successfully!
+            </h2>
+            <button
+              onClick={() => setStatusSuccessPopup(false)}
+              style={{
+                backgroundColor: COLORS.button,
+                color: "#fff",
+                ...FONTS.models,
+              }}
+              className="px-6 py-2 rounded-tl-[10px] rounded-br-[10px]"
+            >
+              OK
+            </button>
+          </div>
+        </div>
+      )}
     </div>
-  </div>
-)}
-</div>
   );
 };
-
- 
 
 export default Categories;

@@ -5,7 +5,6 @@ import Profileimage from "../../assets/HelpCenter/HelpProfile.png";
 import { IoMdSend } from "react-icons/io";
 import { COLORS, FONTS } from "../../constants/ui constants";
 import { MdEmail, MdPhone, MdLocationOn, MdAccessTime, MdLanguage, MdPerson } from "react-icons/md";
-import { FaDesktop, FaGlobe } from "react-icons/fa";
 import whatsappBg from '../../assets/Helpcenter/whatsappbg.jpg';
 
 
@@ -213,22 +212,6 @@ const ChatPanel: React.FC<ChatPanelProps> = ({ onClose }) => {
             </p>
             <p className="flex items-center gap-2">
               <MdLanguage color={ICON_COLOR} /> <strong>Language:</strong> English
-            </p>
-          </div>
-        </div>
-
-      
-        <div>
-          <h3 className="font-semibold text-gray-700 mb-4" style={FONTS.models}>Device Details</h3>
-          <div className="space-y-2">
-            <p className="flex items-center gap-2">
-              <FaGlobe color={ICON_COLOR} /> <strong>IP Address:</strong> 192.168.1.1
-            </p>
-            <p className="flex items-center gap-2">
-              <FaDesktop color={ICON_COLOR} /> <strong>Operating System:</strong> Windows 10
-            </p>
-            <p className="flex items-center gap-2">
-              <MdLanguage color={ICON_COLOR} /> <strong>Browser:</strong> Chrome
             </p>
           </div>
         </div>
