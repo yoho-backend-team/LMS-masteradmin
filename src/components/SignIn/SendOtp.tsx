@@ -27,8 +27,9 @@ const SendOtp = () => {
       } else {
           navigate("/otp-verification", { 
         state: { 
-          email, 
-          otp: response.data.otp 
+          email,
+          otp: response.data.data.otp,
+          token: response.data?.data.token 
         } 
       });
         

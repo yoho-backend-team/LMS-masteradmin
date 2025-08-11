@@ -1,33 +1,42 @@
 import { verifyOtpService } from "@/features/ForgotPassword/service";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-
 
 interface LocationState {
   email: string;
+  token: string;
   otp: string;
 }
 
 const OtpVerification = () => {
-  const [otp, setOtp] = useState(["", "", "", "", "", ""]);
   const navigate = useNavigate();
- const location = useLocation();
+  const location = useLocation();
   const state = location.state as LocationState;
 
-  console.log("Received OTP:",state.otp);
+  const [otp, setOtp] = useState(["", "", "", "", "", ""]);
+  const [token] = useState(state.token);
+  const [email] = useState(state.email);
+
+  console.log("Received OTP from backend:", state.otp);
+
+  // Prefill OTP when component mounts
+  useEffect(() => {
+    if (state.otp) {
+      const otpArray = state.otp.split("").slice(0, 6); // max 6 digits
+      setOtp(otpArray);
+    }
+  }, [state.otp]);
 
   const handleChange = (value: string, index: number) => {
-    if (/^[0-9]?$/.test(value)) { 
+    if (/^[0-9]?$/.test(value)) {
       const newOtp = [...otp];
       newOtp[index] = value;
       setOtp(newOtp);
 
- 
       if (value && index < 5) {
         document.getElementById(`otp-${index + 1}`)?.focus();
       }
-      
-      
+
       if (!value && index > 0) {
         document.getElementById(`otp-${index - 1}`)?.focus();
       }
@@ -40,24 +49,33 @@ const OtpVerification = () => {
     }
   };
 
- const handleVerify = async () => {
-  const otpCode = otp.join("");
+  const handleVerify = async () => {
+    const otpCode = otp.join("");
 
-  try {
-    const response = await verifyOtpService({
-      otp: otpCode
-    });
-
-    if (response.data?.success) {
-      navigate("/");
-    } else {
-      alert(response.data?.message || "Invalid OTP");
+    // Optional: Compare with backend OTP before hitting API
+    if (state.otp && otpCode !== state.otp) {
+      alert("Entered OTP does not match the one sent by the server");
+      return;
     }
-  } catch (err: any) {
-    alert(err.message || "Something went wrong");
-  }
-};
 
+    const params = {
+      email,
+      otp: otpCode,
+      token,
+    };
+
+    try {
+      const response = await verifyOtpService(params);
+
+      if (response.data?.success) {
+        navigate("/");
+      } else {
+        alert(response.data?.message || "Invalid OTP");
+      }
+    } catch (err: any) {
+      alert(err.message || "Something went wrong");
+    }
+  };
 
   return (
     <div className="grid grid-cols-2">
@@ -65,10 +83,11 @@ const OtpVerification = () => {
         <div className="w-full p-5">
           <h1 className="text-9xl text-center tracking-widest text-[#2D6974]">
             Classie
-         
           </h1>
 
-          <p className="text-2xl mt-10 font-bold text-[#68B39F]">OTP Verification</p>
+          <p className="text-2xl mt-10 font-bold text-[#68B39F]">
+            OTP Verification
+          </p>
           <p className="text-lg mt-2 text-[#999999]">
             Enter the 6 digit OTP sent to your Mobile Number
           </p>
