@@ -7,7 +7,7 @@ import { useNavigate } from "react-router-dom";
 
 const SignIn = () => {
   const [email, setEmail] = useState("mernstackdev.yoho@gmail.com");
-  const [password, setPassword] = useState("Wecandoit@2025");
+  const [password, setPassword] = useState("Wecandoit@2024");
   const [showPassword, setShowPassword] = useState(false);
   const navigate = useNavigate();
 
@@ -98,11 +98,8 @@ const handleSignIn = async (e: React.FormEvent) => {
 
          
           <div className="mt-3 flex items-center justify-between">
-            <label className="flex items-center space-x-2 text-sm text-gray-600">
-              <input type="checkbox" className="rounded border-gray-300" />
-              <span>Remember Me</span>
-            </label>
-            <a href="#" className="text-sm text-gray-500 hover:text-[#68B39F]" onClick={() => navigate('/send-otp')}>
+            
+            <a href="#" className="text-sm ml-auto text-gray-500 hover:text-[#68B39F]" onClick={() => navigate('/send-otp')}>
               Forgot Password?
             </a>
           </div>

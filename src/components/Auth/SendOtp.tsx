@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { CiCircleInfo } from "react-icons/ci";
 import { useNavigate } from "react-router-dom";
 
-import { SendOtps } from "@/features/ForgotPassword/service";
+import { SendOtps } from "@/features/Auth/service";
 
 const SendOtp = () => {
   const [email, setEmail] = useState("");
@@ -35,7 +35,7 @@ const SendOtp = () => {
         
       }
     } catch (err: any) {
-      setError(err.message || "Something went wrong");
+      setError("Enter a valid email");
     } finally {
       setLoading(false);
     }

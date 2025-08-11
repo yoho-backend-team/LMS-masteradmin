@@ -1,5 +1,9 @@
-import { verifyOtpService } from "@/features/ForgotPassword/service";
-import React, { useState, useEffect } from "react";
+import {
+  verifyOtpService,
+  resendOtpService,
+} from "@/features/Auth/service";
+import React, { useState } from "react";
+import { CiCircleInfo } from "react-icons/ci";
 import { useLocation, useNavigate } from "react-router-dom";
 
 interface LocationState {
@@ -14,18 +18,12 @@ const OtpVerification = () => {
   const state = location.state as LocationState;
 
   const [otp, setOtp] = useState(["", "", "", "", "", ""]);
-  const [token] = useState(state.token);
+  const [token, setToken] = useState(state.token);
   const [email] = useState(state.email);
+  const [serverOtp, setServerOtp] = useState(state.otp);
+  const [loading, setLoading] = useState(false);
 
-  console.log("Received OTP from backend:", state.otp);
-
-  // Prefill OTP when component mounts
-  useEffect(() => {
-    if (state.otp) {
-      const otpArray = state.otp.split("").slice(0, 6); // max 6 digits
-      setOtp(otpArray);
-    }
-  }, [state.otp]);
+  console.log("Received OTP from backend:", serverOtp);
 
   const handleChange = (value: string, index: number) => {
     if (/^[0-9]?$/.test(value)) {
@@ -52,17 +50,12 @@ const OtpVerification = () => {
   const handleVerify = async () => {
     const otpCode = otp.join("");
 
-    // Optional: Compare with backend OTP before hitting API
-    if (state.otp && otpCode !== state.otp) {
-      alert("Entered OTP does not match the one sent by the server");
+    if (serverOtp && otpCode !== serverOtp) {
+      alert("Entered OTP wrong");
       return;
     }
 
-    const params = {
-      email,
-      otp: otpCode,
-      token,
-    };
+    const params = { email, otp: otpCode, token };
 
     try {
       const response = await verifyOtpService(params);
@@ -70,10 +63,24 @@ const OtpVerification = () => {
       if (response.data?.success) {
         navigate("/");
       } else {
-        alert(response.data?.message || "Invalid OTP");
+        
       }
     } catch (err: any) {
-      alert(err.message || "Something went wrong");
+      alert(err.message);
+    }
+  };
+
+  const handleResendOtp = async () => {
+    setLoading(true);
+    try {
+      const params = { email, token };
+      const response = await resendOtpService(params);
+      setToken(response.data.token);
+      setServerOtp(response.data.otp);
+    } catch (error: any) {
+     
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -92,6 +99,8 @@ const OtpVerification = () => {
             Enter the 6 digit OTP sent to your Mobile Number
           </p>
 
+          <p>OTP : {serverOtp}</p>
+
           <div className="flex justify-center ml-10 gap-4 mt-6">
             {otp.map((digit, index) => (
               <input
@@ -102,7 +111,7 @@ const OtpVerification = () => {
                 value={digit}
                 onChange={(e) => handleChange(e.target.value, index)}
                 onKeyDown={(e) => handleKeyDown(e, index)}
-                className="w-14 mr-14 h-14 border border-[#68B39F] rounded-md text-[#68B39F] text-center text-lg focus:outline-none focus:ring-2 focus:ring-[#68B39F]"
+                className="w-14 mr-12 h-14 border border-[#68B39F] rounded-md  text-[#68B39F] text-center text-lg focus:outline-none focus:ring-2 focus:ring-[#68B39F]"
                 autoFocus={index === 0}
               />
             ))}
@@ -115,7 +124,24 @@ const OtpVerification = () => {
             Verify
           </button>
 
-          <div className="text-center mt-5 text-[#999999]">Resend OTP</div>
+          <div
+            onClick={handleResendOtp}
+            className={`text-center mt-5 text-[#999999] hover:text-[#68B39F] cursor-pointer ${
+              loading ? "opacity-50 pointer-events-none" : ""
+            }`}
+          >
+            {loading ? "Resending..." : "Resend OTP"}
+          </div>
+
+          <button
+            className="text-[#999999] text-sm hover:text-[#68B39F] text-center ml-80 mt-3 transition-colors"
+            onClick={() => navigate("/sign-in")}
+          >
+            <span className="flex items-center justify-center">
+              <CiCircleInfo className="mt-0.5 mr-2" />
+              Back to Login
+            </span>
+          </button>
         </div>
       </div>
       <div className="hidden md:block bg-[#68B39F]"></div>
