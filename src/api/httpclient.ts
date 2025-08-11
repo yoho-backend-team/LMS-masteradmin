@@ -1,4 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
+import { showSessionExpireModal } from "@/components/Session/SessionExpireModal";
+import { ClearLocalStorage } from "@/utils/localStorage";
 import axios from "axios";
 
 const Axios = axios.create({
@@ -20,11 +22,8 @@ Axios.interceptors.request.use((config: any) => {
 Axios.interceptors.response.use((response: any) => response,
     (error) => {
         if (error?.response && error?.response?.status === 401 && error?.response?.statusText === "Unauthorized") {
-            localStorage.removeItem("isAuthenticated")
-            localStorage.removeItem("permissions")
-            localStorage.removeItem("token")
-            localStorage.removeItem("userData")
-            window.location.href = "/"
+            ClearLocalStorage();
+            showSessionExpireModal();
         }
         return Promise.reject(error)
     }
