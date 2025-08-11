@@ -8,6 +8,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { getAllFaq } from "@/features/Faq/selector";
 import { fetchFAQsThunk } from "@/features/Faq/thunks";
 import { createFAQ, deleteFAQ, updateFAQ } from "@/features/Faq/service";
+import { FONTS } from "@/constants/ui constants";
 
 const FAQ = () => {
   const [faqs, setFaqs] = useState([
@@ -199,7 +200,8 @@ const confirmDelete = async () => {
 
       <div className="rounded overflow-hidden">
         <table className="min-w-full text-[#999999] text-sm border-separate border-spacing-y-4">
-          <thead className="bg-[#2D6974] text-white h-16 text-left text-lg font-semibold">
+          <thead className="bg-[#2D6974] text-white  text-left text-lg font-semibold"
+          style={{ ...FONTS.tableheader }}>
             <tr>
               <th className="px-6 py-3 rounded-l-xl">Faq Name</th>
               <th className="px-6 py-3">Category</th>
@@ -211,7 +213,8 @@ const confirmDelete = async () => {
             {filteredFaqs.map((faq: any) => (
               <tr
                 key={faq.id}
-                className="bg-white/30 backdrop-blur-xl text-base shadow-xl h-20 rounded-xl font-medium transition"
+                className="bg-white/30 backdrop-blur-xl text-base shadow-lg  rounded-xl font-medium transition"
+                style={{ ...FONTS.description }}
               >
                 <td className="px-6 py-4 rounded-l-xl">{faq.question}</td>
                 <td className="px-6 py-4">{faq.category}</td>
@@ -492,7 +495,7 @@ const confirmDelete = async () => {
         <div className="fixed inset-0 bg-black/50 flex justify-center items-center z-50">
           <div className="bg-white p-8 rounded-xl w-96 text-center">
             <div className="mb-6">
-              <div className="mx-auto w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mb-4">
+              <div className="mx-auto w-16  bg-green-100 rounded-full flex items-center justify-center mb-4">
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   className="text-green-500"
