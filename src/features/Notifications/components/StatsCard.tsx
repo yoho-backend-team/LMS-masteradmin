@@ -65,65 +65,66 @@ const StatsCard: React.FC = () => {
             const IconComponent = kpi.icon;
 
             return (
-              <Card
-                key={index}
-                className={`
-                  shadow-lg transition-all duration-300 cursor-pointer border-0
-                  rounded-tl-3xl rounded-br-3xl rounded-bl-none rounded-tr-none
-                  ${isHovered || index === 0
-                    ? 'bg-[#2D6974] text-white hover:scale-105'
-                    : 'bg-white text-gray-900 hover:scale-100'
-                  }
-                `}
-                onMouseEnter={() => setHoveredCard(index)}
-                onMouseLeave={() => setHoveredCard(null)}
-              >
-                <CardContent className='p-6'>
-                  <div className='flex flex-col items-center text-center space-y-4'>
-                    {/* Icon with background circle */}
-                    <div
-                      className={`
-                        w-12 h-12 rounded-full flex items-center justify-center
-                        ${isHovered || index === 0 ? 'bg-white/20' : kpi.iconBg}
-                      `}
-                    >
-                      <IconComponent
-                        className={`
-                          w-6 h-6
-                          ${isHovered || index === 0
-                            ? 'text-white'
-                            : kpi.iconColor
-                          }
-                        `}
-                      />
-                    </div>
+            <Card
+  key={index}
+  className={`
+    shadow-lg transition-all duration-300 cursor-pointer border-0
+    rounded-tl-3xl rounded-br-3xl rounded-bl-none rounded-tr-none
+    ${hoveredCard === index
+      ? 'bg-[#2D6974] text-white hover:scale-105'
+      : 'bg-white text-gray-900 hover:scale-100'
+    }
+  `}
+  onMouseEnter={() => setHoveredCard(index)}
+  onMouseLeave={() => setHoveredCard(null)}
+>
+  <CardContent className='p-6'>
+    <div className='flex flex-col items-center text-center space-y-4'>
+      {/* Icon with background circle */}
+      <div
+        className={`
+          w-12 h-12 rounded-full flex items-center justify-center
+          ${hoveredCard === index ? 'bg-white/20' : kpi.iconBg}
+        `}
+      >
+        <IconComponent
+          className={`
+            w-6 h-6
+            ${hoveredCard === index
+              ? 'text-white'
+              : kpi.iconColor
+            }
+          `}
+        />
+      </div>
 
-                    {/* Title */}
-                    <h3
-                      className={`
-                        text-sm font-medium leading-tight
-                        ${isHovered || index === 0
-                          ? 'text-white/90'
-                          : 'text-gray-600'
-                        }
-                      `}
-                      style={{ ...FONTS.card_text }}
-                    >
-                      {kpi.title}
-                    </h3>
+      {/* Title */}
+      <h3
+        className={`
+          text-sm font-medium leading-tight
+          ${hoveredCard === index
+            ? 'text-white/90'
+            : 'text-gray-600'
+          }
+        `}
+        style={{ ...FONTS.card_text }}
+      >
+        {kpi.title}
+      </h3>
 
-                    {/* Circular progress */}
-                    <div className='flex flex-col items-center'>
-                      <CircularProgress
-                        percentage={kpi.percentage}
-                        progressColor={kpi.progressColor}
-                        isLoading={isLoading}
-                        isHovered={isHovered || index === 0}
-                      />
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
+      {/* Circular progress */}
+      <div className='flex flex-col items-center'>
+        <CircularProgress
+          percentage={kpi.percentage}
+          progressColor={kpi.progressColor}
+          isLoading={isLoading}
+          isHovered={hoveredCard === index}
+        />
+      </div>
+    </div>
+  </CardContent>
+</Card>
+
             );
           })}
         </div>

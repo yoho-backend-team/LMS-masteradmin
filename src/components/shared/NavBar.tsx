@@ -9,6 +9,7 @@ import { COLORS, FONTS } from "@/constants/ui constants";
 export default function Navbar() {
   const [showProfileDropdown, setShowProfileDropdown] = useState(false);
   const [showNotificationDropdown, setShowNotificationDropdown] = useState(false);
+  const [showsigninpage,setshowsigninpage] = useState(false);
 
   // ✅ Explicit typing for useRef
   const profileRef = useRef<HTMLDivElement>(null);
@@ -42,6 +43,13 @@ export default function Navbar() {
   const handleView = ()=>{
     setShowProfileDropdown(!showProfileDropdown)
   }
+  const handleLogout =()=>{
+    setshowsigninpage(!showsigninpage)
+    navigate('/sign-in')
+
+  }
+
+  
 
   return (
     <nav ref={profileRef} className="flex h-16 items-center justify-between px-4 md:px-6 bg-[#E0ECDE] relative">
@@ -122,7 +130,13 @@ export default function Navbar() {
           
             <button className="bg-white w-full rounded-tl-xl rounded-br-xl p-2" style={{ ...FONTS.btn_txt_active, color: COLORS.button }} onClick={handleViewProfile}>Profile</button>
           
-          <button className="bg-white rounded-tl-xl rounded-br-xl p-2" style={{ ...FONTS.btn_txt_active, color: COLORS.button }}>Logout</button>
+<button
+      className="bg-white rounded-tl-xl rounded-br-xl p-2"
+      style={{ ...FONTS.btn_txt_active, color: COLORS.button }}
+      onClick={handleLogout}
+    >
+      Logout
+    </button>
         </div>}
 
       </div>
