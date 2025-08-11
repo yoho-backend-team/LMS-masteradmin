@@ -29,6 +29,8 @@ import messageImg from '../../assets/institute/Mail.png';
 import courseImg from '../../assets/institute/courseImage.png';
 import { COLORS, FONTS } from '@/constants/ui constants';
 import { useNavigate } from 'react-router-dom';
+import EditInstituteForm from '../../components/institute/EditInstitute';
+import DocumentsPage from './Documents';
 
 type ActiveSection = 'about' | 'profile' | 'courses';
 type ProfileSection =
@@ -44,6 +46,7 @@ export default function UniversityDashboard() {
 	const [activeProfileSection, setActiveProfileSection] =
 		useState<ProfileSection>('personal-info');
 	const navigate = useNavigate();
+const [isEditing, setIsEditing] = useState(false);
 
 	const Header = () => (
 		<div className='bg-[#2D6974] text-white rounded-xl'>
@@ -350,10 +353,26 @@ export default function UniversityDashboard() {
 					/>
 				</div>
 			</div>
-			<div className='flex gap-4 mt-6'>
-				<Button variant='outline'>Edit</Button>
-				<Button className='bg-[#2D6974] hover:bg-[#2D6974]'>Suspend</Button>
-			</div>
+		<div className="p-6 bg-white shadow-md rounded-lg">
+  {!isEditing ? (
+    <div className="flex gap-4 mt-6">
+      <Button variant="outline" onClick={() => setIsEditing(true)}>
+        Edit
+      </Button>
+      <Button className="bg-[#2D6974] hover:bg-[#2D6974]">Suspend</Button>
+    </div>
+  ) : (
+    <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-40 z-50">
+      <div className="bg-white p-6 rounded-lg shadow-lg w-full max-w-4xl max-h-[90vh] overflow-y-auto">
+        <h2 className="text-xl font-bold mb-4">Edit Institute Information</h2>
+        <EditInstituteForm onCancel={() => setIsEditing(false)}/>
+      
+      </div>
+    </div>
+  )}
+</div>
+
+
 		</div>
 	);
 
@@ -363,50 +382,116 @@ export default function UniversityDashboard() {
 				return <PersonalInfoForm />;
 			case 'profile':
 				return (
-					<div className='p-6'>
-						<h2 className='text-xl font-semibold mb-4'>Profile Settings</h2>
-						<p className='text-gray-600'>
-							Manage your profile information and preferences.
-						</p>
+					<div className="p-6 bg-white rounded-lg shadow-md">
+					<h2 className="text-xl font-semibold mb-6">Profile Settings</h2>
+
+					<div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+						{/* Logo Section */}
+						<div className="flex flex-col items-center border p-4 rounded-lg">
+							<h2 className='text-black font-bold'>LOGO</h2>
+						<img
+							src="https://i.pinimg.com/736x/d1/f1/cf/d1f1cfa32ebc3e606acd2785ecca811d.jpg"
+							alt="Bharathidasan University Logo"
+							className="w-67 h-67 object-contain mb-4"
+						/>
+						
+						</div>
+
+						{/* Gallery Section */}
+						<div className="md:col-span-2">
+						<h3 className="text-lg font-semibold mb-4">Gallery Images</h3>
+						<div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
+							{[
+							"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSXOHKZal9x4hk2mATL4hev-Kn4KzUPNTSynQ&s",
+							"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ9jOVIVylm2bF2QaIAXXxrMQqGdvr1liQjmQ&s",
+							"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTYMXVHnzdoC761gGL06NqWTiwyEotLAKlFfA&s",
+							
+							].map((img, idx) => (
+							<div
+								key={idx}
+								className="border rounded-lg overflow-hidden shadow-sm"
+							>
+								<img
+								src={img}
+								alt={`Gallery ${idx + 1}`}
+								className="w-full h-28 object-cover"
+								/>
+							</div>
+							))}
+						</div>
+						</div>
+					</div>
 					</div>
 				);
+
 			case 'social-media':
-				return (
-					<div className='p-6'>
-						<h2 className='text-xl font-semibold mb-4'>Social Media</h2>
-						<p className='text-gray-600'>Connect your social media accounts.</p>
-					</div>
-				);
+			const socialLinks = [
+				{ name: 'Facebook', url: 'https://facebook.com', icon: '🌐' },
+				{ name: 'LinkedIn', url: 'https://linkedin.com', icon: '🌐' },
+				{ name: 'Instagram', url: 'https://instagram.com', icon: '🌐' },
+				{ name: 'X', url: 'https://x.com', icon: '🌐' }
+			];
+
+  return (
+    <div className="p-6">
+      <h2 className="text-xl font-semibold mb-4">Social Media</h2>
+      <p className="text-gray-600 mb-6">
+        Connect your social media accounts.
+      </p>
+
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        {socialLinks.map((link, index) => (
+          <a
+            key={index}
+            href={link.url}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="flex items-center gap-3 p-3 border rounded-lg shadow-sm hover:bg-gray-50 transition"
+          >
+            <div className="w-10 h-10 flex items-center justify-center bg-[#e0f2f1] rounded-md text-xl">
+              {link.icon}
+            </div>
+            <span className="text-blue-600 underline">{link.url}</span>
+          </a>
+        ))}
+      </div>
+    </div>
+  );
+
 			case 'documents':
 				return (
 					<div className='p-6'>
 						<h2 className='text-xl font-semibold mb-4'>Documents</h2>
 						<p className='text-gray-600'>Upload and manage your documents.</p>
+						<DocumentsPage/>
 					</div>
 				);
 			case 'change-password':
-				return (
-					<div className='p-6'>
-						<h2 className='text-xl font-semibold mb-4'>Change Password</h2>
-						<div className='space-y-4 max-w-md'>
-							<div className='space-y-2'>
-								<Label htmlFor='current-password'>Current Password</Label>
-								<Input id='current-password' type='password' />
-							</div>
-							<div className='space-y-2'>
-								<Label htmlFor='new-password'>New Password</Label>
-								<Input id='new-password' type='password' />
-							</div>
-							<div className='space-y-2'>
-								<Label htmlFor='confirm-password'>Confirm Password</Label>
-								<Input id='confirm-password' type='password' />
-							</div>
-							<Button className='bg-[#2D6974] hover:bg-[#2D6974]'>
-								Update Password
-							</Button>
-						</div>
-					</div>
-				);
+  return (
+    <div className="p-6">
+      <h2 className="text-xl font-semibold mb-4">Change Password</h2>
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-4xl">
+        <div className="space-y-2">
+          <Label htmlFor="current-password">Current Password</Label>
+          <Input id="current-password" type="password" />
+        </div>
+        <div className="space-y-2">
+          <Label htmlFor="new-password">New Password</Label>
+          <Input id="new-password" type="password" />
+        </div>
+        <div className="space-y-2">
+          <Label htmlFor="confirm-password">Confirm Password</Label>
+          <Input id="confirm-password" type="password" />
+        </div>
+      </div>
+      <div className="mt-6">
+        <Button className="bg-[#2D6974] hover:bg-[#2D6974]">
+          Update Password
+        </Button>
+      </div>
+    </div>
+  );
+
 			case 'activity-logs':
 				return (
 					<div className='p-6'>

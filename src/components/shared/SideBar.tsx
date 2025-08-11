@@ -13,12 +13,14 @@ import {
   BadgeInfo,
   BadgeQuestionMark,
 } from "lucide-react";
-import { NavLink, useLocation } from "react-router-dom";
+import { NavLink, useLocation, useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
 
 const Sidebar = () => {
   const [expanded, setExpanded] = useState<string | null>(null);
+  const navigate = useNavigate();
   const location = useLocation();
+  const [showsigninpage,setshowsigninpage] = useState(false);
 
   const sidebarItems = [
     { label: "Dashboard", path: "/", icon: LayoutDashboard },
@@ -56,6 +58,9 @@ const Sidebar = () => {
 
   const handleLogout = () => {
     toast.success("logout successfully");
+    setshowsigninpage(!showsigninpage)
+    navigate('/sign-in')
+
   };
 
   return (
