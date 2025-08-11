@@ -189,5 +189,10 @@ export const FONTS = {
 		fontFamily: 'Montserrat',
 		fontWeight: 700,
 		fontSize: '28px',
+	},
+	big_text: {
+		fontFamily: 'Montserrat',
+		fontWeight: 700,
+		fontSize: '42px',
 	}
 };

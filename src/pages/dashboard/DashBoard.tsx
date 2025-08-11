@@ -195,7 +195,7 @@ const Dashboard = () => {
 	const [kpiData, setKpiData] = useState([
 		{
 			title: 'Total Institute',
-			value: '45%',
+			value: '45',
 			percentage: 45,
 			icon: Zap,
 			bgColor: 'bg-teal-600',
@@ -205,7 +205,7 @@ const Dashboard = () => {
 		},
 		{
 			title: 'Institute Subscription',
-			value: '15%',
+			value: '15',
 			percentage: 15,
 			icon: Component,
 			bgColor: 'bg-white',
@@ -215,7 +215,7 @@ const Dashboard = () => {
 		},
 		{
 			title: 'Active Subscription',
-			value: '9%',
+			value: '9',
 			percentage: 9,
 			icon: Droplet,
 			bgColor: 'bg-white',
@@ -225,7 +225,7 @@ const Dashboard = () => {
 		},
 		{
 			title: 'New Support Tickets',
-			value: '25%',
+			value: '25',
 			percentage: 25,
 			icon: LifeBuoy,
 			bgColor: 'bg-white',
@@ -551,13 +551,13 @@ const Dashboard = () => {
                   ${
 										isHovered || index === 0
 											? 'bg-[#2D6974] text-white hover:scale-105'
-											: 'bg-white text-gray-900 hover:scale-100'
+											: 'bg-white text-[#242731] hover:scale-100'
 									}
                 `}
 								onMouseEnter={() => setHoveredCard(index)}
 								onMouseLeave={() => setHoveredCard(null)}
 							>
-								<CardContent className='p-6'>
+								<CardContent className='p-2'>
 									<div className='flex flex-col items-center text-center space-y-4'>
 										{/* Icon with background circle */}
 										<div
@@ -585,23 +585,27 @@ const Dashboard = () => {
                         ${
 													isHovered || index === 0
 														? 'text-white/90'
-														: 'text-gray-600'
+														: 'text-[#242731]'
 												}
                       `}
-											style={{ ...FONTS.card_text }}
+											style={{ ...FONTS.button_text, fontWeight: 700 }}
 										>
 											{kpi.title}
 										</h3>
 
+										<div>
+											<p style={{ ...FONTS.big_text }}>{kpi.value}</p>
+										</div>
+
 										{/* Circular progress */}
-										<div className='flex flex-col items-center'>
+										{/* <div className='flex flex-col items-center'>
 											<CircularProgress
 												percentage={kpi.percentage}
 												progressColor={kpi.progressColor}
 												isLoading={isLoading}
 												isHovered={isHovered || index === 0}
 											/>
-										</div>
+										</div> */}
 									</div>
 								</CardContent>
 							</Card>
