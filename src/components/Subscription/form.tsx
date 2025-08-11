@@ -199,19 +199,38 @@ const SubscriptionPlanForm: React.FC<SubscriptionPlanFormProps> = ({ onClose }) 
           {/* Support Level */}
           <div className="space-y-2">
             <label className="!text-[#242731]"style={{...FONTS.text5}}>Support Level</label>
-            <Select
-              value={formik.values.supportLevel}
-              onValueChange={(value) => formik.setFieldValue('supportLevel', value)}
-            >
-              <SelectTrigger className="border-gray-300">
-                <SelectValue placeholder="Select support level" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="basic">Basic</SelectItem>
-                <SelectItem value="premium">Premium</SelectItem>
-                
-              </SelectContent>
-            </Select>
+           <Select
+  value={formik.values.supportLevel}
+  onValueChange={(value) => formik.setFieldValue('supportLevel', value)}
+>
+  <SelectTrigger className="border-gray-300 rounded-md">
+    <SelectValue placeholder="Select support level" />
+  </SelectTrigger>
+  <SelectContent>
+    <SelectItem
+      value="basic"
+      className={` rounded-tl-xl rounded-br-xl rounded-tr-none rounded-bl-none px-4 py-2 border ${
+        formik.values.supportLevel === "basic"
+          ? "bg-[#68b39f] text-white border-transparent font-semibold"
+                  : "bg-white text-gray-500 border-gray-300 hover:bg-[#68b39f] hover:text-white hover:border-transparent"
+      }`}
+    >
+      Basic
+    </SelectItem>
+
+    <SelectItem
+      value="premium"
+      className={` rounded-tl-xl rounded-br-xl rounded-tr-none rounded-bl-none px-4 mt-2 py-2 border ${
+        formik.values.supportLevel === "premium"
+          ?"bg-[#68b39f] text-white border-transparent font-semibold"
+                  : "bg-white text-gray-500 border-gray-300 hover:bg-[#68b39f] hover:text-white hover:border-transparent"
+      }`}
+    >
+      Premium
+    </SelectItem>
+  </SelectContent>
+</Select>
+
             {getFieldError('supportLevel') && (
               <p className="text-sm text-red-500">{getFieldError('supportLevel')}</p>
             )}
@@ -253,20 +272,30 @@ const SubscriptionPlanForm: React.FC<SubscriptionPlanFormProps> = ({ onClose }) 
 
           <div className="space-y-2">
             <label className="!text-[#242731]"style={{...FONTS.text5}}>Duration Type</label>
-            <Select
-              value={formik.values.durationType}
-              onValueChange={(value) => formik.setFieldValue('durationType', value)}
-            >
-              <SelectTrigger className="border-gray-300">
-                <SelectValue placeholder="Select duration type" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="days">Days</SelectItem>
-                <SelectItem value="weeks">Weeks</SelectItem>
-                <SelectItem value="months">Months</SelectItem>
-                <SelectItem value="years">Years</SelectItem>
-              </SelectContent>
-            </Select>
+           <Select
+  value={formik.values.durationType}
+  onValueChange={(value) => formik.setFieldValue('durationType', value)}
+>
+  <SelectTrigger className="border-gray-300 rounded-md">
+    <SelectValue placeholder="Select duration type" />
+  </SelectTrigger>
+  <SelectContent>
+    {["days", "weeks", "months", "years"].map((option) => (
+      <SelectItem
+        key={option}
+        value={option}
+        className={`rounded-tl-xl rounded-br-xl rounded-tr-none rounded-bl-none px-4 mt-2 py-2 border text-center ${
+          formik.values.durationType === option
+           ?"bg-[#68b39f] text-white border-transparent font-semibold"
+                  : "bg-white text-gray-500 border-gray-300 hover:bg-[#68b39f] hover:text-white hover:border-transparent"
+        }`}
+      >
+        {option.charAt(0).toUpperCase() + option.slice(1)}
+      </SelectItem>
+    ))}
+  </SelectContent>
+</Select>
+
             {getFieldError('durationType') && (
               <p className="text-sm text-red-500">{getFieldError('durationType')}</p>
             )}

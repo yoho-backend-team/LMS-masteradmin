@@ -54,7 +54,7 @@ This plan is completely free, making it an excellent choice for those looking to
           <hr className="mb-4" />
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-y-2 text-sm mb-4">
             <div>
-              <span className="font-semibold">Price:</span> ${plan.price} / {plan.period}
+              <span className="font-semibold">Price:</span> ₹{plan.price} / {plan.period}
             </div>
             <div>
               <span className="font-semibold">Status:</span>{" "}

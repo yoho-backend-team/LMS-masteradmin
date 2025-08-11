@@ -1,9 +1,24 @@
-import React from 'react'
+import AddInstituteNotify from '@/features/Notifications/components/AddInstituteNotify';
+import NotifyTable from '@/features/Notifications/components/notifyTable';
+import StatsCard from '@/features/Notifications/components/StatsCard';
+import { useState } from 'react';
 
-function Notifications() {
+
+const Notifications: React.FC = () => {
+  const [formModalOpen, setFormModalOpen] = useState(false);
   return (
-    <div>Notifications</div>
+    <div className='grid gap-4 w-full h-screen'>
+      <div>
+        <StatsCard />
+      </div>
+      <div>
+        <NotifyTable setFormModalOpen={setFormModalOpen}/>
+      </div>
+      <div className='fixed top-0 right-0 shadow-md h-full '>
+        <AddInstituteNotify formModalOpen={formModalOpen} setFormModalOpen={setFormModalOpen}/>
+      </div>
+    </div>
   )
 }
 
-export default Notifications
+export default Notifications;

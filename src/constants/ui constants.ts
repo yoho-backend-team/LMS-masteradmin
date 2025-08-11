@@ -16,7 +16,7 @@ export const FONTS = {
 		color: '#242731',
 	},
 	description: {
-		fontFamily: 'Montserrat', //table contents normal text
+		fontFamily: 'Montserrat',
 		fontWeight: 500,
 		fontSize: '20px',
 		color: '#999999',
@@ -32,7 +32,7 @@ export const FONTS = {
 		fontFamily: 'Montserrat',
 		fontWeight: 700,
 		fontSize: '28px',
-		color: '#68B39F', //welcome
+		color: '#68B39F',
 		style: 'Bold',
 		text: '#242731',
 		text_size: '20px',
@@ -65,7 +65,6 @@ export const FONTS = {
 		fontSize: '16px',
 		style: 'Bold',
 		text_size: '16px',
-		fontweight: 500,
 		button: '#68B39F',
 		color: '#FFFFFF',
 	},
@@ -123,7 +122,7 @@ export const FONTS = {
 	},
 	percentage_text: {
 		fontFamily: 'Montserrat',
-		fontWeight: 700,
+		fontWeight: 600,
 		fontSize: '24px',
 	},
 	small_text: {
@@ -136,7 +135,6 @@ export const FONTS = {
 		fontWeight: 400,
 		fontSize: '14px',
 	},
-
 	tableheader: {
 		fontFamily: 'Montserrat',
 		fontWeight: 600,
@@ -185,5 +183,16 @@ export const FONTS = {
 		fontWeight: 500,
 		fontSize: '18px',
 		color: '#999999',
+	},
+	heading: {
+		fontFamily: 'Montserrat',
+		fontWeight: 700,
+		fontSize: '28px',
+	},
+	activity: {
+		fontFamily: 'Montserrat',
+		fontWeight: 600,
+		fontSize: '22px',
+		color: '#242731',
 	},
 };
