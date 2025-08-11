@@ -1,22 +1,48 @@
 import { FONTS } from "@/constants/ui constants";
+import { getProfileThunks } from "@/features/Profile/reducers/thunks";
+import { updatePassword } from "@/features/Profile/services";
+import { useAppDispatch, useAppSelector } from "@/hooks/reduxhooks";
 import { Eye, EyeOff } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 
 const SecurityPage = () => {
   const [showNewPassword, setShowNewPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const dispatch: any = useAppDispatch()
+  const profileData: any = useAppSelector((state) => state.ProfileSlice.data);
+
+
 
   const {
     register,
     handleSubmit,
     watch,
+    reset,
     formState: { errors },
-  } = useForm();
+  } = useForm({
+  defaultValues: {
+    newPassword: "",
+    confirmPassword: ""
+  }
+});
 
-  const onSubmit = (data: any) => {
-    console.log("Password Changed:", data);
+  const onSubmit = (formValues: any) => {
+    const payload = {
+      email: profileData?.email,
+      newPassword: formValues.newPassword,
+      confirmPassword: formValues.confirmPassword
+    };
+
+    dispatch(updatePassword(payload));
+    reset({ newPassword: "", confirmPassword: "" });
+    setShowNewPassword(false);
+    setShowConfirmPassword(false);
   };
+
+  useEffect(() => {
+    dispatch(getProfileThunks({}));
+  }, [dispatch]);
 
   const newPassword = watch("newPassword");
 
