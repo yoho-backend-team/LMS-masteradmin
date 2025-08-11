@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { useState, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -14,6 +16,9 @@ import {
 import { Zap, Component, Droplet, LifeBuoy } from 'lucide-react';
 import filterImg from '../../assets/dashboard/filter.png';
 import { COLORS, FONTS } from '@/constants/ui constants';
+import { useAppDispatch, useAppSelector } from '@/hooks/reduxhooks';
+import { GetDashboardThunks } from '@/features/dashboard/redux/thunks';
+import { GetDashboardSelector } from '@/features/dashboard/redux/selector';
 
 const Dashboard = () => {
 	const [isLoading, setIsLoading] = useState(true);
@@ -23,221 +28,134 @@ const Dashboard = () => {
 	const [selectedMonth, setSelectedMonth] = useState<string | null>(null);
 	const [selectedYear, setSelectedYear] = useState<string | null>(null);
 	const [revenueYear, setRevenueYear] = useState('2025');
-	const [subscriptionYear, setSubscriptionYear] = useState('2025');
+	const nowDate = new Date()
+	const currentMonth = nowDate.getMonth()
+	const currentYear = nowDate.getFullYear()
 
-	// Simulate loading
+	const dispatch = useAppDispatch()
+	const DashBoardDatas = useAppSelector<any>(GetDashboardSelector)
+
 	useEffect(() => {
+		if (selectedMonth || selectedYear) {
+			dispatch(GetDashboardThunks({ month: selectedMonth ?? 0, year: selectedYear ?? currentYear }))
+		}
+		dispatch(GetDashboardThunks({ month: currentMonth, year: currentYear }))
 		const timer = setTimeout(() => {
 			setIsLoading(false);
 		}, 2000);
 		return () => clearTimeout(timer);
-	}, []);
+	}, [currentMonth, currentYear, dispatch, selectedMonth, selectedYear]);
 
-	// Sample data for the revenue trends chart with amounts for different years
-	const revenueDataByYear = {
-		'2022': [
-			{ month: 'Jan', value: 15, amount: 8000 },
-			{ month: 'Feb', value: 20, amount: 10000 },
-			{ month: 'Mar', value: 30, amount: 15000 },
-			{ month: 'Apr', value: 25, amount: 12000 },
-			{ month: 'May', value: 45, amount: 22000 },
-			{ month: 'Jun', value: 35, amount: 18000 },
-			{ month: 'Jul', value: 30, amount: 15000 },
-			{ month: 'Aug', value: 28, amount: 14000 },
-			{ month: 'Sep', value: 32, amount: 16000 },
-			{ month: 'Oct', value: 38, amount: 19000 },
-			{ month: 'Nov', value: 42, amount: 21000 },
-			{ month: 'Dec', value: 36, amount: 18000 },
-		],
-		'2023': [
-			{ month: 'Jan', value: 25, amount: 12000 },
-			{ month: 'Feb', value: 30, amount: 15000 },
-			{ month: 'Mar', value: 40, amount: 22000 },
-			{ month: 'Apr', value: 35, amount: 18000 },
-			{ month: 'May', value: 85, amount: 45000 },
-			{ month: 'Jun', value: 50, amount: 28000 },
-			{ month: 'Jul', value: 45, amount: 25000 },
-			{ month: 'Aug', value: 38, amount: 20000 },
-			{ month: 'Sep', value: 42, amount: 23000 },
-			{ month: 'Oct', value: 48, amount: 26000 },
-			{ month: 'Nov', value: 52, amount: 30000 },
-			{ month: 'Dec', value: 46, amount: 24000 },
-		],
-		'2024': [
-			{ month: 'Jan', value: 35, amount: 18000 },
-			{ month: 'Feb', value: 40, amount: 22000 },
-			{ month: 'Mar', value: 50, amount: 28000 },
-			{ month: 'Apr', value: 45, amount: 25000 },
-			{ month: 'May', value: 95, amount: 50000 },
-			{ month: 'Jun', value: 60, amount: 35000 },
-			{ month: 'Jul', value: 55, amount: 32000 },
-			{ month: 'Aug', value: 48, amount: 27000 },
-			{ month: 'Sep', value: 52, amount: 30000 },
-			{ month: 'Oct', value: 58, amount: 33000 },
-			{ month: 'Nov', value: 62, amount: 37000 },
-			{ month: 'Dec', value: 56, amount: 31000 },
-		],
-		'2025': [
-			{ month: 'Jan', value: 45, amount: 25000 },
-			{ month: 'Feb', value: 50, amount: 28000 },
-			{ month: 'Mar', value: 60, amount: 35000 },
-			{ month: 'Apr', value: 55, amount: 32000 },
-			{ month: 'May', value: 105, amount: 55000 },
-			{ month: 'Jun', value: 70, amount: 40000 },
-			{ month: 'Jul', value: 65, amount: 37000 },
-			{ month: 'Aug', value: 58, amount: 33000 },
-			{ month: 'Sep', value: 62, amount: 37000 },
-			{ month: 'Oct', value: 68, amount: 40000 },
-			{ month: 'Nov', value: 72, amount: 45000 },
-			{ month: 'Dec', value: 66, amount: 38000 },
-		],
-	};
 
-	// Sample data for subscription details chart for different years
-	const subscriptionDataByYear = {
-		'2022': [
-			{ month: 'Jan', value: 15, subscriptions: 80 },
-			{ month: 'Feb', value: 25, subscriptions: 130 },
-			{ month: 'Mar', value: 35, subscriptions: 180 },
-			{ month: 'Apr', value: 28, subscriptions: 145 },
-			{ month: 'May', value: 32, subscriptions: 165 },
-			{ month: 'Jun', value: 25, subscriptions: 130 },
-			{ month: 'Jul', value: 18, subscriptions: 95 },
-			{ month: 'Aug', value: 22, subscriptions: 115 },
-			{ month: 'Sep', value: 28, subscriptions: 145 },
-			{ month: 'Oct', value: 35, subscriptions: 180 },
-			{ month: 'Nov', value: 25, subscriptions: 130 },
-			{ month: 'Dec', value: 30, subscriptions: 155 },
-		],
-		'2023': [
-			{ month: 'Jan', value: 25, subscriptions: 120 },
-			{ month: 'Feb', value: 35, subscriptions: 180 },
-			{ month: 'Mar', value: 45, subscriptions: 230 },
-			{ month: 'Apr', value: 38, subscriptions: 195 },
-			{ month: 'May', value: 42, subscriptions: 215 },
-			{ month: 'Jun', value: 35, subscriptions: 175 },
-			{ month: 'Jul', value: 28, subscriptions: 145 },
-			{ month: 'Aug', value: 32, subscriptions: 165 },
-			{ month: 'Sep', value: 38, subscriptions: 190 },
-			{ month: 'Oct', value: 45, subscriptions: 225 },
-			{ month: 'Nov', value: 35, subscriptions: 180 },
-			{ month: 'Dec', value: 40, subscriptions: 200 },
-		],
-		'2024': [
-			{ month: 'Jan', value: 35, subscriptions: 180 },
-			{ month: 'Feb', value: 45, subscriptions: 230 },
-			{ month: 'Mar', value: 55, subscriptions: 280 },
-			{ month: 'Apr', value: 48, subscriptions: 245 },
-			{ month: 'May', value: 52, subscriptions: 265 },
-			{ month: 'Jun', value: 45, subscriptions: 230 },
-			{ month: 'Jul', value: 38, subscriptions: 195 },
-			{ month: 'Aug', value: 42, subscriptions: 215 },
-			{ month: 'Sep', value: 48, subscriptions: 245 },
-			{ month: 'Oct', value: 55, subscriptions: 280 },
-			{ month: 'Nov', value: 45, subscriptions: 230 },
-			{ month: 'Dec', value: 50, subscriptions: 255 },
-		],
-		'2025': [
-			{ month: 'Jan', value: 45, subscriptions: 230 },
-			{ month: 'Feb', value: 55, subscriptions: 1080 },
-			{ month: 'Mar', value: 65, subscriptions: 430 },
-			{ month: 'Apr', value: 58, subscriptions: 95 },
-			{ month: 'May', value: 62, subscriptions: 615 },
-			{ month: 'Jun', value: 55, subscriptions: 280 },
-			{ month: 'Jul', value: 48, subscriptions: 845 },
-			{ month: 'Aug', value: 52, subscriptions: 465 },
-			{ month: 'Sep', value: 58, subscriptions: 95 },
-			{ month: 'Oct', value: 65, subscriptions: 330 },
-			{ month: 'Nov', value: 55, subscriptions: 180 },
-			{ month: 'Dec', value: 60, subscriptions: 905 },
-		],
-	};
+	function setSubcriptionData() {
+		try {
+			const data = {
+				jan: 0,
+				feb: 0,
+				mar: 0,
+				apr: 0,
+				may: 0,
+				jun: 0,
+				jul: 0,
+				aug: 0,
+				sep: 0,
+				oct: 0,
+				nov: 0,
+				dec: 0,
+			}
 
-	// Get filtered revenue data
-	const getFilteredRevenueData = () => {
-		let data = revenueDataByYear[revenueYear as keyof typeof revenueDataByYear];
-		if (selectedMonth) {
-			data = data.filter((item) => item.month === selectedMonth);
+			DashBoardDatas?.instituteSubscriptions?.forEach((item: any) => {
+				const date = new Date(item?.createdAt)
+				const month = date.getMonth()
+
+				switch (month) {
+					case 0: ++data.jan; break;
+					case 1: ++data.feb; break;
+					case 2: ++data.mar; break;
+					case 3: ++data.apr; break;
+					case 4: ++data.may; break;
+					case 5: ++data.jun; break;
+					case 6: ++data.jul; break;
+					case 7: ++data.aug; break;
+					case 8: ++data.sep; break;
+					case 9: ++data.oct; break;
+					case 10: ++data.nov; break;
+					case 11: ++data.dec; break;
+				}
+			});
+
+
+			return [
+				{ month: 'Jan', subscriptions: data.jan },
+				{ month: 'Feb', subscriptions: data.feb },
+				{ month: 'Mar', subscriptions: data.mar },
+				{ month: 'Apr', subscriptions: data.apr },
+				{ month: 'May', subscriptions: data.may },
+				{ month: 'Jun', subscriptions: data.jun },
+				{ month: 'Jul', subscriptions: data.jul },
+				{ month: 'Aug', subscriptions: data.aug },
+				{ month: 'Sep', subscriptions: data.sep },
+				{ month: 'Oct', subscriptions: data.oct },
+				{ month: 'Nov', subscriptions: data.nov },
+				{ month: 'Dec', subscriptions: data.dec },
+			]
+
+		} catch (error) {
+			console.log(error, "sub filter")
 		}
-		return data;
-	};
+	}
 
-	// Get filtered subscription data
-	const getFilteredSubscriptionData = () => {
-		let data =
-			subscriptionDataByYear[
-				subscriptionYear as keyof typeof subscriptionDataByYear
-			];
-		if (selectedMonth) {
-			data = data.filter((item) => item.month === selectedMonth);
-		}
-		return data;
-	};
 
-	const revenueData = getFilteredRevenueData();
-	const subscriptionData = getFilteredSubscriptionData();
 
-	// Filter KPI data based on selection (simplified for demo)
-	const getFilteredKpiData = () => {
-		if (!selectedMonth) return kpiData;
+	const subscriptionData = setSubcriptionData()
 
-		// This is a simplified example - in a real app you'd have actual filtered data
-		return kpiData.map((kpi) => ({
-			...kpi,
-			percentage: Math.min(kpi.percentage + Math.floor(Math.random() * 10), 95),
-			value: `${Math.min(
-				kpi.percentage + Math.floor(Math.random() * 10),
-				95
-			)}%`,
-		}));
-	};
 
-	const [kpiData, setKpiData] = useState([
-		{
-			title: 'Total Institute',
-			value: '45%',
-			percentage: 45,
-			icon: Zap,
-			bgColor: 'bg-teal-600',
-			iconBg: 'bg-teal-100',
-			iconColor: 'text-teal-600',
-			progressColor: '#14b8a6',
-		},
-		{
-			title: 'Institute Subscription',
-			value: '15%',
-			percentage: 15,
-			icon: Component,
-			bgColor: 'bg-white',
-			iconBg: 'bg-pink-100',
-			iconColor: 'text-pink-500',
-			progressColor: '#ec4899',
-		},
-		{
-			title: 'Active Subscription',
-			value: '9%',
-			percentage: 9,
-			icon: Droplet,
-			bgColor: 'bg-white',
-			iconBg: 'bg-purple-100',
-			iconColor: 'text-purple-500',
-			progressColor: '#8b5cf6',
-		},
-		{
-			title: 'New Support Tickets',
-			value: '25%',
-			percentage: 25,
-			icon: LifeBuoy,
-			bgColor: 'bg-white',
-			iconBg: 'bg-yellow-100',
-			iconColor: 'text-yellow-500',
-			progressColor: '#f59e0b',
-		},
-	]);
+	const [kpiData, setKpiData] = useState<any[]>([]);
 
 	useEffect(() => {
-		setKpiData(getFilteredKpiData());
-	}, [selectedMonth, selectedYear]);
+		setKpiData([
+			{
+				title: 'Total Institute',
+				value: DashBoardDatas?.totalInstituteCount,
+				percentage: 45,
+				icon: Zap,
+				bgColor: 'bg-teal-600',
+				iconBg: 'bg-teal-100',
+				iconColor: 'text-teal-600',
+				progressColor: '#14b8a6',
+			},
+			{
+				title: 'Institute Subscription',
+				value: DashBoardDatas?.instituteSubscriptions?.length,
+				percentage: 15,
+				icon: Component,
+				bgColor: 'bg-white',
+				iconBg: 'bg-pink-100',
+				iconColor: 'text-pink-500',
+				progressColor: '#ec4899',
+			},
+			{
+				title: 'Active Subscription',
+				value: DashBoardDatas?.activeSubscriptions,
+				percentage: 9,
+				icon: Droplet,
+				bgColor: 'bg-white',
+				iconBg: 'bg-purple-100',
+				iconColor: 'text-purple-500',
+				progressColor: '#8b5cf6',
+			},
+			{
+				title: 'New Support Tickets',
+				value: DashBoardDatas?.supportTickets,
+				percentage: 25,
+				icon: LifeBuoy,
+				bgColor: 'bg-white',
+				iconBg: 'bg-yellow-100',
+				iconColor: 'text-yellow-500',
+				progressColor: '#f59e0b',
+			},
+		]);
+	}, [DashBoardDatas?.activeSubscriptions, DashBoardDatas?.instituteSubscriptions?.length, DashBoardDatas?.supportTickets, DashBoardDatas?.totalInstituteCount]);
 
 	const CircularProgress = ({
 		percentage,
@@ -284,19 +202,18 @@ const Dashboard = () => {
 				{/* Center percentage text */}
 				<div className='absolute inset-0 flex items-center justify-center'>
 					<span
-						className={`text-lg font-bold ${
-							isHovered ? 'text-white' : 'text-gray-800'
-						} ${isLoading ? 'animate-pulse' : ''}`}
+						className={`text-lg font-bold ${isHovered ? 'text-white' : 'text-gray-800'
+							} ${isLoading ? 'animate-pulse' : ''}`}
 						style={{ ...FONTS.percentage_text }}
 					>
-						{`${percentage}%`}
+						{`${percentage}`}
 					</span>
 				</div>
 			</div>
 		);
 	};
 
-	// Helper function to describe an arc for the SVG path
+
 	function describeArc(
 		x: number,
 		y: number,
@@ -324,7 +241,6 @@ const Dashboard = () => {
 		].join(' ');
 	}
 
-	// Helper function to convert polar coordinates to Cartesian
 	function polarToCartesian(
 		centerX: number,
 		centerY: number,
@@ -355,7 +271,6 @@ const Dashboard = () => {
 		return null;
 	};
 
-	// Custom bar component with border radius and shadow
 	const CustomBar = (props: any) => {
 		const { fill, ...rest } = props;
 		const currentDate = new Date();
@@ -368,7 +283,6 @@ const Dashboard = () => {
 		return (
 			<g>
 				<defs>
-					{/* Light cross-hatch pattern for non-current month bars */}
 					<pattern
 						id={`crosshatch-${props.payload?.index}`}
 						patternUnits='userSpaceOnUse'
@@ -383,7 +297,6 @@ const Dashboard = () => {
 							opacity='0.6'
 						/>
 					</pattern>
-					{/* Hover effect pattern */}
 					<pattern
 						id={`crosshatch-hover-${props.payload?.index}`}
 						patternUnits='userSpaceOnUse'
@@ -406,8 +319,8 @@ const Dashboard = () => {
 						isCurrentMonthBar
 							? '#2D6974'
 							: isHovered
-							? `url(#crosshatch-hover-${props.payload?.index})`
-							: `url(#crosshatch-${props.payload?.index})`
+								? `url(#crosshatch-hover-${props.payload?.index})`
+								: `url(#crosshatch-${props.payload?.index})`
 					}
 					rx='6'
 					ry='6'
@@ -416,7 +329,7 @@ const Dashboard = () => {
 		);
 	};
 
-	// Months and years for filter dropdowns
+
 	const months = [
 		'Jan',
 		'Feb',
@@ -432,6 +345,11 @@ const Dashboard = () => {
 		'Dec',
 	];
 
+	const revenueData: any[] | undefined = []
+
+	DashBoardDatas?.revenue?.forEach((item: number, index: number) => {
+		revenueData.push({ month: months[index], amount: item })
+	})
 	const years = ['2022', '2023', '2024', '2025'];
 
 	const resetFilters = () => {
@@ -456,7 +374,6 @@ const Dashboard = () => {
 					</Button>
 				</div>
 
-				{/* Filter Card */}
 				{showFilter && (
 					<Card className='shadow-lg border-0 p-4'>
 						<div className='flex items-center justify-between'>
@@ -536,7 +453,6 @@ const Dashboard = () => {
 					</Card>
 				)}
 
-				{/* KPI Cards */}
 				<div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6'>
 					{kpiData.map((kpi, index) => {
 						const isHovered = hoveredCard === index;
@@ -548,10 +464,9 @@ const Dashboard = () => {
 								className={`
                   shadow-lg transition-all duration-300 cursor-pointer border-0
                   rounded-tl-3xl rounded-br-3xl rounded-bl-none rounded-tr-none
-                  ${
-										isHovered || index === 0
-											? 'bg-[#2D6974] text-white hover:scale-105'
-											: 'bg-white text-gray-900 hover:scale-100'
+                  ${isHovered || index === 0
+										? 'bg-[#2D6974] text-white hover:scale-105'
+										: 'bg-white text-gray-900 hover:scale-100'
 									}
                 `}
 								onMouseEnter={() => setHoveredCard(index)}
@@ -569,10 +484,9 @@ const Dashboard = () => {
 											<IconComponent
 												className={`
                           w-6 h-6
-                          ${
-														isHovered || index === 0
-															? 'text-white'
-															: kpi.iconColor
+                          ${isHovered || index === 0
+														? 'text-white'
+														: kpi.iconColor
 													}
                         `}
 											/>
@@ -582,10 +496,9 @@ const Dashboard = () => {
 										<h3
 											className={`
                         text-sm font-medium leading-tight
-                        ${
-													isHovered || index === 0
-														? 'text-white/90'
-														: 'text-gray-600'
+                        ${isHovered || index === 0
+													? 'text-white/90'
+													: 'text-gray-600'
 												}
                       `}
 											style={{ ...FONTS.card_text }}
@@ -609,61 +522,21 @@ const Dashboard = () => {
 					})}
 				</div>
 
-				{/* Charts Section */}
 				<div className='space-y-6'>
-					{/* Revenue Trends Chart */}
 					<h1 style={{ ...FONTS.bold_heading }}>Graphs & Trends</h1>
 					<Card className='shadow-lg border-0'>
 						<CardHeader className='pb-4 flex flex-row justify-between items-center'>
 							<CardTitle style={{ ...FONTS.sub_text, color: COLORS.button }}>
 								Revenue Trends (Monthly)
 							</CardTitle>
-							<div className='flex items-center space-x-2'>
-								<select
-									className='p-1 border border-[#808191] rounded-md text-sm focus:ring-[#68B39F] focus:border-[#68B39F]'
-									value={revenueYear}
-									style={{ ...FONTS.option_text, color: COLORS.black }}
-									onChange={(e) => setRevenueYear(e.target.value)}
-								>
-									{years.map((year) => (
-										<option key={year} value={year}>
-											{year}
-										</option>
-									))}
-								</select>
-							</div>
 						</CardHeader>
+
 						<CardContent>
 							<div className='flex'>
-								{/* Left side revenue amounts */}
-								<div className='w-16 flex flex-col justify-between text-xs text-gray-500 pr-2'>
-									<span style={{ ...FONTS.small_text, color: COLORS.gray_01 }}>
-										3.0K$
-									</span>
-									<span style={{ ...FONTS.small_text, color: COLORS.gray_01 }}>
-										2.5K$
-									</span>
-									<span style={{ ...FONTS.small_text, color: COLORS.gray_01 }}>
-										2.0K$
-									</span>
-									<span style={{ ...FONTS.small_text, color: COLORS.gray_01 }}>
-										1.5K$
-									</span>
-									<span style={{ ...FONTS.small_text, color: COLORS.gray_01 }}>
-										1.0K$
-									</span>
-									<span style={{ ...FONTS.small_text, color: COLORS.gray_01 }}>
-										0.0$
-									</span>
-								</div>
-								{/* Chart */}
 								<div className='flex-1 h-64'>
 									<ResponsiveContainer width='100%' height='100%'>
 										<BarChart
-											data={revenueData.map((item, index) => ({
-												...item,
-												index,
-											}))}
+											data={revenueData}
 											onMouseMove={(e) => {
 												if (e && typeof e.activeTooltipIndex === 'number') {
 													setHoveredBar(e.activeTooltipIndex);
@@ -675,12 +548,16 @@ const Dashboard = () => {
 												dataKey='month'
 												axisLine={false}
 												tickLine={false}
-												tick={{}}
 												style={{ ...FONTS.small_text, color: COLORS.gray_01 }}
 											/>
-											<YAxis hide />
+											<YAxis
+												dataKey='amount'
+												axisLine={false}
+												tickLine={false}
+												style={{ ...FONTS.small_text, color: COLORS.gray_01 }}
+											/>
 											<Bar
-												dataKey='value'
+												dataKey='amount'
 												maxBarSize={50}
 												shape={<CustomBar />}
 											/>
@@ -691,7 +568,6 @@ const Dashboard = () => {
 						</CardContent>
 					</Card>
 
-					{/* Subscription Details Chart */}
 					<Card className='shadow-lg border-0'>
 						<CardHeader className='pb-4 flex flex-row justify-between items-center'>
 							<div>
@@ -701,20 +577,6 @@ const Dashboard = () => {
 										Details
 									</span>
 								</CardTitle>
-							</div>
-							<div className='flex items-center space-x-2'>
-								<select
-									className='p-1 border border-[#808191] rounded-md text-sm focus:ring-[#68B39F] focus:border-[#68B39F]'
-									value={subscriptionYear}
-									onChange={(e) => setSubscriptionYear(e.target.value)}
-									style={{ ...FONTS.option_text, color: COLORS.black }}
-								>
-									{years.map((year) => (
-										<option key={year} value={year}>
-											{year}
-										</option>
-									))}
-								</select>
 							</div>
 						</CardHeader>
 						<CardContent>
@@ -768,7 +630,7 @@ const Dashboard = () => {
 												strokeWidth: 2,
 											}}
 										/>
-										{/* Shadow effect */}
+
 										<Line
 											type='monotone'
 											dataKey='subscriptions'

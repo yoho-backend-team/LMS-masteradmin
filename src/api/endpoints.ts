@@ -23,11 +23,13 @@ export const API_END_POINTS = {
         verify_otp: "/api/auth/verify-otp/",
         resend_otp: "/api/auth/resend-otp/",
         validate_otp: "/api/auth/validate-otp/",
+        sign_in: "api/auth/login",
         forget_password: "/api/auth/forget-password/",
         update_password: "/api/auth/update-password/",
         get_profile: "/api/auth/me",
         get_activity: "/api/auth/activity",
-        edit_profile: "/api/auth/edit-profile"
+        edit_profile: "/api/auth/edit-profile",
+        reports: 'api/institutes/platform/report'
     },
     subscription: {
         all: "/api/subscription/plans",
