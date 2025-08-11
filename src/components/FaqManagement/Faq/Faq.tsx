@@ -9,6 +9,7 @@ import { getAllFaq } from "@/features/Faq/selector";
 import { fetchFAQsThunk } from "@/features/Faq/thunks";
 import { createFAQ, deleteFAQ, updateFAQ } from "@/features/Faq/service";
 import { getCategoriesThunks } from "@/features/FaqCategories/reducers/thunks";
+import { FONTS } from "@/constants/ui constants";
 
 const FAQ = () => {
   const [faqs, setFaqs] = useState([
@@ -25,7 +26,7 @@ const FAQ = () => {
   const [isAddOpen, setIsAddOpen] = useState(false);
   const [isEditOpen, setIsEditOpen] = useState(false);
   const [editFaq, setEditFaq] = useState<any>(null);
-   const [page, setPage] = useState(1);
+  const [page, setPage] = useState(1);
   const [totalPages, setTotalPages] = useState(3);
 
   const [isOpen, setIsOpen] = useState(false);
@@ -59,7 +60,7 @@ const FAQ = () => {
 
   const mappedFaqs = AllFaqs.map((faq: any) => ({
     id: faq._id,
-    uuid: faq.uuid, 
+    uuid: faq.uuid,
     question: faq.identity,
     description: faq.description,
     category: faq.category?.identity || "",
@@ -77,7 +78,7 @@ const FAQ = () => {
     const params = {
       page: page,
     };
-    console.log("current page",page)
+    console.log("current page", page)
     dispatch(fetchFAQsThunk(params));
   }, [dispatch, page]);
 
@@ -99,13 +100,13 @@ const FAQ = () => {
     if (!statusConfirm.faqId) return;
 
     try {
-   
+
       const currentFaq = mappedFaqs.find((faq: any) => faq.id === statusConfirm.faqId);
       if (!currentFaq) return;
 
       const payload = {
-        is_active: !currentFaq.status, 
-        id: currentFaq.uuid, 
+        is_active: !currentFaq.status,
+        id: currentFaq.uuid,
       };
 
       console.log("Status update payload:", payload);
@@ -150,33 +151,33 @@ const FAQ = () => {
     }
   };
 
- const handleUpdate = async () => {
-  try {
-    const payload = {
-      id: editFaq.uuid, 
-      identity: formData.question,
-      description: formData.description,
-    };
+  const handleUpdate = async () => {
+    try {
+      const payload = {
+        id: editFaq.uuid,
+        identity: formData.question,
+        description: formData.description,
+      };
 
-    console.log("payload", payload);
+      console.log("payload", payload);
 
-    const res = await updateFAQ(payload);
-    console.log("Update FAQ response:", res.data);
+      const res = await updateFAQ(payload);
+      console.log("Update FAQ response:", res.data);
 
-    dispatch(fetchFAQsThunk({ page: 3 }));
-    setIsEditOpen(false);
-    setEditFaq(null);
-    setFormData({
-      question: "",
-      description: "",
-      categoryId: "",
-      categoryName: "",
-      status: true,
-    });
-  } catch (err) {
-    console.error("Error updating FAQ:", err);
-  }
-};
+      dispatch(fetchFAQsThunk({ page: 3 }));
+      setIsEditOpen(false);
+      setEditFaq(null);
+      setFormData({
+        question: "",
+        description: "",
+        categoryId: "",
+        categoryName: "",
+        status: true,
+      });
+    } catch (err) {
+      console.error("Error updating FAQ:", err);
+    }
+  };
 
 
   const handleDeleteClick = (id: any) => {
@@ -219,127 +220,124 @@ const FAQ = () => {
         </button>
       </div>
 
-      
-        <table className="min-w-full text-[#999999] text-sm border-separate border-spacing-y-4">
-          <thead className="bg-[#2D6974] text-white h-16 text-left text-lg font-semibold">
-            <tr>
-              <th className="px-6 py-3 rounded-l-xl">Faq Name</th>
-              <th className="px-6 py-3">Category</th>
-              <th className="px-6 py-3">Status</th>
-              <th className="px-6 py-3 rounded-r-xl text-right">Actions</th>
-            </tr>
-          </thead>
-          <tbody>
-            {filteredFaqs.map((faq: any) => (
-              <tr
-                key={faq.id}
-                className="bg-white/30 backdrop-blur-xl text-base shadow-xl h-20 rounded-xl font-medium transition"
-              >
-                <td className="px-6 py-4 rounded-l-xl">{faq.question}</td>
-                <td className="px-6 py-4">{faq.category}</td>
 
-                <td className="px-6 py-4">
-                  <label className="inline-flex items-center cursor-pointer">
-                
-                    <input
-                      type="checkbox"
-                      checked={faq.status}
-                      onChange={() => handleStatusToggle(faq.id)}
-                      className="sr-only peer"
-                    />
+      <table className="min-w-full text-[#999999] text-sm border-separate border-spacing-y-4">
+        <thead className="bg-[#2D6974] text-white  text-left text-lg font-semibold"
+          style={{ ...FONTS.tableheader }}>
+          <tr>
+            <th className="px-6 py-3 rounded-l-xl">Faq Name</th>
+            <th className="px-6 py-3">Category</th>
+            <th className="px-6 py-3">Status</th>
+            <th className="px-6 py-3 rounded-r-xl text-right">Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          {filteredFaqs.map((faq: any) => (
+            <tr
+              key={faq.id}
+              className="bg-white/30 backdrop-blur-xl text-base shadow-lg  rounded-xl font-medium transition"
+              style={{ ...FONTS.description }}
+            >
+              <td className="px-6 py-4 rounded-l-xl">{faq.question}</td>
+              <td className="px-6 py-4">{faq.category}</td>
 
-                    <div
-                      className={`relative w-12 h-6 rounded-full transition-colors duration-300 ${
-                        faq.status ? "bg-green-500" : "bg-gray-300"
+              <td className="px-6 py-4">
+                <label className="inline-flex items-center cursor-pointer">
+
+                  <input
+                    type="checkbox"
+                    checked={faq.status}
+                    onChange={() => handleStatusToggle(faq.id)}
+                    className="sr-only peer"
+                  />
+
+                  <div
+                    className={`relative w-12 h-6 rounded-full transition-colors duration-300 ${faq.status ? "bg-green-500" : "bg-gray-300"
                       }`}
-                    >
-                      <span
-                        className={`absolute top-1 left-1 w-4 h-4 bg-white rounded-full shadow-md transition-transform duration-300 ${
-                          faq.status ? "translate-x-3" : "translate-x-0"
+                  >
+                    <span
+                      className={`absolute top-1 left-1 w-4 h-4 bg-white rounded-full shadow-md transition-transform duration-300 ${faq.status ? "translate-x-3" : "translate-x-0"
                         }`}
-                      ></span>
-                    </div>
-                  </label>
-                </td>
-                <td className="px-6 py-4 rounded-r-xl">
-                  <div className="flex justify-end space-x-3">
-                    <button
-                      onClick={() => {
-                        setEditFaq(faq);
-                        setFormData({
-                          question: faq.question,
-                          description: faq.description,
-                          categoryId: faq.categoryId,
-                          categoryName: faq.category,
-                          status: faq.status,
-                        });
-
-                        setIsEditOpen(true);
-                      }}
-                    >
-                      <img src={editIcon} alt="Edit" />
-                    </button>
-                    <button
-                      className="text-red-500"
-                      onClick={() => handleDeleteClick(faq.uuid)}
-                    >
-                      <img src={deleteIcon} alt="Delete" />
-                    </button>
+                    ></span>
                   </div>
-                </td>
-              </tr>
-            ))}
+                </label>
+              </td>
+              <td className="px-6 py-4 rounded-r-xl">
+                <div className="flex justify-end space-x-3">
+                  <button
+                    onClick={() => {
+                      setEditFaq(faq);
+                      setFormData({
+                        question: faq.question,
+                        description: faq.description,
+                        categoryId: faq.categoryId,
+                        categoryName: faq.category,
+                        status: faq.status,
+                      });
 
-            {filteredFaqs.length === 0 && (
-              <tr>
-                <td colSpan={5} className="text-center p-4 text-gray-500">
-                  No FAQs found
-                </td>
-              </tr>
-            )}
-          </tbody>
-        </table>
-     
+                      setIsEditOpen(true);
+                    }}
+                  >
+                    <img src={editIcon} alt="Edit" />
+                  </button>
+                  <button
+                    className="text-red-500"
+                    onClick={() => handleDeleteClick(faq.uuid)}
+                  >
+                    <img src={deleteIcon} alt="Delete" />
+                  </button>
+                </div>
+              </td>
+            </tr>
+          ))}
+
+          {filteredFaqs.length === 0 && (
+            <tr>
+              <td colSpan={5} className="text-center p-4 text-gray-500">
+                No FAQs found
+              </td>
+            </tr>
+          )}
+        </tbody>
+      </table>
+
 
       <div className="flex justify-center mt-6 space-x-2">
-  <button
-    onClick={() => setPage((prev) => Math.max(prev - 1, 1))}
-    disabled={page === 1}
-    className={`px-4 rounded-tl-xl rounded-br-xl py-2 rounded ${
-      page === 1
-        ? "bg-gray-300 cursor-not-allowed"
-        : "bg-[#68B39F] text-white"
-    }`}
-  >
-    Prev
-  </button>
+        <button
+          onClick={() => setPage((prev) => Math.max(prev - 1, 1))}
+          disabled={page === 1}
+          className={`px-4 rounded-tl-xl rounded-br-xl py-2 rounded ${page === 1
+              ? "bg-gray-300 cursor-not-allowed"
+              : "bg-[#68B39F] text-white"
+            }`}
+        >
+          Prev
+        </button>
 
-  {Array.from({ length: totalPages }, (_, i) => (
-    <button
-      key={i + 1}
-      onClick={() => setPage(i + 1)}
-      className={`px-4 rounded-tl-xl rounded-br-xl py-2 rounded ${
-        page === i + 1
-          ? "bg-[#2D6974] text-white"
-          : "bg-gray-200 text-gray-700"
-      }`}
-    >
-      {i + 1}
-    </button>
-  ))}
+        {Array.from({ length: totalPages }, (_, i) => (
+          <button
+            key={i + 1}
+            onClick={() => setPage(i + 1)}
+            className={`px-4 rounded-tl-xl rounded-br-xl py-2 rounded ${page === i + 1
+                ? "bg-[#2D6974] text-white"
+                : "bg-gray-200 text-gray-700"
+              }`}
+          >
+            {i + 1}
+          </button>
+        ))}
 
-  <button
-    onClick={() => setPage((prev) => Math.min(prev + 1, totalPages))}
-    disabled={page === totalPages}
-    className={`px-4 rounded-tl-xl rounded-br-xl py-2 rounded ${
-      page === totalPages
-        ? "bg-gray-300 cursor-not-allowed"
-        : "bg-[#68B39F] text-white"
-    }`}
-  >
-    Next
-  </button>
-</div>
+        <button
+          onClick={() => setPage((prev) => Math.min(prev + 1, totalPages))}
+          disabled={page === totalPages}
+          className={`px-4 rounded-tl-xl rounded-br-xl py-2 rounded ${page === totalPages
+              ? "bg-gray-300 cursor-not-allowed"
+              : "bg-[#68B39F] text-white"
+            }`}
+        >
+          Next
+        </button>
+      </div>
 
 
       {isAddOpen && (
@@ -390,13 +388,12 @@ const FAQ = () => {
               >
                 <span>{formData.categoryName || "Select a category"}</span>
                 <IoIosArrowDown
-                  className={`transition-transform duration-300 ${
-                    isOpen ? "rotate-180" : "rotate-0"
-                  }`}
+                  className={`transition-transform duration-300 ${isOpen ? "rotate-180" : "rotate-0"
+                    }`}
                 />
               </div>
 
-           
+
               {isOpen && (
                 <div
                   className="absolute w-full bg-white shadow-xl mt-1 rounded-lg border overflow-x-auto border-gray-300 z-10 space-y-2 p-2 
@@ -414,9 +411,8 @@ const FAQ = () => {
                         setIsOpen(false);
                       }}
                       className={`px-3 py-2 border rounded-tl-xl rounded-br-xl border-gray-200 cursor-pointer 
-          hover:bg-[#68B39F] hover:text-white ${
-            formData.categoryId === cat.uuid ? "bg-[#68B39F] text-white" : ""
-          }`}
+          hover:bg-[#68B39F] hover:text-white ${formData.categoryId === cat.uuid ? "bg-[#68B39F] text-white" : ""
+                        }`}
                     >
                       {cat.identity}
                     </div>
@@ -443,7 +439,7 @@ const FAQ = () => {
         </div>
       )}
 
-      
+
 
       {isEditOpen && (
         <div className="fixed inset-0 bg-black/50 flex justify-center items-center">
@@ -566,7 +562,7 @@ const FAQ = () => {
         <div className="fixed inset-0 bg-black/50 flex justify-center items-center z-50">
           <div className="bg-white p-8 rounded-xl w-96 text-center">
             <div className="mb-6">
-              <div className="mx-auto w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mb-4">
+              <div className="mx-auto w-16  bg-green-100 rounded-full flex items-center justify-center mb-4">
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   className="text-green-500"

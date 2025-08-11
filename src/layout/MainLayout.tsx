@@ -65,7 +65,7 @@ function MainLayout() {
 					>
 						<Sidebar isOpen={isSidebarOpen} setIsOpen={setIsSidebarOpen} />
 					</div>
-					<div className='flex-1 overflow-y-auto p-3 bg-white'>
+					<div className='flex-1 overflow-y-auto p-3 bg-white no-scrollbar'>
 						<Outlet />
 					</div>
 				</div>

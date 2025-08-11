@@ -74,12 +74,12 @@ const StatsCard: React.FC = () => {
 
 
   return (
-    <div className='p-6 w-full'>
+    <div className=' w-full'>
       <div className='w-full mx-auto space-y-6'>
         {/* Header */}
 
         {/* KPI Cards */}
-        <div className='grid grid-cols-1 md:grid-cols-4 gap-6'>
+        <div className='flex justify-evenly gap-6 w-full'>
           {kpiData.map((kpi, index) => {
             const isHovered = hoveredCard === index;
             const IconComponent = kpi.icon;
@@ -88,10 +88,10 @@ const StatsCard: React.FC = () => {
               <Card
                 key={index}
                 className={`
-                  shadow-lg transition-all duration-300 cursor-pointer border-0
+                  shadow-2xl transition-all w-80 h-85  duration-300 cursor-pointer border-0
                   rounded-tl-3xl rounded-br-3xl rounded-bl-none rounded-tr-none
-                  ${isHovered || index === 0
-                    ? 'bg-[#2D6974] text-white hover:scale-105'
+                  ${isHovered 
+                    ? 'bg-[#2D6974] text-white hover:scale-90'
                     : 'bg-white text-gray-900 hover:scale-100'
                   }
                 `}
@@ -99,18 +99,18 @@ const StatsCard: React.FC = () => {
                 onMouseLeave={() => setHoveredCard(null)}
               >
                 <CardContent className='p-6'>
-                  <div className='flex flex-col items-center text-center space-y-4'>
+                  <div className='flex flex-col items-center text-center space-y-4 -mt-5'>
                     {/* Icon with background circle */}
                     <div
                       className={`
-                        w-12 h-12 rounded-full flex items-center justify-center
-                        ${isHovered || index === 0 ? 'bg-white/20' : kpi.iconBg}
+                        w-16 h-16 rounded-full flex items-center justify-center
+                        ${isHovered  ? 'bg-white/20' : kpi.iconBg}
                       `}
                     >
                       <IconComponent
                         className={`
-                          w-6 h-6
-                          ${isHovered || index === 0
+                          w-10 h-10
+                          ${isHovered 
                             ? 'text-white'
                             : kpi.iconColor
                           }
@@ -121,8 +121,8 @@ const StatsCard: React.FC = () => {
                     {/* Title */}
                     <h3
                       className={`
-                        text-sm font-medium leading-tight
-                        ${isHovered || index === 0
+                        text-xl font-medium leading-tight
+                        ${isHovered
                           ? 'text-white/90'
                           : 'text-gray-600'
                         }
@@ -141,7 +141,7 @@ const StatsCard: React.FC = () => {
                         percentage={kpi.percentage}
                         progressColor={kpi.progressColor}
                         isLoading={isLoading}
-                        isHovered={isHovered || index === 0}
+                        isHovered={isHovered}
                       />
                     </div>
                   </div>
@@ -177,7 +177,7 @@ const CircularProgress = ({
     : visibleCircumference + (percentage / 100) * visibleCircumference;
 
   return (
-    <div className='relative w-24 h-24'>
+    <div className='relative w-40 h-40'>
       <svg className='w-full h-full' viewBox='0 0 100 100'>
         {/* Background circle - only showing 270 degrees */}
         <path
