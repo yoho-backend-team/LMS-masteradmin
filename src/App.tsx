@@ -8,7 +8,6 @@ import { AuthProvider } from './components/SignIn/AuthContext'
 
 function App() {
 
-
 	return (
 		<>
 			<BrowserRouter>
@@ -46,4 +45,4 @@ function App() {
 	)
 }
 
-export default App
+export default App;
