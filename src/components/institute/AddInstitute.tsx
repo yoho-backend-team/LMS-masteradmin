@@ -1,18 +1,14 @@
-
-
 import type React from 'react';
 import { useState, useCallback } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
-import { Card, CardContent } from '@/components/ui/card';
+import { Card } from '@/components/ui/card';
 import { Upload, Check } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import toast from 'react-hot-toast';
 import { COLORS, FONTS } from '@/constants/ui constants';
-
-
 
 interface FormData {
 	// Personal Info
@@ -82,7 +78,12 @@ const FileUploadBox = ({
 	const id = `file-${field}`;
 	return (
 		<div className='space-y-2'>
-			<Label className='text-sm font-medium text-gray-700 mb-4'style={{...FONTS.text5,color:COLORS.black}}>{title}</Label>
+			<Label
+				className='text-sm font-medium text-gray-700 mb-4'
+				style={{ ...FONTS.text5, color: COLORS.black }}
+			>
+				{title}
+			</Label>
 			<div className='border-2 border-dashed border-gray-300 rounded-lg p-8 text-center hover:border-gray-400 transition-colors'>
 				<input
 					type='file'
@@ -93,8 +94,15 @@ const FileUploadBox = ({
 				/>
 				<label htmlFor={id} className='cursor-pointer'>
 					<Upload className='w-8 h-8 mx-auto mb-2 text-gray-400' />
-					<p className='mb-1 text-gray-600'style={{...FONTS.sub_text}}>Drag & Drop Or Click To Upload</p>
-					<p className='text-xs text-gray-400'style={{...FONTS.sub_text,fontSize:"12px"}}>{description}</p>
+					<p className='mb-1 text-gray-600' style={{ ...FONTS.sub_text }}>
+						Drag & Drop Or Click To Upload
+					</p>
+					<p
+						className='text-xs text-gray-400'
+						style={{ ...FONTS.sub_text, fontSize: '12px' }}
+					>
+						{description}
+					</p>
 					{file && <p className='text-sm text-teal-600 mt-2'>{file.name}</p>}
 				</label>
 			</div>
@@ -122,14 +130,18 @@ const InputField = ({
 	const id = `input-${field}`;
 	return (
 		<div className={className}>
-			<Label htmlFor={id} className='text-sm font-medium text-gray-700 mb-4' style={{...FONTS.text5,color:COLORS.black}}>
+			<Label
+				htmlFor={id}
+				className='text-sm font-medium text-gray-700 mb-4'
+				style={{ ...FONTS.text5, color: COLORS.black }}
+			>
 				{label}
 			</Label>
 			<Input
 				id={id}
 				type={type}
 				value={value}
-				style={{...FONTS.text4,color:COLORS.gray_01}}
+				style={{ ...FONTS.text4, color: COLORS.gray_01 }}
 				onChange={(e) => onChange(field, e.target.value)}
 				placeholder={placeholder}
 				className='mt-1'
@@ -156,13 +168,17 @@ const TextareaField = ({
 	const id = `textarea-${field}`;
 	return (
 		<div className={className}>
-			<Label htmlFor={id} className='text-sm font-medium text-gray-700 mb-4' style={{...FONTS.text5,color:COLORS.black}}>
+			<Label
+				htmlFor={id}
+				className='text-sm font-medium text-gray-700 mb-4'
+				style={{ ...FONTS.text5, color: COLORS.black }}
+			>
 				{label}
 			</Label>
 			<Textarea
 				id={id}
 				value={value}
-				style={{...FONTS.text4,color:COLORS.gray_01}}
+				style={{ ...FONTS.text4, color: COLORS.gray_01 }}
 				onChange={(e) => onChange(field, e.target.value)}
 				className='mt-1'
 				rows={rows}
@@ -264,7 +280,7 @@ const StepperForm: React.FC = () => {
 			{steps.map((step) => (
 				<div key={step.id} className='flex flex-col items-center gap-3'>
 					<div
-						className={`w-44 h-44 rounded-lg flex flex-col items-center justify-center gap-4 ${
+						className={`w-42 h-44 rounded-lg flex flex-col items-center justify-center gap-4 ${
 							currentStep === step.id
 								? '!bg-[#2D6974]'
 								: currentStep > step.id
@@ -314,15 +330,21 @@ const StepperForm: React.FC = () => {
 				return (
 					<div className='space-y-6'>
 						<div>
-							<h2 className='text-2xl font-bold text-gray-800 mb-2'style={{...FONTS.heading}}>
+							<h2
+								className='text-2xl font-bold text-gray-800 mb-2'
+								style={{ ...FONTS.heading }}
+							>
 								Personal Info
 							</h2>
-							<p className='text-gray-600 mb-6'style={{...FONTS.edit_form}}>
+							<p className='text-gray-600 mb-6' style={{ ...FONTS.edit_form }}>
 								Add Logo Image, Gallery Information
 							</p>
 						</div>
 						<Card className='p-4 shadow-md'>
-							<h3 className='font-semibold text-gray-700 mb-4'style={{...FONTS.tableheader,color:COLORS.secondary}}>
+							<h3
+								className='font-semibold text-gray-700 mb-4'
+								style={{ ...FONTS.tableheader, color: COLORS.secondary }}
+							>
 								Enter your Institute Details Here
 							</h3>
 							<div className='grid grid-cols-1 md:grid-cols-2 gap-4'>
@@ -348,7 +370,10 @@ const StepperForm: React.FC = () => {
 							/>
 						</Card>
 						<Card className='p-4 shadow-md'>
-							<h3 className='font-semibold text-gray-700 mb-4'style={{...FONTS.tableheader,color:COLORS.secondary}}>
+							<h3
+								className='font-semibold text-gray-700 mb-4'
+								style={{ ...FONTS.tableheader, color: COLORS.secondary }}
+							>
 								Enter your Address Information Here
 							</h3>
 							<div className='grid grid-cols-1 md:grid-cols-2 gap-4'>
@@ -405,7 +430,10 @@ const StepperForm: React.FC = () => {
 							</div>
 						</Card>
 						<Card className='p-4 shadow-md'>
-							<h3 className='font-semibold text-gray-700 mb-4'style={{...FONTS.tableheader,color:COLORS.secondary}}>
+							<h3
+								className='font-semibold text-gray-700 mb-4'
+								style={{ ...FONTS.tableheader, color: COLORS.secondary }}
+							>
 								Enter your Contact Details Here
 							</h3>
 							<div className='grid grid-cols-1 md:grid-cols-2 gap-4'>
@@ -425,7 +453,10 @@ const StepperForm: React.FC = () => {
 							</div>
 						</Card>
 						<Card className='p-4 shadow-md'>
-							<h3 className='font-semibold text-gray-700 mb-4'style={{...FONTS.tableheader,color:COLORS.secondary}}>
+							<h3
+								className='font-semibold text-gray-700 mb-4'
+								style={{ ...FONTS.tableheader, color: COLORS.secondary }}
+							>
 								Enter your Subscription Information Here
 							</h3>
 							<InputField
@@ -441,42 +472,50 @@ const StepperForm: React.FC = () => {
 				return (
 					<div className='space-y-6'>
 						<div>
-							<h2 className='text-2xl font-bold text-gray-800 mb-2'style={{...FONTS.heading}}>
+							<h2
+								className='text-2xl font-bold text-gray-800 mb-2'
+								style={{ ...FONTS.heading }}
+							>
 								Gallery Info
 							</h2>
-							<p className='text-gray-600 mb-6'style={{...FONTS.edit_form}}>Add Gallery Info</p>
+							<p className='text-gray-600 mb-6' style={{ ...FONTS.edit_form }}>
+								Add Gallery Info
+							</p>
 						</div>
 						<div className='space-y-6'>
-							
-							<Card className='p-4 shadow-md'><FileUploadBox
-								field='instituteLogo'
-								title='Institute Logo'
-								description='Upload your brand or logo logo Size 300X300 px (Max 80 kb)'
-								file={formData.instituteLogo}
-								onFileChange={handleFileUpload}
-							/></Card>
-							<Card className='p-4 shadow-md'><TextareaField
-								label='Description'
-								field='logoDescription'
-								value={formData.logoDescription}
-								onChange={handleInputChange}
-							/></Card>
 							<Card className='p-4 shadow-md'>
 								<FileUploadBox
-								field='instituteImage'
-								title='Institute Image'
-								description='Upload your institute image Size 300X300 px (Max 1 Mb)'
-								file={formData.instituteImage}
-								onFileChange={handleFileUpload}
-							/>
+									field='instituteLogo'
+									title='Institute Logo'
+									description='Upload your brand or logo logo Size 300X300 px (Max 80 kb)'
+									file={formData.instituteLogo}
+									onFileChange={handleFileUpload}
+								/>
 							</Card>
 							<Card className='p-4 shadow-md'>
 								<TextareaField
-								label='Description'
-								field='imageDescription'
-								value={formData.imageDescription}
-								onChange={handleInputChange}
-							/>
+									label='Description'
+									field='logoDescription'
+									value={formData.logoDescription}
+									onChange={handleInputChange}
+								/>
+							</Card>
+							<Card className='p-4 shadow-md'>
+								<FileUploadBox
+									field='instituteImage'
+									title='Institute Image'
+									description='Upload your institute image Size 300X300 px (Max 1 Mb)'
+									file={formData.instituteImage}
+									onFileChange={handleFileUpload}
+								/>
+							</Card>
+							<Card className='p-4 shadow-md'>
+								<TextareaField
+									label='Description'
+									field='imageDescription'
+									value={formData.imageDescription}
+									onChange={handleInputChange}
+								/>
 							</Card>
 						</div>
 					</div>
@@ -485,13 +524,21 @@ const StepperForm: React.FC = () => {
 				return (
 					<div className='space-y-6'>
 						<div>
-							<h2 className='text-2xl font-bold text-gray-800 mb-2'style={{...FONTS.heading}}>
+							<h2
+								className='text-2xl font-bold text-gray-800 mb-2'
+								style={{ ...FONTS.heading }}
+							>
 								Social Links
 							</h2>
-							<p className='text-gray-600 mb-6'style={{...FONTS.edit_form}}>Add Social Links</p>
+							<p className='text-gray-600 mb-6' style={{ ...FONTS.edit_form }}>
+								Add Social Links
+							</p>
 						</div>
 						<Card className='p-4 shadow-md'>
-							<h3 className='font-semibold text-gray-700 mb-4'style={{...FONTS.tableheader,color:COLORS.secondary}}>
+							<h3
+								className='font-semibold text-gray-700 mb-4'
+								style={{ ...FONTS.tableheader, color: COLORS.secondary }}
+							>
 								Give your Social Links Here
 							</h3>
 							<div className='grid grid-cols-1 md:grid-cols-2 gap-4'>
@@ -539,14 +586,22 @@ const StepperForm: React.FC = () => {
 				return (
 					<div className='space-y-6'>
 						<div>
-							<h2 className='text-2xl font-bold text-gray-800 mb-2'style={{...FONTS.heading}}>
+							<h2
+								className='text-2xl font-bold text-gray-800 mb-2'
+								style={{ ...FONTS.heading }}
+							>
 								Documents
 							</h2>
-							<p className='text-gray-600 mb-6'style={{...FONTS.edit_form}}>Add Institute Docs</p>
+							<p className='text-gray-600 mb-6' style={{ ...FONTS.edit_form }}>
+								Add Institute Docs
+							</p>
 						</div>
 						<div className='space-y-6'>
 							<Card className='p-4 shdow-md'>
-								<h3 className='font-semibold text-gray-700 mb-4'style={{...FONTS.tableheader,color:COLORS.secondary}}>
+								<h3
+									className='font-semibold text-gray-700 mb-4'
+									style={{ ...FONTS.tableheader, color: COLORS.secondary }}
+								>
 									GST Information
 								</h3>
 								<InputField
@@ -557,7 +612,10 @@ const StepperForm: React.FC = () => {
 								/>
 							</Card>
 							<Card className='p-4 shadow-md'>
-								<h3 className='font-semibold text-gray-700 mb-4'style={{...FONTS.tableheader,color:COLORS.secondary}}>
+								<h3
+									className='font-semibold text-gray-700 mb-4'
+									style={{ ...FONTS.tableheader, color: COLORS.secondary }}
+								>
 									PAN Information
 								</h3>
 								<InputField
@@ -568,7 +626,10 @@ const StepperForm: React.FC = () => {
 								/>
 							</Card>
 							<Card className='p-4 shadow-md'>
-								<h3 className='font-semibold text-gray-700 mb-4'style={{...FONTS.tableheader,color:COLORS.secondary}}>
+								<h3
+									className='font-semibold text-gray-700 mb-4'
+									style={{ ...FONTS.tableheader, color: COLORS.secondary }}
+								>
 									License Information
 								</h3>
 								<InputField
@@ -585,13 +646,21 @@ const StepperForm: React.FC = () => {
 				return (
 					<div className='space-y-6'>
 						<div>
-							<h2 className='text-2xl font-bold text-gray-800 mb-2'style={{...FONTS.heading}}>
+							<h2
+								className='text-2xl font-bold text-gray-800 mb-2'
+								style={{ ...FONTS.heading }}
+							>
 								Account Details
 							</h2>
-							<p className='text-gray-600 mb-6'style={{...FONTS.edit_form}}>Enter your Account Details</p>
+							<p className='text-gray-600 mb-6' style={{ ...FONTS.edit_form }}>
+								Enter your Account Details
+							</p>
 						</div>
 						<Card className='p-6 shadow-md'>
-							<h3 className='font-semibold text-gray-700 mb-4'style={{...FONTS.tableheader,color:COLORS.secondary}}>
+							<h3
+								className='font-semibold text-gray-700 mb-4'
+								style={{ ...FONTS.tableheader, color: COLORS.secondary }}
+							>
 								Enter your Branch Details Here
 							</h3>
 							<div className='grid grid-cols-1 md:grid-cols-2 gap-4'>
@@ -654,7 +723,10 @@ const StepperForm: React.FC = () => {
 							</div>
 						</Card>
 						<Card className='p-4 shadow-md'>
-							<h3 className='font-semibold text-gray-700 mb-4'style={{...FONTS.tableheader,color:COLORS.secondary}}>
+							<h3
+								className='font-semibold text-gray-700 mb-4'
+								style={{ ...FONTS.tableheader, color: COLORS.secondary }}
+							>
 								Enter your Contact Details Here
 							</h3>
 							<div className='grid grid-cols-1 md:grid-cols-2 gap-4'>
@@ -686,7 +758,10 @@ const StepperForm: React.FC = () => {
 								/>
 							</div>
 							<div className='mt-4 '>
-								<Label className='text-sm font-medium text-gray-700 mb-4'style={{...FONTS.text5}}>
+								<Label
+									className='text-sm font-medium text-gray-700 mb-4'
+									style={{ ...FONTS.text5 }}
+								>
 									Profile Image
 								</Label>
 								<Input
