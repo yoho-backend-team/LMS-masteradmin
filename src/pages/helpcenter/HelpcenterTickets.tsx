@@ -1,6 +1,7 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { Badge } from '@/components/ui/badge'
+import ticketBg from '../../assets/ticket/Frame 6135 (1).png'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { ScrollArea } from '@/components/ui/scroll-area'
@@ -18,24 +19,34 @@ import {
 } from '@/components/ui/dropdown-menu'
 import { BsThreeDotsVertical } from "react-icons/bs";
 import { ChevronDown, Send, Paperclip, X } from 'lucide-react'
+import { useDispatch, useSelector } from 'react-redux'
+import { getHelpcenterTicketData } from '@/features/Profile/helpcenter-ticket/reducers/Thunks'
+import { helpcenterTicketSelect } from '@/features/Profile/helpcenter-ticket/reducers/Selector'
+import { GetImageUrl } from '@/utils/helper'
+import socket from '@/utils/socket'
 
 interface Ticket {
-  id: string
-  user: string
-  avatar: string
-  title: string
-  timestamp: string
-  status: 'Opened' | 'Closed'
+  _id: string
+  uuid: string
+  user: {
+    _id: string
+    first_name: string
+    last_name: string
+    image?: string
+  }
+  query: string
+  date: string
+  status: string
   priority: 'Low' | 'Medium' | 'High'
+  messages: Message[]
 }
 
 interface Message {
-  id: string
-  ticketId: string
+  _id: string
   sender: string
+  senderType: 'Users' | 'Support'
   content: string
-  timestamp: string
-  isUser: boolean
+  createdAt: string
 }
 
 interface UserProfile {
@@ -45,50 +56,8 @@ interface UserProfile {
   location: string
   locationTime: string
   language: string
-  ipAddress: string
-  operatingSystem: string
-  browser: string
-  role: string
-}
 
-const tickets: Ticket[] = [
-  {
-    id: '1',
-    user: 'Chandran',
-    avatar: '/placeholder.svg?height=40&width=40',
-    title: 'Testing Purpose',
-    timestamp: '4 Month Ago',
-    status: 'Opened',
-    priority: 'Low'
-  },
-  {
-    id: '2',
-    user: 'Chandran',
-    avatar: '/placeholder.svg?height=40&width=40',
-    title: 'Test the Ticket Management System',
-    timestamp: '4 Month Ago',
-    status: 'Opened',
-    priority: 'Medium'
-  },
-  {
-    id: '3',
-    user: 'Chandran',
-    avatar: '/placeholder.svg?height=40&width=40',
-    title: 'Testing Purpose',
-    timestamp: '2 Month Ago',
-    status: 'Opened',
-    priority: 'Low'
-  },
-  {
-    id: '4',
-    user: 'Chandran',
-    avatar: '/placeholder.svg?height=40&width=40',
-    title: 'Testing Purpose',
-    timestamp: '4 Month Ago',
-    status: 'Opened',
-    priority: 'Low'
-  }
-]
+}
 
 const userProfiles: Record<string, UserProfile> = {
   'Chandran': {
@@ -98,301 +67,235 @@ const userProfiles: Record<string, UserProfile> = {
     location: 'New York, USA',
     locationTime: 'Mon - Fri 9 AM - 5 PM',
     language: 'English',
-    ipAddress: '192.168.1.1',
-    operatingSystem: 'Windows 10',
-    browser: 'Chrome',
-    role: 'Institute Admin'
   }
 }
 
-const initialTicketMessages: Record<string, Message[]> = {
-  '1': [
-    {
-      id: '1-1',
-      ticketId: '1',
-      sender: 'Support',
-      content: 'Hi there, how can I assist you with your testing today?',
-      timestamp: '10:15 AM',
-      isUser: false
-    },
-    {
-      id: '1-2',
-      ticketId: '1',
-      sender: 'Chandran',
-      content: 'I need help with setting up test cases for the new authentication module.',
-      timestamp: '10:17 AM',
-      isUser: true
-    },
-    {
-      id: '1-3',
-      ticketId: '1',
-      sender: 'Support',
-      content: 'I can definitely help with that. Could you share more details about what specific test scenarios you need to cover?',
-      timestamp: '10:19 AM',
-      isUser: false
-    },
-    {
-      id: '1-4',
-      ticketId: '1',
-      sender: 'Chandran',
-      content: 'We need to test login with valid/invalid credentials, password reset flow, and session timeout functionality.',
-      timestamp: '10:22 AM',
-      isUser: true
-    },
-    {
-      id: '1-5',
-      ticketId: '1',
-      sender: 'Support',
-      content: 'Got it. I\'ll prepare test cases for these scenarios. Would you like me to include edge cases like special characters in passwords?',
-      timestamp: '10:25 AM',
-      isUser: false
-    },
-    {
-      id: '1-6',
-      ticketId: '1',
-      sender: 'Chandran',
-      content: 'Yes, please include those edge cases. Also, we need to verify the error messages are user-friendly.',
-      timestamp: '10:28 AM',
-      isUser: true
-    }
-  ],
-  '2': [
-    {
-      id: '2-1',
-      ticketId: '2',
-      sender: 'Support',
-      content: 'Hello, I understand you\'re testing the ticket management system. How can I help?',
-      timestamp: '9:30 AM',
-      isUser: false
-    },
-    {
-      id: '2-2',
-      ticketId: '2',
-      sender: 'Chandran',
-      content: 'We\'re experiencing issues with ticket assignment notifications. They don\'t always reach the assigned agent.',
-      timestamp: '9:32 AM',
-      isUser: true
-    },
-    {
-      id: '2-3',
-      ticketId: '2',
-      sender: 'Support',
-      content: 'I see. Are you using email notifications or in-app notifications? And is this happening for all agents or specific ones?',
-      timestamp: '9:35 AM',
-      isUser: false
-    },
-    {
-      id: '2-4',
-      ticketId: '2',
-      sender: 'Chandran',
-      content: 'Both types seem affected. It appears random - sometimes notifications work, sometimes they don\'t. No pattern by agent.',
-      timestamp: '9:38 AM',
-      isUser: true
-    },
-    {
-      id: '2-5',
-      ticketId: '2',
-      sender: 'Support',
-      content: 'Thanks for the details. I\'ll check our notification logs. In the meantime, could you provide timestamps of specific failed notifications?',
-      timestamp: '9:42 AM',
-      isUser: false
-    },
-    {
-      id: '2-6',
-      ticketId: '2',
-      sender: 'Chandran',
-      content: 'Here are three examples from yesterday: Ticket #4567 at 2:15 PM, #4568 at 3:30 PM, and #4570 at 4:45 PM.',
-      timestamp: '9:45 AM',
-      isUser: true
-    },
-    {
-      id: '2-7',
-      ticketId: '2',
-      sender: 'Support',
-      content: 'Appreciate the examples. I\'ve found the issue - there was a queue processing delay during those times. We\'re implementing a fix that should be deployed by EOD today.',
-      timestamp: '10:00 AM',
-      isUser: false
-    }
-  ],
-  '3': [
-    {
-      id: '3-1',
-      ticketId: '3',
-      sender: 'Support',
-      content: 'Good morning! Regarding your testing purpose ticket from 2 months ago - is this still an active issue?',
-      timestamp: '11:05 AM',
-      isUser: false
-    },
-    {
-      id: '3-2',
-      ticketId: '3',
-      sender: 'Chandran',
-      content: 'Yes, we need to revisit the performance testing for the reporting module under heavy load conditions.',
-      timestamp: '11:07 AM',
-      isUser: true
-    },
-    {
-      id: '3-3',
-      ticketId: '3',
-      sender: 'Support',
-      content: 'Understood. We\'ve made some optimizations since your last test. What load parameters would you like to test with this time?',
-      timestamp: '11:10 AM',
-      isUser: false
-    },
-    {
-      id: '3-4',
-      ticketId: '3',
-      sender: 'Chandran',
-      content: 'We need to simulate 500 concurrent users generating reports with complex filters. Last time the system slowed significantly at 300 users.',
-      timestamp: '11:12 AM',
-      isUser: true
-    },
-    {
-      id: '3-5',
-      ticketId: '3',
-      sender: 'Support',
-      content: 'Our recent database indexing improvements should help. I\'ll prepare a test environment with monitoring tools so we can identify any remaining bottlenecks.',
-      timestamp: '11:15 AM',
-      isUser: false
-    },
-    {
-      id: '3-6',
-      ticketId: '3',
-      sender: 'Chandran',
-      content: 'Perfect. Please include response time metrics for each report type. We need this data for our compliance documentation.',
-      timestamp: '11:18 AM',
-      isUser: true
-    }
-  ],
-  '4': [
-    {
-      id: '4-1',
-      ticketId: '4',
-      sender: 'Support',
-      content: 'Hi Chandran, I see you opened a ticket about notification testing. What specifically would you like to verify?',
-      timestamp: '2:00 PM',
-      isUser: false
-    },
-    {
-      id: '4-2',
-      ticketId: '4',
-      sender: 'Chandran',
-      content: 'We need to confirm all notification types are working after the recent platform update: assignment alerts, status changes, and due date reminders.',
-      timestamp: '2:02 PM',
-      isUser: true
-    },
-    {
-      id: '4-3',
-      ticketId: '4',
-      sender: 'Support',
-      content: 'I can help test these. Would you like to do this together in a test environment, or should I run through the scenarios and share results?',
-      timestamp: '2:05 PM',
-      isUser: false
-    },
-    {
-      id: '4-4',
-      ticketId: '4',
-      sender: 'Chandran',
-      content: 'Let\'s do it together - I can share my screen. Are you available now?',
-      timestamp: '2:06 PM',
-      isUser: true
-    },
-    {
-      id: '4-5',
-      ticketId: '4',
-      sender: 'Support',
-      content: 'Yes, I\'m available. I\'ll set up the test environment. Please initiate the screen share when ready.',
-      timestamp: '2:08 PM',
-      isUser: false
-    },
-    {
-      id: '4-6',
-      ticketId: '4',
-      sender: 'Chandran',
-      content: 'Great, joining now. First, let\'s test the ticket assignment flow between different departments.',
-      timestamp: '2:10 PM',
-      isUser: true
-    },
-    {
-      id: '4-7',
-      ticketId: '4',
-      sender: 'Support',
-      content: 'I see the notification came through instantly on your end. Let me check the email delivery logs... yes, the email was also sent successfully.',
-      timestamp: '2:15 PM',
-      isUser: false
-    },
-    {
-      id: '4-8',
-      ticketId: '4',
-      sender: 'Chandran',
-      content: 'Excellent. Now let\'s test the escalation notifications when a ticket approaches its SLA deadline.',
-      timestamp: '2:17 PM',
-      isUser: true
-    }
-  ]
-};
-
 const HelpcenterTickets = () => {
-  const [selectedTicket, setSelectedTicket] = useState<Ticket>(tickets[0])
+  const dispatch = useDispatch<any>();
+  const ticketData = useSelector(helpcenterTicketSelect)?.data?.data as Ticket[]
+  const [ticketMessages, setTicketMessages] = useState<Record<string, Message[]>>({})
+  const [selectedTicket, setSelectedTicket] = useState<Ticket | null>(null)
   const [messageInput, setMessageInput] = useState<string>('')
-  const [ticketMessages, setTicketMessages] = useState<Record<string, Message[]>>(initialTicketMessages)
   const [isProfileModalOpen, setIsProfileModalOpen] = useState(false)
   const [selectedUserProfile, setSelectedUserProfile] = useState<UserProfile | null>(null)
+  const [searchQuery, setSearchQuery] = useState<string>('');
 
-  const handleSendMessage = () => {
-    if (messageInput.trim()) {
-      const newMessage: Message = {
-        id: `${selectedTicket.id}-${Date.now()}`,
-        ticketId: selectedTicket.id,
-        sender: 'Chandran',
-        content: messageInput,
-        timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
-        isUser: true
-      };
-      
+  const filteredTickets = ticketData?.filter((ticket) => {
+  const fullName = `${ticket.user.first_name} ${ticket.user.last_name}`.toLowerCase();
+  const queryText = ticket.query.toLowerCase();
+  return (
+    fullName.includes(searchQuery.toLowerCase()) ||
+    queryText.includes(searchQuery.toLowerCase())
+  );
+    });
+
+  // Initialize with first ticket when data loads
+  useEffect(() => {
+  if (ticketData && ticketData.length > 0) {
+    const messagesMap: Record<string, Message[]> = {};
+    ticketData.forEach(ticket => {
+      messagesMap[ticket._id] = ticket.messages;
+    });
+    setTicketMessages(messagesMap);
+
+    // Set first ticket as default selected
+    if (!selectedTicket) {
+      setSelectedTicket(ticketData[0]);
+    }
+  }
+}, [ticketData]);
+
+  // Load ticket data on mount
+  useEffect(() => {
+    dispatch(getHelpcenterTicketData({}))
+  }, [dispatch])
+
+ const handleSendMessage = () => {
+  if (messageInput.trim() && selectedTicket) {
+    const timestamp = new Date().toISOString(); // ISO format
+    const userId = "66152b8fe43cda58126a2356"; // Ideally dynamic
+    const ticketId = selectedTicket.uuid;
+
+    // Construct message to send to server
+    const outgoingMessage = {
+      senderType: "Users",
+      text: messageInput,
+      ticket_id: ticketId,
+      timestamp,
+      user: userId
+    };
+
+    // Emit to server via socket
+    socket.emit("sendTicketMessage", outgoingMessage);
+    console.log("Message sent via socket:", outgoingMessage);
+
+    // Construct local UI message in expected format
+    const localMessage: Message = {
+      _id: `${ticketId}-${Date.now()}`,  // Temporary/fake ID
+      sender: userId,
+      senderType: "Users",
+      content: messageInput,
+      createdAt: timestamp
+    };
+
+    // Optimistically add message to local state
+    setTicketMessages(prev => ({
+      ...prev,
+      [selectedTicket._id]: [...(prev[selectedTicket._id] || []), localMessage]
+    }));
+
+    // Clear input
+    setMessageInput('');
+  }
+};
+
+  
+useEffect(() => {
+  socket.connect();
+
+  socket.on("connect", () => {
+    if (selectedTicket?.uuid) {
+      socket.emit("joinTicket", selectedTicket.uuid);
+    }
+  });
+
+  const handleMessage = (message: Message) => {
+    console.log("Received message:", message);
+
+    // Append to local UI
+    if (selectedTicket?.uuid) {
       setTicketMessages(prev => ({
         ...prev,
-        [selectedTicket.id]: [...(prev[selectedTicket.id] || []), newMessage]
+        [selectedTicket.uuid]: [...(prev[selectedTicket.uuid] || []), message]
       }));
-      
-      setMessageInput('');
+    }
+  };
+
+  
+  socket.on("receiveMessage", handleMessage);
+
+  return () => {
+    socket.off("receiveMessage", handleMessage);
+  };
+}, [selectedTicket]);
+
+
+
+  const handleAvatarClick = (user: Ticket['user']) => {
+  const profile: UserProfile = {
+    name: `${user.first_name} ${user.last_name}`,
+    email: user.email || 'N/A',
+    phone: user.phone_number || 'N/A',
+    location: 'India', // or dynamically from user object if available
+    locationTime: 'Mon - Fri 9 AM - 5 PM', // placeholder or remove
+    language: 'English', // placeholder or remove
+  }
+
+  setSelectedUserProfile(profile)
+  setIsProfileModalOpen(true)
+}
+
+
+const groupMessagesByDate = (messages: Message[]) => {
+  return messages.reduce((acc: Record<string, Message[]>, message) => {
+    const date = new Date(message.createdAt).toDateString(); // e.g. "Sat Aug 09 2025"
+    if (!acc[date]) acc[date] = [];
+    acc[date].push(message);
+    return acc;
+  }, {});
+};
+
+const getReadableDate = (dateStr: string) => {
+  const today = new Date();
+  const targetDate = new Date(dateStr);
+  const yesterday = new Date();
+  yesterday.setDate(today.getDate() - 1);
+
+  const todayStr = today.toDateString();
+  const yesterdayStr = yesterday.toDateString();
+
+  if (dateStr === todayStr) return 'Today';
+  if (dateStr === yesterdayStr) return 'Yesterday';
+
+  return targetDate.toLocaleDateString(undefined, {
+    day: 'numeric',
+    month: 'short',
+    year: 'numeric',
+  }); // e.g. 9 Aug 2025
+};
+
+
+  const formatRelativeTime = (isoString: string) => {
+    const now = new Date()
+    const date = new Date(isoString)
+    const diffInSeconds = Math.floor((now.getTime() - date.getTime()) / 1000)
+    
+    const minute = 60
+    const hour = minute * 60
+    const day = hour * 24
+    const week = day * 7
+    const month = day * 30
+    const year = day * 365
+
+    if (diffInSeconds < minute) {
+      return 'just now'
+    } else if (diffInSeconds < hour) {
+      const minutes = Math.floor(diffInSeconds / minute)
+      return `${minutes} minute${minutes === 1 ? '' : 's'} ago`
+    } else if (diffInSeconds < day) {
+      const hours = Math.floor(diffInSeconds / hour)
+      return `${hours} hour${hours === 1 ? '' : 's'} ago`
+    } else if (diffInSeconds < week) {
+      const days = Math.floor(diffInSeconds / day)
+      return `${days} day${days === 1 ? '' : 's'} ago`
+    } else if (diffInSeconds < month) {
+      const weeks = Math.floor(diffInSeconds / week)
+      return `${weeks} week${weeks === 1 ? '' : 's'} ago`
+    } else if (diffInSeconds < year) {
+      const months = Math.floor(diffInSeconds / month)
+      return `${months} month${months === 1 ? '' : 's'} ago`
+    } else {
+      const years = Math.floor(diffInSeconds / year)
+      return `${years} year${years === 1 ? '' : 's'} ago`
     }
   }
 
-  const handleAvatarClick = (userName: string) => {
-    const profile = userProfiles[userName]
-    if (profile) {
-      setSelectedUserProfile(profile)
-      setIsProfileModalOpen(true)
-    }
+  const formatMessageTime = (isoString: string) => {
+    return new Date(isoString).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+  }
+
+  if (!ticketData) {
+    return <div className="flex items-center justify-center h-screen">Loading tickets...</div>
   }
 
   return (
-    <div className="flex gap-2 bg-white ">
+    <div className="flex gap-2 h-[100%] bg-white">
       {/* Left Sidebar */}
-      <div className="max-h-screen  bg-white border border-gray-100 transition-shadow duration-200 shadow-[0_0_15px_rgba(0,0,0,0.1)] hover:shadow-[0_0_20px_rgba(0,0,0,0.15)]">
+      <div className=" bg-white border border-gray-100 transition-shadow duration-200 shadow-[0_0_6px_rgba(0,0,0,0.1)] ">
         {/* Search Bar */}
         <div className="p-3 border-gray-200">
           <Input 
             placeholder="Search"
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
             className="w-full rounded-lg bg-gray-50 border-[#999999]"
           />
         </div>
         {/* Tickets List */}
-        <ScrollArea className="flex-1 p-3 scrollbar-hide bg-white h-[calc(100vh-73px)]">
-          <div className="p-1 bg-white ">
-            {tickets.map((ticket) => (
+        <ScrollArea className="flex-1 p-3 scrollbar-hide bg-white h-[90%] ">
+          <div className="p-1 bg-white">
+            {filteredTickets?.map((ticket) => (
               <div
-                key={ticket.id}
-                className={`p-3 cursor-pointer my-2 bg-white rounded-xl border border-gray-100 transition-shadow duration-200 shadow-[0_0_15px_rgba(0,0,0,0.1)] hover:shadow-[0_0_20px_rgba(0,0,0,0.15)] border-l-4 ${
-                  selectedTicket.id === ticket.id 
+                key={ticket._id}
+                className={`p-3 cursor-pointer my-2 bg-white rounded-xl border border-gray-100 transition-shadow duration-200 shadow-[0_0_5px_rgba(0,0,0,0.1)] hover:shadow-[0_0_20px_rgba(0,0,0,0.15)] border-l-4 ${
+                  selectedTicket?._id === ticket._id 
                     ? 'bg-gray-50 border-l-[#68b39f]'
                     : 'hover:bg-gray-50 border-l-transparent'
                 }`}
                 onClick={() => setSelectedTicket(ticket)}
               >
-                <div className="flex items-start space-x-3 ">
-                  <div className="relative ">
+                <div className="flex items-start space-x-3">
+                  <div className="relative">
                     <Avatar 
                       className="w-10 h-10 cursor-pointer hover:ring-2 hover:ring-[#68b39f] transition-all"
                       onClick={(e) => {
@@ -400,48 +303,44 @@ const HelpcenterTickets = () => {
                         handleAvatarClick(ticket.user)
                       }}
                     >
-                      <AvatarImage src={ticket.avatar || "/placeholder.svg"} alt={ticket.user} />
-                      <AvatarFallback className="bg-orange-400 text-white">{ticket.user[0]}</AvatarFallback>
+                      <AvatarImage src={GetImageUrl(ticket.user.image) || "/placeholder.svg"} alt={ticket.user.first_name} />
+                      <AvatarFallback className="bg-orange-400 text-white">
+                        {ticket.user.first_name[0]}
+                      </AvatarFallback>
                     </Avatar>
-                    
                   </div>
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center justify-between mb-1">
                       <h3 className="font-semibold text-sm text-gray-900">
-                        {ticket.user}
+                        {ticket.user.first_name} {ticket.user.last_name}
                       </h3>
                       <span className="text-xs text-gray-400">
-                        {ticket.timestamp}
+                        {formatRelativeTime(ticket.date)}
                       </span>
                     </div>
-                    <p className="text-sm text-gray-600 mb-2">
-                      {ticket.title}
+                    <p className=" text-sm text-gray-600 mb-2">
+                      {ticket.query}
                     </p>
-                   <div className="flex items-center mt-8 ml-8 space-x-2">
-                    {/* Status Badge */}
-                    <Badge
-                      className="px-4 py-1 text-white bg-[#68b39f] text-sm font-medium h-auto rounded-tl-xl rounded-br-xl rounded-tr-none rounded-bl-none"
-                    >
-                      {ticket.status}
-                    </Badge>
-                                      
-                    {/* Priority Badge */}
-                    <Badge
-                      variant="outline"
-                      className={`px-4 py-1 text-sm font-medium h-auto rounded-tl-xl rounded-br-xl rounded-tr-none rounded-bl-none
-                        ${
+                    <div className="flex items-center mt-8 ml-22 space-x-2">
+                      {/* Status Badge */}
+                      <Badge className="px-4 py-1 text-white bg-[#68b39f] text-sm font-medium h-auto rounded-tl-xl rounded-br-xl rounded-tr-none rounded-bl-none">
+                        {ticket.status}
+                      </Badge>
+                      
+                      {/* Priority Badge */}
+                      <Badge
+                        variant="outline"
+                        className={`px-4 py-1 text-sm font-medium h-auto rounded-tl-xl rounded-br-xl rounded-tr-none rounded-bl-none ${
                           ticket.priority === 'Low'
                             ? 'border-[#68b39f] text-[#68b39f] bg-white'
                             : ticket.priority === 'Medium'
                             ? 'border-[#68b39f] text-[#68b39f] bg-white'
                             : 'border-red-300 text-red-600 bg-red-50'
-                        }
-                      `}
-                    >
-                      {ticket.priority}
-                    </Badge>
-                  </div>
-
+                        }`}
+                      >
+                        {ticket.priority}
+                      </Badge>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -451,104 +350,118 @@ const HelpcenterTickets = () => {
       </div>
 
       {/* Chat Area */}
-      <div className="flex-1 flex flex-col h-screen bg-white">
-        {/* Chat Header */}
-        <div className="shrink-0 bg-white border-b rounded-xl border-gray-400 px-6 py-4 transition-shadow duration-200 shadow-[0_0_15px_rgba(0,0,0,0.1)] hover:shadow-[0_0_20px_rgba(0,0,0,0.15)]">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center space-x-3">
-              <Avatar 
-                className="w-10 h-10 cursor-pointer hover:ring-2 hover:ring-[#68b39f] transition-all"
-                onClick={() => handleAvatarClick(selectedTicket.user)}
-              >
-                <AvatarImage src={selectedTicket.avatar || "/placeholder.svg"} alt={selectedTicket.user} />
-                <AvatarFallback className="bg-orange-400 text-white">{selectedTicket.user[0]}</AvatarFallback>
-              </Avatar>
-              <div>
-                <h2 className="font-semibold text-gray-900">{selectedTicket.user} R</h2>
-                <p className="text-sm text-gray-500">Institute Admin</p>
-              </div>
-            </div>
-            <div>
-              <BsThreeDotsVertical />
-            </div>
-          </div>
-        </div>
-
-        {/* Messages */}
-        <div className="flex-1 overflow-y-auto no-scrollbar px-6 py-4 bg-gray-50">
-          <div className="space-y-4">
-            {ticketMessages[selectedTicket.id]?.map((message) => (
-              <div
-                key={message.id}
-                className={`flex ${message.isUser ? 'justify-end' : 'justify-start'}`}
-              >
-                <div className="flex items-end space-x-2 max-w-xs lg:max-w-md">
-                  {!message.isUser && (
-                    <Avatar className="w-8 h-8 mb-1">
-                      <AvatarImage src="/placeholder.svg?height=32&width=32" alt="Support" />
-                      <AvatarFallback className="bg-blue-500 text-white text-xs">S</AvatarFallback>
-                    </Avatar>
-                  )}
-                  <div className="space-y-1">
-                    <div
-                      className={`px-4 py-3 rounded-2xl   bg-white border border-gray-100 transition-shadow duration-200 shadow-[0_0_15px_rgba(0,0,0,0.1)] hover:shadow-[0_0_20px_rgba(0,0,0,0.15)] ${
-                        message.isUser
-                          ? 'bg-[#68b39f] text-white rounded-br-md'
-                          : 'bg-white text-gray-900 rounded-bl-md'
-                      }`}
-                    >
-                      <p className="text-sm leading-relaxed">{message.content}</p>
-                    </div>
-                    {message.timestamp && (
-                      <p className={`text-xs px-2 ${
-                        message.isUser ? 'text-right text-gray-500' : 'text-left text-gray-500'
-                      }`}>
-                        {message.timestamp}
-                      </p>
-                    )}
-                  </div>
-                  {message.isUser && (
-                    <Avatar 
-                      className="w-8 h-8 mb-1 cursor-pointer hover:ring-2 hover:ring-[#68b39f] transition-all"
-                      onClick={() => handleAvatarClick(selectedTicket.user)}
-                    >
-                      <AvatarImage src={selectedTicket.avatar || "/placeholder.svg"} alt={selectedTicket.user} />
-                      <AvatarFallback className="bg-orange-400 text-white">{selectedTicket.user[0]}</AvatarFallback>
-                    </Avatar>
-                  )}
+      {selectedTicket ? (
+        <div className="flex-1 flex flex-col bg-white">
+          {/* Chat Header */}
+          <div className="shrink-0 bg-white mb-1 border-b rounded-xl border-gray-400 px-6 py-4 transition-shadow duration-200 shadow-[0_0_5px_rgba(0,0,0,0.1)]">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center space-x-3">
+                <Avatar 
+                  className="w-10 h-10 cursor-pointer hover:ring-2 hover:ring-[#68b39f] transition-all"
+                  onClick={() => handleAvatarClick(selectedTicket.user.first_name)}
+                >
+                  <AvatarImage src={GetImageUrl(selectedTicket.user.image) || "/placeholder.svg"} alt={selectedTicket.user.first_name} />
+                  <AvatarFallback className="bg-orange-400 text-white">
+                    {selectedTicket.user.first_name[0]}
+                  </AvatarFallback>
+                </Avatar>
+                <div>
+                  <h2 className="font-semibold text-gray-900">
+                    {selectedTicket.user.first_name} {selectedTicket.user.last_name}
+                  </h2>
+                  <p className="text-sm text-gray-500">{selectedTicket.user?.role?.identity}</p>
                 </div>
               </div>
-            ))}
+              <div>
+                <BsThreeDotsVertical />
+              </div>
+            </div>
           </div>
-        </div>
 
-        {/* Message Input */}
-        <div className="shrink-0 xbg-white border-t border-gray-200 px-6 py-4">
-          <div className="flex items-center space-x-3">
-            <Button variant="ghost" size="sm" className="text-gray-400 hover:text-gray-600">
-              <Paperclip className="w-5 h-5" />
-            </Button>
-            <Input
-              placeholder="Type a message..."
-              value={messageInput}
-              onChange={(e) => setMessageInput(e.target.value)}
-              onKeyPress={(e) => e.key === 'Enter' && handleSendMessage()}
-              className="flex-1 rounded-full bg-gray-50 border-gray-200 px-4"
-            />
-            <Button 
-              onClick={handleSendMessage}
-              className="bg-[#68b39f] hover:bg-teal-600 rounded-full p-3"
-              size="sm"
-            >
-              <Send className="w-4 h-4" />
-            </Button>
+          {/* Messages */}
+          <div className="flex-1 overflow-y-auto border rounded-2xl mb-2 no-scrollbar px-6 py-4 bg-ticket ">
+            <div className="space-y-4">
+              {ticketMessages[selectedTicket._id] && ticketMessages[selectedTicket._id].length > 0 ? (
+              ticketMessages[selectedTicket._id]?.map((message) => (
+                <div
+                  key={message._id}
+                  className={`flex ${message.senderType === 'Users' ? 'justify-end' : 'justify-start'}`}
+                >
+
+                  <div className="flex items-end space-x-2 max-w-xs lg:max-w-md">
+                    {message.senderType !== 'Users' && (
+                      <Avatar className="w-8 h-8 mb-1">
+                        <AvatarImage src="/placeholder.svg?height=32&width=32" alt="Support" />
+                        <AvatarFallback className="bg-blue-500 text-white text-xs">S</AvatarFallback>
+                      </Avatar>
+                    )}
+                    <div className="space-y-1">
+                      <div
+                        className={`px-4 py-3 rounded-xl bg-white border border-gray-100 transition-shadow duration-200 shadow-[0_0_10px_rgba(0,0,0,0.1)] ${
+                          message.senderType === 'Users'
+                            ? 'bg-[#68b39f] text-white rounded-br-md'
+                            : 'bg-white text-gray-900 rounded-bl-md'
+                        }`}
+                      >
+                        <p className="text-sm leading-relaxed">{message.content}</p>
+                      </div>
+                      <p className={`text-xs px-2 ${
+                        message.senderType === 'Users' ? 'text-right text-gray-500' : 'text-left text-gray-500'
+                      }`}>
+                        {formatMessageTime(message.createdAt)}
+                      </p>
+                    </div>
+                    {message.senderType === 'Users' && (
+                      <Avatar 
+                        className="w-8 h-8 mb-1 cursor-pointer transition-all" >
+                        <AvatarImage src={GetImageUrl(selectedTicket.user.image) || "/placeholder.svg"} alt={selectedTicket.user.first_name} />
+                        <AvatarFallback className="bg-orange-400 text-white">
+                          {selectedTicket.user.first_name[0]}
+                        </AvatarFallback>
+                      </Avatar>
+                    )}
+                  </div>
+                </div>
+              ))) : (
+                <div className="text-center text-gray-400 text-sm mt-10">
+                  Message not yet started
+                </div>
+              )}
+            </div>
+          </div>
+
+          {/* Message Input */}
+          <div className="shrink-0 xbg-white border rounded-2xl border-gray-200 px-6 py-4">
+            <div className="flex items-center space-x-3">
+              <Button variant="ghost" size="sm" className="text-gray-400 relative hover:text-gray-600">
+                <Paperclip className="w-5 h-5" />
+              </Button>
+              <Input
+                placeholder="Type a message..."
+                value={messageInput}
+                onChange={(e) => setMessageInput(e.target.value)}
+                onKeyPress={(e) => e.key === 'Enter' && handleSendMessage()}
+                className="flex-1 rounded-full bg-gray-50 border-gray-200 px-4"
+              />
+              <Button 
+                onClick={handleSendMessage}
+                className="bg-[#68b39f] hover:bg-teal-600 rounded-full p-3"
+                size="sm"
+              >
+                <Send className="w-4 h-4" />
+              </Button>
+            </div>
           </div>
         </div>
-      </div>
+      ) : (
+        <div className="flex-1 flex items-center justify-center bg-white">
+          <p className="text-gray-500">Select a ticket to view messages</p>
+        </div>
+      )}
 
       {/* Profile Modal */}
       <Dialog open={isProfileModalOpen} onOpenChange={setIsProfileModalOpen}>
-        <DialogContent className="max-w-md mt-70 ml-70 bg-white rounded-2xl shadow-2xl border-0 p-0 overflow-hidden">
+        <DialogContent className="max-w-md mt-50  ml-70 bg-white rounded-2xl shadow-2xl border-0 p-0 overflow-hidden">
           <div className="relative">
             {/* Close Button */}
             <Button
@@ -630,36 +543,7 @@ const HelpcenterTickets = () => {
                 </div>
               </div>
 
-              {/* Device Details */}
-              <div>
-                <h4 className="font-semibold text-gray-900 mb-4">Device Details</h4>
-                <div className="grid grid-cols-2 gap-4">
-                  <div>
-                    <label className="text-sm text-gray-600 mb-1 block">IP Address</label>
-                    <Input 
-                      value={selectedUserProfile?.ipAddress || ''} 
-                      readOnly 
-                      className="bg-white border-[#999999] text-sm text-[#999999]"
-                    />
-                  </div>
-                  <div>
-                    <label className="text-sm text-gray-600 mb-1 block">Operating System</label>
-                    <Input 
-                      value={selectedUserProfile?.operatingSystem || ''} 
-                      readOnly 
-                      className="bg-white border-[#999999] text-sm text-[#999999]"
-                    />
-                  </div>
-                  <div className="col-span-2">
-                    <label className="text-sm text-gray-600 mb-1 block">Browser</label>
-                    <Input 
-                      value={selectedUserProfile?.browser || ''} 
-                      readOnly 
-                      className="bg-white border-[#999999] text-sm text-[#999999]"
-                    />
-                  </div>
-                </div>
-              </div>
+             
             </div>
           </div>
         </DialogContent>
@@ -668,4 +552,4 @@ const HelpcenterTickets = () => {
   )
 }
 
-export default HelpcenterTickets;
+export default HelpcenterTickets

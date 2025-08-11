@@ -129,3 +129,10 @@
 	-ms-overflow-style: none; /* IE and Edge */
 	scrollbar-width: none; /* Firefox */
 }
+
+.bg-ticket {
+  background-image: url('/src/assets//ticket/Frame\ 6135\ \(1\).png');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+}

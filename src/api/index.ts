@@ -12,7 +12,8 @@ class Client {
         update_password: (data: any) => httpClient.post(API_END_POINTS.auth.update_password, data),
         get_profile: (data: any) => httpClient.get(API_END_POINTS.auth.get_profile, data),
         get_activity: (data: any) => httpClient.get(API_END_POINTS.auth.get_activity, data),
-        edit_profile: (data: any) => httpClient.patch(API_END_POINTS.auth.edit_profile, data)
+        edit_profile: (data: any) => httpClient.patch(API_END_POINTS.auth.edit_profile, data),
+        sign_in: (data: any) => httpClient.post(API_END_POINTS.auth.sign_in, data)
     }
     institute = {
         all: (params: any) => httpClient.get(API_END_POINTS.institute.getAll, params),
@@ -49,8 +50,9 @@ class Client {
     faq_category = {
         get: (querys: any) => httpClient.get(API_END_POINTS.faq_category.all, querys),
         create: (data: any) => httpClient.post(API_END_POINTS.faq_category.create, data),
-        update: (data: { id: string; }) => httpClient.patch(API_END_POINTS.faq_category.create + data.id, data),
-        delete: (data: { id: string; }) => httpClient.delete(API_END_POINTS.faq_category.create + data.id)
+        update: (data: { uuid: string; }) => httpClient.patch(API_END_POINTS.faq_category.create + data.uuid, data),
+        statusupdate: (data: { uuid: string,}) => httpClient.patch(API_END_POINTS.faq_category.create + data.uuid, data),
+        delete: (data: { uuid: string; }) => httpClient.delete(API_END_POINTS.faq_category.create + data.uuid)
     }
     faq = {
         get: (data: any) => httpClient.get(API_END_POINTS.faq, data),
@@ -65,6 +67,9 @@ class Client {
     }
     activity = {
         get: (params: any) => httpClient.get(API_END_POINTS.activity.get, params)
+    }
+    report = {
+        get: (params: any) => httpClient.get(API_END_POINTS.auth.reports, params)
     }
 }
 

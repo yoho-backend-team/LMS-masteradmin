@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Zap, Component, Droplet, Plus, ChevronDown, Eye } from 'lucide-react';
+import { Zap, Component, Droplet, Plus, ChevronDown } from 'lucide-react';
 import filterImg from '../../assets/dashboard/filter.png';
 import { COLORS, FONTS } from '@/constants/ui constants';
 import instituteImg from '../../assets/institute/instituteImage.png';
@@ -13,6 +13,7 @@ import {
 	DropdownMenuItem,
 	DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
+import { useNavigate } from 'react-router-dom';
 
 interface Institute {
 	id: number;
@@ -32,6 +33,7 @@ const Institutes: React.FC = () => {
 	const [selectedPlan, setSelectedPlan] = useState<string | null>(null);
 	const [selectedStatus, setSelectedStatus] = useState<string | null>(null);
 	const [selectedDate, setSelectedDate] = useState<string | null>(null);
+	const navigate = useNavigate();
 	const [originalInstitutes, setOriginalInstitutes] = useState<Institute[]>([
 		{
 			id: 1,
@@ -270,7 +272,12 @@ const Institutes: React.FC = () => {
 							{showFilter ? 'Hide Filter' : 'Show Filter'}
 						</span>
 					</Button>
-					<Button className='bg-[#68B39F] text-white border-[#68B39F] hover:bg-[#2D6974] rounded-tl-2xl rounded-br-2xl rounded-bl-none rounded-tr-none px-4 py-6'>
+					<Button
+						className='bg-[#68B39F] text-white border-[#68B39F] hover:bg-[#2D6974] rounded-tl-2xl rounded-br-2xl rounded-bl-none rounded-tr-none px-4 py-6'
+						onClick={() => {
+							navigate('/institute/add');
+						}}
+					>
 						<Plus className='w-6 h-6' />
 						<span style={{ ...FONTS.button_text }}>Add Institute</span>
 					</Button>
@@ -439,8 +446,8 @@ const Institutes: React.FC = () => {
                         text-sm font-medium leading-tight
                         ${
 													isHovered || index === 0
-														? 'text-white/90'
-														: 'text-gray-600'
+														? 'text-white'
+														: 'text-[#242731]'
 												}
                       `}
 											style={{ ...FONTS.card_text }}
@@ -549,7 +556,7 @@ const Institutes: React.FC = () => {
 												<div className='flex gap-2'>
 													{/* Status Dropdown */}
 													<DropdownMenu>
-														<DropdownMenuTrigger asChild>
+														{/* <DropdownMenuTrigger asChild>
 															<Button
 																className={`px-4 flex items-center gap-2 ${
 																	institute.status === 'Active'
@@ -558,12 +565,15 @@ const Institutes: React.FC = () => {
 																		? 'bg-red-500 hover:bg-red-600'
 																		: 'bg-yellow-500 hover:bg-yellow-600'
 																}`}
-																style={{ ...FONTS.pass_head_2, color: COLORS.white }}
+																style={{
+																	...FONTS.pass_head_2,
+																	color: COLORS.white,
+																}}
 															>
 																{institute.status}
 																<ChevronDown className='w-4 h-4' />
 															</Button>
-														</DropdownMenuTrigger>
+														</DropdownMenuTrigger> */}
 														<DropdownMenuContent>
 															{statusOptions.map((status) => (
 																<DropdownMenuItem
@@ -583,6 +593,9 @@ const Institutes: React.FC = () => {
 														variant='outline'
 														className='!text-white bg-[#2D6974] px-4 flex items-center gap-2'
 														style={{ ...FONTS.pass_head_2 }}
+														onClick={() => {
+															navigate(`/institute/view/${institute.id}`);
+														}}
 													>
 														View
 													</Button>
@@ -656,9 +669,9 @@ const CircularProgress = ({
 			<div className='absolute inset-0 flex items-center justify-center'>
 				<span
 					className={`text-lg font-bold ${
-						isHovered ? 'text-white' : 'text-gray-800'
+						isHovered ? '!text-white' : '!text-[#242731]'
 					} ${isLoading ? 'animate-pulse' : ''}`}
-					style={{ ...FONTS.percentage_text }}
+					style={{ ...FONTS.tableheader }}
 				>
 					{`${percentage}%`}
 				</span>

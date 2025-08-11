@@ -1,0 +1,130 @@
+import { Signin } from "@/features/SignIn/service";
+import { StoreLocalStorage } from "@/utils/localStorage";
+import React, { useState } from "react";
+import { CiCircleInfo } from "react-icons/ci";
+import { FiEyeOff, FiEye } from "react-icons/fi";
+import { useNavigate } from "react-router-dom";
+
+const SignIn = () => {
+  const [email, setEmail] = useState("mernstackdev.yoho@gmail.com");
+  const [password, setPassword] = useState("Wecandoit@2025");
+  const [showPassword, setShowPassword] = useState(false);
+  const navigate = useNavigate();
+
+
+
+const handleSignIn = async (e: React.FormEvent) => {
+  e.preventDefault();
+
+  if (!email || !password) {
+    alert("Please enter valid email and password");
+    return;
+  }
+
+  const params = { email, password };
+
+  try {
+    const response = await Signin(params); 
+
+
+    const token = response?.data?.data?.token;
+
+    if (token) {
+      localStorage.setItem("token", token);
+      localStorage.setItem("isAuthenticated", "true");
+
+      navigate("/");
+    } else {
+      alert("Invalid credentials. Please try again.");
+    }
+  } catch (error: any) {
+    console.error("Sign-in error:", error);
+    alert("Login failed");
+  }
+};
+
+
+  return (
+    <div className="min-h-screen grid grid-cols-1 md:grid-cols-2">
+     
+      <div className="flex flex-col justify-center items-center p-3 bg-white">
+        <h1 className="text-9xl text-[#2D6974] tracking-widest ">
+        Classie
+        </h1>
+
+        <form onSubmit={handleSignIn} className="mt-8 p-5 w-full">
+          <h2 className="text-2xl font-bold text-[#68B39F]">
+            Hi, Welcome Back
+          </h2>
+          <p className="text-lg mt-2 text-[#999999]">
+            Enter your Credentials to continue
+          </p>
+
+         
+          <div className="mt-6">
+            <label className="block text-md font-medium text-gray-700">
+              User Name
+            </label>
+            <input
+              type="text"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              className="mt-1 block w-full h-14 rounded-md border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#68B39F]"
+              required
+            />
+          </div>
+
+        
+          <div className="mt-4">
+            <label className="block text-md font-medium text-gray-700">
+              Password
+            </label>
+            <div className="relative mt-1">
+              <input
+                type={showPassword ? "text" : "password"}
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                className="block w-full h-14 rounded-md border border-gray-300 px-3 py-2 text-sm pr-10 focus:outline-none focus:ring-2 focus:ring-[#68B39F]"
+                required
+              />
+              <div
+                className="absolute right-3 top-4 cursor-pointer text-gray-500"
+                onClick={() => setShowPassword(!showPassword)}
+              >
+                {showPassword ? <FiEye /> : <FiEyeOff />}
+              </div>
+            </div>
+          </div>
+
+         
+          <div className="mt-3 flex items-center justify-between">
+            <label className="flex items-center space-x-2 text-sm text-gray-600">
+              <input type="checkbox" className="rounded border-gray-300" />
+              <span>Remember Me</span>
+            </label>
+            <a href="#" className="text-sm text-gray-500 hover:text-[#68B39F]" onClick={() => navigate('/send-otp')}>
+              Forgot Password?
+            </a>
+          </div>
+
+         
+          <button
+            type="submit"
+            className="mt-6 w-full h-14 bg-[#68B39F]  text-white py-2 rounded-md text-xl font-medium"
+          >
+            Sign In
+          </button>
+
+         
+          <p className="mt-4 text-xs text-center text-[#999999]">
+            Enter the mail ID & Password given by LMS
+          </p>
+        </form>
+      </div>
+
+      <div className="hidden md:block bg-[#68B39F]"></div>
+    </div>
+  );
+};
+
+export default SignIn;
