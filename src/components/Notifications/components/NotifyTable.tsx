@@ -3,7 +3,7 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { FONTS } from '@/constants/ui constants';
 import { GetAllNotificationThunks } from '@/features/notification/redux/thunks';
-import { ResendNotification } from '@/features/notification/sevice/index';  
+import { ResendNotification } from '@/features/notification/sevice/index';
 import { Plus } from 'lucide-react';
 import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
@@ -16,7 +16,7 @@ const NotifyTable: React.FC<props> = ({ setFormModalOpen }) => {
   const dispatch = useDispatch();
 
   const notifications = useSelector(
-    (state: any) => state.Notification.notification || []
+    (state: any) => state?.Notification?.notification || []
   );
 
   useEffect(() => {

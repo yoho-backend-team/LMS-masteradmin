@@ -32,22 +32,22 @@ const AddInstituteNotify: React.FC<props> = ({
 }) => {
   const dispatch = useDispatch();
 
- 
+
   const [selectedInstitute, setSelectedInstitute] = useState("");
   const [selectedBranch, setSelectedBranch] = useState("");
   const [title, setTitle] = useState("");
   const [body, setBody] = useState("");
   const [link, setLink] = useState("");
 
-  const institutes = useSelector((state: any) => state.Institute.institute);
+  const institutes = useSelector((state: any) => state?.Institute?.institute);
 
   useEffect(() => {
     dispatch(GetAllInstituteThunks() as any);
   }, [dispatch]);
 
- 
 
-  const branches = useSelector((state: RootState) => state.Branch.branch);
+
+  const branches = useSelector((state: RootState) => state?.Branch?.branch);
 
   useEffect(() => {
     if (selectedInstitute) {
@@ -79,7 +79,7 @@ const AddInstituteNotify: React.FC<props> = ({
         setTitle("");
         setBody("");
         setLink("");
-        setSelectedInstitute(""); 
+        setSelectedInstitute("");
         setSelectedBranch("");
       })
       .catch(() => alert("Failed to create notification"));

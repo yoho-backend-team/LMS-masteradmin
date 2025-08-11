@@ -22,7 +22,7 @@ const StatsCard: React.FC = () => {
   const dispatch = useDispatch();
 
   const notifications = useSelector(
-    (state: any) => state.Notification.notification || []
+    (state: any) => state?.Notification?.notification || []
   );
 
   useEffect(() => {
@@ -30,9 +30,9 @@ const StatsCard: React.FC = () => {
   }, [dispatch]);
   console.log(notifications, "check")
 
-  const totalNotifications = notifications.length;
-  const seenNotifications = notifications.filter((n: any) => n.status === 'read').length;
-  const unseenNotifications = notifications.filter((n: any) => n.status === 'unread').length;
+  const totalNotifications = notifications?.length;
+  const seenNotifications = notifications?.filter((n: any) => n.status === 'read').length;
+  const unseenNotifications = notifications?.filter((n: any) => n.status === 'unread').length;
 
   console.log('Total:', totalNotifications);
   console.log('Seen:', seenNotifications);
@@ -90,7 +90,7 @@ const StatsCard: React.FC = () => {
                 className={`
                   shadow-2xl transition-all w-80 h-85  duration-300 cursor-pointer border-0
                   rounded-tl-3xl rounded-br-3xl rounded-bl-none rounded-tr-none
-                  ${isHovered 
+                  ${isHovered
                     ? 'bg-[#2D6974] text-white hover:scale-90'
                     : 'bg-white text-gray-900 hover:scale-100'
                   }
@@ -104,13 +104,13 @@ const StatsCard: React.FC = () => {
                     <div
                       className={`
                         w-16 h-16 rounded-full flex items-center justify-center
-                        ${isHovered  ? 'bg-white/20' : kpi.iconBg}
+                        ${isHovered ? 'bg-white/20' : kpi.iconBg}
                       `}
                     >
                       <IconComponent
                         className={`
                           w-10 h-10
-                          ${isHovered 
+                          ${isHovered
                             ? 'text-white'
                             : kpi.iconColor
                           }
