@@ -1,5 +1,5 @@
 import type React from 'react';
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -9,7 +9,9 @@ import { Upload, Check } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import toast from 'react-hot-toast';
 import { COLORS, FONTS } from '@/constants/ui constants';
-import DocumentsForm from './Doc-gst-Form';
+import uploadImg from '../../assets/institute/upload.png';
+import { getAllSubscriptions } from '@/features/institute/services';
+import { fetchCities, fetchCountries, fetchStates } from '@/utils/locationApi';
 
 interface FormData {
 	// Personal Info
@@ -234,6 +236,7 @@ const StepperForm: React.FC = () => {
 		phoneNumberAccount: '',
 		profileImage: null,
 	});
+	const [allSubscriptions, setAllSubscriptions] = useState<any[]>([]);
 
 	const steps = [
 		{ id: 1, title: 'Personal Info', number: '1' },
@@ -242,6 +245,91 @@ const StepperForm: React.FC = () => {
 		{ id: 4, title: 'Documents', number: '4' },
 		{ id: 5, title: 'Account Details', number: '5' },
 	];
+
+	const fetchAllSubscriptions = async () => {
+		try {
+			const response = await getAllSubscriptions();
+			if (response) {
+				setAllSubscriptions(response?.data?.data || []);
+			}
+		} catch (error) {
+			console.error('Error fetching subscriptions:', error);
+		}
+	};
+
+	useEffect(() => {
+		fetchAllSubscriptions();
+	}, []);
+
+	const [countries, setCountries] = useState<any[]>([]);
+	const [states, setStates] = useState<any[]>([]);
+	const [cities, setCities] = useState<any[]>([]);
+	const [branchStates, setBranchStates] = useState<any[]>([]);
+	const [branchCities, setBranchCities] = useState<any[]>([]);
+	const [loadingCountries, setLoadingCountries] = useState(false);
+	const [loadingStates, setLoadingStates] = useState(false);
+	const [loadingCities, setLoadingCities] = useState(false);
+	const [loadingBranchStates, setLoadingBranchStates] = useState(false);
+	const [loadingBranchCities, setLoadingBranchCities] = useState(false);
+
+	// Add these useEffect hooks to fetch countries on component mount
+	useEffect(() => {
+		const loadCountries = async () => {
+			setLoadingCountries(true);
+			const data = await fetchCountries();
+			setCountries(data);
+			setLoadingCountries(false);
+		};
+		loadCountries();
+	}, []);
+
+	// Add this handler for country selection (for both main and branch address)
+	const handleCountryChange = async (value: string, isBranch = false) => {
+		handleInputChange(isBranch ? 'country' : 'state', value);
+		if (isBranch) {
+			setLoadingBranchStates(true);
+			const data = await fetchStates(value);
+			setBranchStates(data);
+			setLoadingBranchStates(false);
+			// Reset state and city when country changes
+			handleInputChange('stateBranch', '');
+			handleInputChange('cityBranch', '');
+			setBranchCities([]);
+		} else {
+			setLoadingStates(true);
+			const data = await fetchStates(value);
+			setStates(data);
+			setLoadingStates(false);
+			// Reset state and city when country changes
+			handleInputChange('state', '');
+			handleInputChange('city', '');
+			setCities([]);
+		}
+	};
+
+	// Add this handler for state selection (for both main and branch address)
+	const handleStateChange = async (
+		value: string,
+		countryCode: string,
+		isBranch = false
+	) => {
+		handleInputChange(isBranch ? 'stateBranch' : 'state', value);
+		if (isBranch) {
+			setLoadingBranchCities(true);
+			const data = await fetchCities(countryCode, value);
+			setBranchCities(data);
+			setLoadingBranchCities(false);
+			// Reset city when state changes
+			handleInputChange('cityBranch', '');
+		} else {
+			setLoadingCities(true);
+			const data = await fetchCities(countryCode, value);
+			setCities(data);
+			setLoadingCities(false);
+			// Reset city when state changes
+			handleInputChange('city', '');
+		}
+	};
 
 	const handleInputChange = useCallback(
 		(field: keyof FormData, value: string | File | null) => {
@@ -276,9 +364,59 @@ const StepperForm: React.FC = () => {
 		}
 	};
 
+	// Create a new DropdownField component
+	const DropdownField = ({
+		label,
+		field,
+		options,
+		loading = false,
+		className = '',
+		value,
+		onChange,
+	}: {
+		label: string;
+		field: keyof FormData;
+		options: { iso2?: string; name: string }[];
+		loading?: boolean;
+		className?: string;
+		value: string;
+		onChange: (field: keyof FormData, value: string) => void;
+	}) => {
+		const id = `select-${field}`;
+		return (
+			<div className={className}>
+				<Label
+					htmlFor={id}
+					className='text-sm font-medium text-gray-700 mb-4'
+					style={{ ...FONTS.text5, color: COLORS.black }}
+				>
+					{label}
+				</Label>
+				<select
+					id={id}
+					value={value}
+					onChange={(e) => onChange(field, e.target.value)}
+					className='mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md'
+					style={{ ...FONTS.text4, color: COLORS.gray_01 }}
+					disabled={loading}
+				>
+					<option value=''>Select {label}</option>
+					{options?.map((option) => (
+						<option
+							key={option?.iso2 || option?.name}
+							value={option?.iso2 || option?.name}
+						>
+							{option?.name}
+						</option>
+					))}
+				</select>
+			</div>
+		);
+	};
+
 	const StepHeader = () => (
 		<div className='flex items-center justify-center mb-8 space-x-4'>
-			{steps.map((step) => (
+			{steps?.map((step) => (
 				<div key={step.id} className='flex flex-col items-center gap-3'>
 					<div
 						className={`w-42 h-44 rounded-lg flex flex-col items-center justify-center gap-4 ${
@@ -404,24 +542,66 @@ const StepperForm: React.FC = () => {
 									value={formData.altPhoneNumber}
 									onChange={handleInputChange}
 								/>
-								<InputField
-									label='Contact'
-									field='contact'
-									value={formData.contact}
-									onChange={handleInputChange}
+								{/* <DropdownField
+									label='Country'
+									field='state' // Note: You might want to rename this field to 'country' in your FormData interface
+									options={countries}
+									loading={loadingCountries}
+									value={formData.state} // Or formData.country if you rename the field
+									onChange={(field, value) => handleCountryChange(value)}
+								/> */}
+								{/* {states?.length > 0 && (
+									<DropdownField
+										label='State'
+										field='state'
+										options={states}
+										loading={loadingStates}
+										value={formData.state}
+										onChange={(field, value) =>
+											handleStateChange(value, formData.state)
+										}
+									/>
+								)} */}
+								{cities?.length > 0 && (
+									<DropdownField
+										label='City'
+										field='city'
+										options={cities}
+										loading={loadingCities}
+										value={formData.city}
+										onChange={handleInputChange}
+									/>
+								)}
+								<DropdownField
+									label='Country'
+									field='country'
+									options={countries}
+									loading={loadingCountries}
+									value={formData.country}
+									onChange={(field, value) => handleCountryChange(value, true)}
 								/>
-								<InputField
-									label='State'
-									field='state'
-									value={formData.state}
-									onChange={handleInputChange}
-								/>
-								<InputField
-									label='City'
-									field='city'
-									value={formData.city}
-									onChange={handleInputChange}
-								/>
+								{branchStates?.length > 0 && (
+									<DropdownField
+										label='State'
+										field='stateBranch'
+										options={branchStates}
+										loading={loadingBranchStates}
+										value={formData.stateBranch}
+										onChange={(field, value) =>
+											handleStateChange(value, formData.country, true)
+										}
+									/>
+								)}
+								{branchCities?.length > 0 && (
+									<DropdownField
+										label='City'
+										field='cityBranch'
+										options={branchCities}
+										loading={loadingBranchCities}
+										value={formData.cityBranch}
+										onChange={handleInputChange}
+									/>
+								)}
 								<InputField
 									label='Pin code'
 									field='pinCode'
@@ -460,11 +640,19 @@ const StepperForm: React.FC = () => {
 							>
 								Enter your Subscription Information Here
 							</h3>
-							<InputField
+							<DropdownField
 								label='Subscription'
 								field='subscription'
+								options={
+									allSubscriptions && allSubscriptions?.length > 0
+										? allSubscriptions?.map((sub) => ({
+												name: sub?.identity,
+										  }))
+										: []
+								}
 								value={formData.subscription}
 								onChange={handleInputChange}
+								className='mt-4'
 							/>
 						</Card>
 					</div>
@@ -584,114 +772,137 @@ const StepperForm: React.FC = () => {
 					</div>
 				);
 			case 4:
-	return (
-		<div className="space-y-6">
-			<div>
-				<h2
-					className="text-2xl font-bold text-gray-800 mb-2"
-					style={{ ...FONTS.heading }}
-				>
-					Documents
-				</h2>
-				<p
-					className="text-gray-600 mb-6"
-					style={{ ...FONTS.edit_form }}
-				>
-					Add Institute Docs
-				</p>
-			</div>
-
-			<div className="space-y-6">
-				{/* GST */}
-				<Card className="p-4 shadow-md">
-					<h3
-						className="font-semibold text-gray-700 mb-4"
-						style={{ ...FONTS.tableheader, color: COLORS.secondary }}
-					>
-						GST Information
-					</h3>
-					<div className="flex items-center gap-4">
-						<div className="flex-1">
-							<InputField
-								label="GST Number"
-								field="gstNumber"
-								value={formData.gstNumber}
-								onChange={handleInputChange}
-							/>
+				return (
+					<div className='space-y-6'>
+						<div>
+							<h2
+								className='text-2xl font-bold text-gray-800 mb-2'
+								style={{ ...FONTS.heading }}
+							>
+								Documents
+							</h2>
+							<p className='text-gray-600 mb-6' style={{ ...FONTS.edit_form }}>
+								Add Institute Docs
+							</p>
 						</div>
-						<label className="flex items-center gap-2 px-4 py-2 bg-gray-100 border rounded cursor-pointer hover:bg-gray-200">
-							<input
-								type="file"
-								className="hidden"
-								accept=".pdf,.jpg,.jpeg,.png"
-								onChange={(e) => handleFileUpload(e, "gstFile")}
-							/>
-							<span className="text-sm text-gray-700"> GST Document</span>
-						</label>
-					</div>
-				</Card>
 
-				{/* PAN */}
-				<Card className="p-4 shadow-md">
-					<h3
-						className="font-semibold text-gray-700 mb-4"
-						style={{ ...FONTS.tableheader, color: COLORS.secondary }}
-					>
-						PAN Information
-					</h3>
-					<div className="flex items-center gap-4">
-						<div className="flex-1">
-							<InputField
-								label="PAN Number"
-								field="panNumber"
-								value={formData.panNumber}
-								onChange={handleInputChange}
-							/>
-						</div>
-						<label className="flex items-center gap-2 px-4 py-2 bg-gray-100 border rounded cursor-pointer hover:bg-gray-200">
-							<input
-								type="file"
-								className="hidden"
-								accept=".pdf,.jpg,.jpeg,.png"
-								onChange={(e) => handleFileUpload(e, "panFile")}
-							/>
-							<span className="text-sm text-gray-700"> PAN Document</span>
-						</label>
-					</div>
-				</Card>
+						<div className='space-y-6'>
+							{/* GST */}
+							<Card className='p-4 shadow-md'>
+								<h3
+									className=' mb-4'
+									style={{ ...FONTS.tableheader, color: COLORS.secondary }}
+								>
+									GST Information
+								</h3>
+								<div className='flex items-center gap-4'>
+									<div className='flex flex-1 justify-between items-center'>
+										<InputField
+											label='GST Number'
+											field='gstNumber'
+											className='w-[70%]'
+											value={formData.gstNumber}
+											onChange={handleInputChange}
+										/>
+										<label className='flex items-center gap-2 px-4 py-2 bg-[#E0ECDE] border rounded-lg cursor-pointer hover:bg-[#E0ECDE] w-52 h-10 justify-center'>
+											<img
+												src={uploadImg}
+												alt='upload image'
+												className='w-6 h-6'
+											/>
+											<input
+												type='file'
+												className='hidden'
+												accept='.pdf,.jpg,.jpeg,.png'
+												onChange={(e) => handleFileUpload(e, 'gstFile')}
+											/>
+											<span style={{ ...FONTS.text4, color: COLORS.button }}>
+												{' '}
+												GST Document
+											</span>
+										</label>
+									</div>
+								</div>
+							</Card>
 
-				{/* License */}
-				<Card className="p-4 shadow-md">
-					<h3
-						className="font-semibold text-gray-700 mb-4"
-						style={{ ...FONTS.tableheader, color: COLORS.secondary }}
-					>
-						License Information
-					</h3>
-					<div className="flex items-center gap-4">
-						<div className="flex-1">
-							<InputField
-								label="License Number"
-								field="licenseNumber"
-								value={formData.licenseNumber}
-								onChange={handleInputChange}
-							/>
+							{/* PAN */}
+							<Card className='p-4 shadow-md'>
+								<h3
+									className=' mb-4'
+									style={{ ...FONTS.tableheader, color: COLORS.secondary }}
+								>
+									PAN Information
+								</h3>
+								<div className='flex items-center gap-4'>
+									<div className='flex flex-1 justify-between items-center'>
+										<InputField
+											label='PAN Number'
+											field='panNumber'
+											className='w-[70%]'
+											value={formData.panNumber}
+											onChange={handleInputChange}
+										/>
+										<label className='flex items-center gap-2 px-4 py-2 bg-[#E0ECDE] border rounded-lg cursor-pointer hover:bg-[#E0ECDE] w-52 h-10 justify-center'>
+											<img
+												src={uploadImg}
+												alt='upload image'
+												className='w-6 h-6'
+											/>
+											<input
+												type='file'
+												className='hidden'
+												accept='.pdf,.jpg,.jpeg,.png'
+												onChange={(e) => handleFileUpload(e, 'panFile')}
+											/>
+											<span style={{ ...FONTS.text4, color: COLORS.button }}>
+												{' '}
+												PAN Document
+											</span>
+										</label>
+									</div>
+								</div>
+							</Card>
+
+							{/* License */}
+							<Card className='p-4 shadow-md'>
+								<h3
+									className=' mb-4'
+									style={{ ...FONTS.tableheader, color: COLORS.secondary }}
+								>
+									License Information
+								</h3>
+								<div className='flex items-center gap-4'>
+									<div className='flex flex-1 justify-between items-center'>
+										<InputField
+											label='License Number'
+											className='w-[70%]'
+											field='licenseNumber'
+											value={formData.licenseNumber}
+											onChange={handleInputChange}
+										/>
+										<label className='flex items-center gap-2 px-4 py-2 bg-[#E0ECDE] border rounded-lg cursor-pointer hover:bg-[#E0ECDE] w-52 h-10 justify-center'>
+											<img
+												src={uploadImg}
+												alt='upload image'
+												className='w-6 h-6'
+											/>
+											<input
+												type='file'
+												className='hidden'
+												accept='.pdf,.jpg,.jpeg,.png'
+												onChange={(e) => handleFileUpload(e, 'licenseFile')}
+											/>
+											<span style={{ ...FONTS.text4, color: COLORS.button }}>
+												{' '}
+												License Document
+											</span>
+										</label>
+									</div>
+								</div>
+							</Card>
 						</div>
-						<label className="flex items-center gap-2 px-4 py-2 bg-gray-100 border rounded cursor-pointer hover:bg-gray-200">
-							<input
-								type="file"
-								className="hidden"
-								accept=".pdf,.jpg,.jpeg,.png"
-								onChange={(e) => handleFileUpload(e, "licenseFile")}
-							/>
-							<span className="text-sm text-gray-700 "> License Document</span>
-						</label>
 					</div>
-				</Card>
-			</div>
-		</div>
-	
-	);
+				);
 
 			case 5:
 				return (

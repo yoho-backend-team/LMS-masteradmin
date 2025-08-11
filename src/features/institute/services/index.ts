@@ -10,3 +10,14 @@ export const getAllInstitutes = async (params?: any) => {
 		console.error('Error fetching institutes:', error);
 	}
 };
+
+export const getAllSubscriptions = async (params?: any) => {
+	try {
+		const response = await Client.subscription.get_all(params);
+		if (response) {
+			return response;
+		}
+	} catch (error) {
+		console.error('Error fetching subscriptions:', error);
+	}
+};
