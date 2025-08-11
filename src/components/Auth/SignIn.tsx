@@ -31,7 +31,7 @@ const handleSignIn = async (e: React.FormEvent) => {
 
     if (token) {
       localStorage.setItem("token", token);
-      localStorage.setItem("isAuthenticated", "true");
+      localStorage.setItem("isAuthenticated","true");
 
       navigate("/");
     } else {
