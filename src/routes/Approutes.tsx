@@ -20,7 +20,7 @@ import SendOtp from '@/components/Auth/SendOtp'
 import AddSubscription from '../pages/subscription/AddSubscription'
 import SubscriptionView from '../pages/subscription/SubscriptionView'
 import SubscriptionEdit from '../pages/subscription/SubscriptionEdit'
-import { useAuth } from '@/components/SignIn/AuthContext';
+import { useAuth } from '../components/Auth/AuthContext';
 
 function Approutes() {
 
