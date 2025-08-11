@@ -119,10 +119,7 @@ const SubscriptionEdit = () => {
         }
     }, [incomingPlan]);
     return (
-        <form
-            onSubmit={handleSubmit}
-            className="min-h-screen p-8 text-sm"
-        >
+        <form onSubmit={handleSubmit} className="min-h-screen p-8 text-sm">
             <button
                 onClick={() => navigate(-1)}
                 className="px-4 py-2 rounded-tl-xl mb-3 rounded-br-xl border border-[#68B39F] text-[#68B39F] hover:bg-[#68B39F] hover:text-white transition"
