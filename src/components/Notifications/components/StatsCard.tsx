@@ -1,15 +1,17 @@
 import { Card, CardContent } from '@/components/ui/card';
-import { Zap, Component, Droplet} from 'lucide-react';
+import { Zap, Component, Droplet } from 'lucide-react';
 import { FONTS } from '@/constants/ui constants';
 import { useEffect, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { GetAllNotificationThunks } from '@/features/notification/redux/thunks';
 
 
 const StatsCard: React.FC = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [hoveredCard, setHoveredCard] = useState<number | null>(null);
-  
 
-  // Simulate loading
+
+
   useEffect(() => {
     const timer = setTimeout(() => {
       setIsLoading(false);
@@ -17,40 +19,58 @@ const StatsCard: React.FC = () => {
     return () => clearTimeout(timer);
   }, []);
 
-  // Filter institutes based on selected filters
+  const dispatch = useDispatch();
 
-  const [kpiData, setKpiData] = useState([
-    {
-      title: 'Total Notifications',
-      value: '45',
-      percentage: 45,
-      icon: Zap,
-      bgColor: 'bg-teal-600',
-      iconBg: 'bg-teal-100',
-      iconColor: 'text-teal-600',
-      progressColor: '#14b8a6',
-    },
-    {
-      title: 'Seen Notifications',
-      value: '9',
-      percentage: 9,
-      icon: Component,
-      bgColor: 'bg-white',
-      iconBg: 'bg-purple-100',
-      iconColor: 'text-purple-500',
-      progressColor: '#8b5cf6',
-    },
-    {
-      title: 'Unseen Notifications',
-      value: '25',
-      percentage: 25,
-      icon: Droplet,
-      bgColor: 'bg-white',
-      iconBg: 'bg-yellow-100',
-      iconColor: 'text-yellow-500',
-      progressColor: '#f59e0b',
-    },
-  ]);
+  const notifications = useSelector(
+    (state: any) => state.Notification.notification || []
+  );
+
+  useEffect(() => {
+    dispatch(GetAllNotificationThunks({}) as any);
+  }, [dispatch]);
+  console.log(notifications, "check")
+
+  const totalNotifications = notifications.length;
+  const seenNotifications = notifications.filter((n: any) => n.status === 'read').length;
+  const unseenNotifications = notifications.filter((n: any) => n.status === 'unread').length;
+
+  console.log('Total:', totalNotifications);
+  console.log('Seen:', seenNotifications);
+  console.log('Unseen:', unseenNotifications);
+  const maxNotifications = 100; 
+
+ const kpiData = [
+  {
+    title: 'Total Notifications',
+    value: totalNotifications, 
+    percentage: totalNotifications > 0 ? Math.min((totalNotifications / maxNotifications) * 100, 100) : 0,    icon: Zap,
+    bgColor: 'bg-teal-600',
+    iconBg: 'bg-teal-100',
+    iconColor: 'text-teal-600',
+    progressColor: '#14b8a6',
+  },
+  {
+    title: 'Seen Notifications',
+    value: seenNotifications, // number count displayed
+    percentage: totalNotifications ? (seenNotifications / totalNotifications) * 100 : 0,
+    icon: Component,
+    bgColor: 'bg-white',
+    iconBg: 'bg-purple-100',
+    iconColor: 'text-purple-500',
+    progressColor: '#8b5cf6',
+  },
+  {
+    title: 'Unseen Notifications',
+    value: unseenNotifications, // number count displayed
+    percentage: totalNotifications > 0 ? Math.min((totalNotifications / maxNotifications) * 100, 100) : 0,    icon: Droplet,
+    bgColor: 'bg-white',
+    iconBg: 'bg-yellow-100',
+    iconColor: 'text-yellow-500',
+    progressColor: '#f59e0b',
+  },
+];
+
+
 
 
   return (
@@ -109,7 +129,10 @@ const StatsCard: React.FC = () => {
                       `}
                       style={{ ...FONTS.card_text }}
                     >
-                      {kpi.title}
+                      <div className='grid'>
+                        <div>{kpi.title}</div>
+                        <div>{kpi.value}</div>
+                      </div>
                     </h3>
 
                     {/* Circular progress */}

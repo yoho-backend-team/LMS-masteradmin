@@ -6,6 +6,11 @@ import HelpcenterTicketSlice from '../features/Profile/helpcenter-ticket/reducer
 import dashboard from '../features/dashboard/redux/slice'
 import CategoriesSlice from '../features/FaqCategories/reducers/CategoriesSlice'
 import FaqReducer from '../features/Faq/slice'
+import Notification from "../features/notification/redux/reduxSlice"
+import Branch from "../features/notification/redux/reduxSlice"
+import Institute from "../features/notification/redux/reduxSlice"
+
+
 
 export const store = configureStore({
     reducer: {
@@ -15,6 +20,9 @@ export const store = configureStore({
         dashboard,
         CategoriesSlice: CategoriesSlice,
         FaqReducer: FaqReducer,
+        Notification:Notification,
+        Branch:Branch,
+        Institute:Institute,
     },
 });
 
