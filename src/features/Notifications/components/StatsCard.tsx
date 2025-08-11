@@ -71,7 +71,7 @@ const StatsCard: React.FC = () => {
     shadow-lg transition-all duration-300 cursor-pointer border-0
     rounded-tl-3xl rounded-br-3xl rounded-bl-none rounded-tr-none
     ${hoveredCard === index
-      ? 'bg-[#2D6974] text-white hover:scale-105'
+      ? 'bg-[#2D6974] text-white hover:scale-90'
       : 'bg-white text-gray-900 hover:scale-100'
     }
   `}
