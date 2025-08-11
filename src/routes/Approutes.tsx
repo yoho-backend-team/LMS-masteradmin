@@ -14,9 +14,9 @@ import Categories from '../pages/FaqManagement/Categories';
 import Profile from '../pages/profile/Profile';
 import StepperForm from '@/components/institute/AddInstitute';
 import UniversityDashboard from '@/components/institute/ViewInstituteDetails';
-import SignIn from '@/components/SignIn/SignIn'
-import OtpVerification from '@/components/SignIn/OtpVerification'
-import SendOtp from '@/components/SignIn/SendOtp'
+import SignIn from '@/components/Auth/SignIn'
+import OtpVerification from '@/components/Auth/OtpVerification'
+import SendOtp from '@/components/Auth/SendOtp'
 import AddSubscription from '../pages/subscription/AddSubscription'
 import SubscriptionView from '../pages/subscription/SubscriptionView'
 import SubscriptionEdit from '../pages/subscription/SubscriptionEdit'
