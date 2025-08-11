@@ -14,16 +14,31 @@ import {
 	DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { useNavigate } from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux';
+import { selectInstitutes } from '@/features/institute/reducers/selectors';
+import { getInstitutesData } from '@/features/institute/reducers/thunks';
+import { GetImageUrl } from '../../utils/helper';
 
 interface Institute {
 	id: number;
-	name: string;
-	location: string;
+	institute_name: string;
+	contact_info: {
+		address: {
+			city: string;
+			state: string;
+			country: string;
+			postal_code: string;
+		};
+		phone_no: string;
+	};
 	type: string;
 	logo: string;
-	subscriptionPlan: string;
-	status: string;
-	joinedDate: Date;
+	subscription?: {
+		identity: string;
+	};
+	institute_active_status: string;
+	registered_date: string;
+	image: string;
 }
 
 const Institutes: React.FC = () => {
@@ -34,92 +49,38 @@ const Institutes: React.FC = () => {
 	const [selectedStatus, setSelectedStatus] = useState<string | null>(null);
 	const [selectedDate, setSelectedDate] = useState<string | null>(null);
 	const navigate = useNavigate();
-	const [originalInstitutes, setOriginalInstitutes] = useState<Institute[]>([
-		{
-			id: 1,
-			name: 'Bharathidasan University',
-			location: 'Kanchipuram, Highway 500',
-			type: 'Branches',
-			logo: '🏛️',
-			subscriptionPlan: 'Premium',
-			status: 'Active',
-			joinedDate: new Date('2023-01-15'),
-		},
-		{
-			id: 2,
-			name: 'Madras University',
-			location: 'Madras, Highway 500',
-			type: 'Main',
-			logo: '🏛️',
-			subscriptionPlan: 'Basic',
-			status: 'Active',
-			joinedDate: new Date('2023-03-20'),
-		},
-		{
-			id: 3,
-			name: 'Anna University',
-			location: 'Chennai, Highway 500',
-			type: 'Branches',
-			logo: '🏛️',
-			subscriptionPlan: 'Enterprise',
-			status: 'Blocked',
-			joinedDate: new Date('2023-05-10'),
-		},
-		{
-			id: 4,
-			name: 'Delhi University',
-			location: 'Delhi, Highway 500',
-			type: 'Main',
-			logo: '🏛️',
-			subscriptionPlan: 'Premium',
-			status: 'Active',
-			joinedDate: new Date('2023-07-25'),
-		},
-		{
-			id: 5,
-			name: 'Mumbai University',
-			location: 'Mumbai, Highway 500',
-			type: 'Branches',
-			logo: '🏛️',
-			subscriptionPlan: 'Basic',
-			status: 'Active',
-			joinedDate: new Date('2023-09-30'),
-		},
-		{
-			id: 6,
-			name: 'Kolkata University',
-			location: 'Kolkata, Highway 500',
-			type: 'Main',
-			logo: '🏛️',
-			subscriptionPlan: 'Enterprise',
-			status: 'Blocked',
-			joinedDate: new Date('2023-11-05'),
-		},
-	]);
-	const [filteredInstitutes, setFilteredInstitutes] =
-		useState<Institute[]>(originalInstitutes);
+	const dispatch = useDispatch<any>();
+	const instituteData = useSelector(selectInstitutes);
 
-	// Simulate loading
-	useEffect(() => {
-		const timer = setTimeout(() => {
+	const fetchAllInstitutes = async () => {
+		try {
+			await dispatch(getInstitutesData());
+		} catch (error) {
+			console.error('Error fetching institutes:', error);
+		} finally {
 			setIsLoading(false);
-		}, 2000);
-		return () => clearTimeout(timer);
-	}, []);
+		}
+	};
+
+	useEffect(() => {
+		fetchAllInstitutes();
+	}, [dispatch]);
 
 	// Filter institutes based on selected filters
 	useEffect(() => {
-		let result = [...originalInstitutes];
+		if (!instituteData) return;
+
+		let result = [...instituteData];
 
 		if (selectedPlan) {
 			result = result.filter(
-				(institute) => institute.subscriptionPlan === selectedPlan
+				(institute) => institute.subscription?.identity === selectedPlan
 			);
 		}
 
 		if (selectedStatus) {
 			result = result.filter(
-				(institute) => institute.status === selectedStatus
+				(institute) => institute.institute_active_status === selectedStatus
 			);
 		}
 
@@ -141,17 +102,21 @@ const Institutes: React.FC = () => {
 					break;
 			}
 
-			result = result.filter((institute) => institute.joinedDate >= dateFilter);
+			result = result.filter(
+				(institute) => new Date(institute.registered_date) >= dateFilter
+			);
 		}
 
 		setFilteredInstitutes(result);
-	}, [selectedPlan, selectedStatus, selectedDate, originalInstitutes]);
+	}, [selectedPlan, selectedStatus, selectedDate, instituteData]);
+
+	const [filteredInstitutes, setFilteredInstitutes] = useState<Institute[]>([]);
 
 	const [kpiData, setKpiData] = useState([
 		{
 			title: 'Total Institute',
-			value: '45%',
-			percentage: 45,
+			value: '0',
+			percentage: 0,
 			icon: Zap,
 			bgColor: 'bg-teal-600',
 			iconBg: 'bg-teal-100',
@@ -160,8 +125,8 @@ const Institutes: React.FC = () => {
 		},
 		{
 			title: 'Active Institute',
-			value: '9%',
-			percentage: 9,
+			value: '0',
+			percentage: 0,
 			icon: Component,
 			bgColor: 'bg-white',
 			iconBg: 'bg-purple-100',
@@ -170,8 +135,8 @@ const Institutes: React.FC = () => {
 		},
 		{
 			title: 'Blocked Institute',
-			value: '25%',
-			percentage: 25,
+			value: '0',
+			percentage: 0,
 			icon: Droplet,
 			bgColor: 'bg-white',
 			iconBg: 'bg-yellow-100',
@@ -182,68 +147,54 @@ const Institutes: React.FC = () => {
 
 	// Update KPI data based on filtered institutes
 	useEffect(() => {
-		const total = originalInstitutes.length;
-		const filteredTotal = filteredInstitutes.length;
-		const filteredActive = filteredInstitutes.filter(
-			(i) => i.status === 'Active'
+		if (!instituteData) return;
+
+		const total = instituteData?.length;
+		const filteredTotal = filteredInstitutes?.length;
+		const filteredActive = filteredInstitutes?.filter(
+			(i) => i.institute_active_status === 'Active'
 		).length;
 		const filteredBlocked = filteredInstitutes.filter(
-			(i) => i.status === 'Blocked'
+			(i) => i.institute_active_status === 'Blocked'
 		).length;
 
 		setKpiData([
 			{
 				...kpiData[0],
-				percentage: Math.round((filteredTotal / total) * 100),
-				value: `${Math.round((filteredTotal / total) * 100)}%`,
+				value: `${total}`,
+				percentage: total > 0 ? Math.round((filteredTotal / total) * 100) : 0,
 			},
 			{
 				...kpiData[1],
+				value: `${filteredActive}`,
 				percentage:
 					filteredTotal > 0
 						? Math.round((filteredActive / filteredTotal) * 100)
 						: 0,
-				value:
-					filteredTotal > 0
-						? `${Math.round((filteredActive / filteredTotal) * 100)}%`
-						: '0%',
 			},
 			{
 				...kpiData[2],
+				value: `${filteredBlocked}`,
 				percentage:
 					filteredTotal > 0
 						? Math.round((filteredBlocked / filteredTotal) * 100)
 						: 0,
-				value:
-					filteredTotal > 0
-						? `${Math.round((filteredBlocked / filteredTotal) * 100)}%`
-						: '0%',
 			},
 		]);
-	}, [filteredInstitutes]);
+	}, [filteredInstitutes, instituteData]);
 
 	// Update institute plan
 	const updateInstitutePlan = (id: number, newPlan: string) => {
-		setOriginalInstitutes((prevInstitutes) =>
-			prevInstitutes.map((institute) =>
-				institute.id === id
-					? { ...institute, subscriptionPlan: newPlan }
-					: institute
-			)
-		);
+		console.log(`Updating institute ${id} to plan ${newPlan}`);
 	};
 
 	// Update institute status
 	const updateInstituteStatus = (id: number, newStatus: string) => {
-		setOriginalInstitutes((prevInstitutes) =>
-			prevInstitutes.map((institute) =>
-				institute.id === id ? { ...institute, status: newStatus } : institute
-			)
-		);
+		console.log(`Updating institute ${id} to status ${newStatus}`);
 	};
 
 	// Filter options
-	const subscriptionPlans = ['Basic', 'Premium', 'Enterprise'];
+	const subscriptionPlans = ['Basic Plan - Free', 'Standard', 'Premium'];
 	const statusOptions = ['Active', 'Blocked'];
 	const dateOptions = [
 		{ value: 'lastWeek', label: 'Last Week' },
@@ -255,6 +206,11 @@ const Institutes: React.FC = () => {
 		setSelectedPlan(null);
 		setSelectedStatus(null);
 		setSelectedDate(null);
+	};
+
+	const getLocationString = (institute: Institute) => {
+		const { city, state, country } = institute?.contact_info?.address;
+		return [city, state, country].filter(Boolean).join(', ');
 	};
 
 	return (
@@ -319,7 +275,7 @@ const Institutes: React.FC = () => {
 									>
 										All Plans
 									</option>
-									{subscriptionPlans.map((plan) => (
+									{subscriptionPlans?.map((plan) => (
 										<option
 											key={plan}
 											value={plan}
@@ -351,7 +307,7 @@ const Institutes: React.FC = () => {
 									>
 										All Statuses
 									</option>
-									{statusOptions.map((status) => (
+									{statusOptions?.map((status) => (
 										<option
 											key={status}
 											value={status}
@@ -400,92 +356,90 @@ const Institutes: React.FC = () => {
 
 				{/* KPI Cards */}
 				<div className='grid grid-cols-1 md:grid-cols-4 gap-6'>
-					{kpiData.map((kpi, index) => {
+					{kpiData?.map((kpi, index) => {
 						const isHovered = hoveredCard === index;
 						const IconComponent = kpi.icon;
 
 						return (
 							<Card
-  key={index}
-  className={`
+								key={index}
+								className={`
     shadow-lg transition-all duration-300 cursor-pointer border-0
     rounded-tl-3xl rounded-br-3xl rounded-bl-none rounded-tr-none
     ${hoveredCard === index
-      ? 'bg-[#2D6974] text-white hover:scale-105'
-      : 'bg-white text-gray-900 hover:scale-100'
-    }
+										? 'bg-[#2D6974] text-white hover:scale-105'
+										: 'bg-white text-gray-900 hover:scale-100'
+									}
   `}
-  onMouseEnter={() => setHoveredCard(index)}
-  onMouseLeave={() => setHoveredCard(null)}
->
-  <CardContent className="p-6">
-    <div className="flex flex-col items-center text-center space-y-4">
-      {/* Icon with background circle */}
-      <div
-        className={`
+								onMouseEnter={() => setHoveredCard(index)}
+								onMouseLeave={() => setHoveredCard(null)}
+							>
+								<CardContent className="p-6">
+									<div className="flex flex-col items-center text-center space-y-4">
+										{/* Icon with background circle */}
+										<div
+											className={`
           w-12 h-12 rounded-full flex items-center justify-center
           ${hoveredCard === index ? 'bg-white/20' : kpi.iconBg}
         `}
-      >
-        <IconComponent
-          className={`
+										>
+											<IconComponent
+												className={`
             w-6 h-6
             ${hoveredCard === index ? 'text-white' : kpi.iconColor}
           `}
-        />
-      </div>
+											/>
+										</div>
 
-      {/* Title */}
-      <h3
-        className={`
-          text-sm font-medium leading-tight
-          ${hoveredCard === index ? 'text-white' : 'text-[#242731]'}
-        `}
-        style={{ ...FONTS.card_text }}
-      >
-        {kpi.title}
-      </h3>
+										{/* Title */}
+										<h3
+											className={`
+                        text-sm font-medium leading-tight
+                        ${isHovered || index === 0
+													? 'text-white'
+													: 'text-[#242731]'
+												}
+                      `}
+											style={{ ...FONTS.card_text }}
+										>
+											{kpi?.title}
+										</h3>
 
-      {/* Circular progress */}
-      <div className="flex flex-col items-center">
-        <CircularProgress
-          percentage={kpi.percentage}
-          progressColor={kpi.progressColor}
-          isLoading={isLoading}
-          isHovered={hoveredCard === index}
-        />
-      </div>
-    </div>
-  </CardContent>
-</Card>
-
+										<div>
+											<p style={{ ...FONTS.big_text }}>{kpi?.value}</p>
+										</div>
+									</div>
+								</CardContent>
+							</Card>
 						);
 					})}
 				</div>
 
 				{/* Institute List */}
-				{filteredInstitutes.length > 0 ? (
+				{filteredInstitutes?.length > 0 ? (
 					<div className='grid grid-cols-1 lg:grid-cols-2 gap-6'>
-						{filteredInstitutes.map((institute) => (
+						{filteredInstitutes?.map((institute: any) => (
 							<Card
-								key={institute.id}
+								key={institute?._id}
 								className='bg-white shadow-sm hover:shadow-md transition-shadow'
 							>
 								<CardContent className='px-6'>
 									<div className=''>
 										<div className='flex items-center gap-4 mb-4'>
-											<div className='w-14 h-14 bg-gradient-to-br from-orange-400 to-red-500 rounded-lg flex items-center justify-center text-white text-2xl font-bold shadow-md'>
-												<img
-													src={instituteImg}
-													alt={institute.name}
-													className='rounded-lg w-full h-full object-cover'
-												/>
+											<div className='w-16 h-16 bg-gradient-to-br from-orange-400 to-red-500 rounded-lg flex items-center justify-center text-white text-2xl font-bold shadow-md'>
+												{institute?.logo && (
+													<img
+														src={GetImageUrl(institute?.logo) ?? undefined}
+														alt={institute?.institute_name}
+														className='rounded-lg w-full h-full object-cover'
+													/>
+												)}
 											</div>
 											<h3
 												className=' !text-[#242731] mb-3'
 												style={{ ...FONTS.tableheader }}
 											>
-												{institute.name}
+												{institute?.institute_name}
 											</h3>
 										</div>
 
@@ -494,26 +448,26 @@ const Institutes: React.FC = () => {
 												<div className='flex items-center gap-1'>
 													<img
 														src={locationImg}
-														alt={institute.location}
+														alt={getLocationString(institute)}
 														className='w-5 h-5 object-cover'
 													/>
 													<span
 														style={{ ...FONTS.btn_txt, color: COLORS.gray_01 }}
 													>
-														{institute.location}
+														{getLocationString(institute)}
 													</span>
 												</div>
 
 												<div className='flex items-center gap-1'>
 													<img
 														src={buildingImg}
-														alt={institute.type}
+														alt={institute?.type || 'Main'}
 														className='w-5 h-5 object-cover'
 													/>
 													<span
 														style={{ ...FONTS.btn_txt, color: COLORS.gray_01 }}
 													>
-														{institute.type}
+														{institute?.type || 'Branches'}
 													</span>
 												</div>
 											</div>
@@ -526,8 +480,9 @@ const Institutes: React.FC = () => {
 															variant='outline'
 															className='!text-[#2D6974] border-[#2D6974] px-4 flex items-center gap-2'
 															style={{ ...FONTS.pass_head_2 }}
+															disabled
 														>
-															{institute.subscriptionPlan}
+															{institute?.subscription?.identity || 'No Plan'}
 															<ChevronDown className='w-4 h-4' />
 														</Button>
 													</DropdownMenuTrigger>
@@ -548,24 +503,23 @@ const Institutes: React.FC = () => {
 												<div className='flex gap-2'>
 													{/* Status Dropdown */}
 													<DropdownMenu>
-														{/* <DropdownMenuTrigger asChild>
+														<DropdownMenuTrigger asChild>
 															<Button
-																className={`px-4 flex items-center gap-2 ${
-																	institute.status === 'Active'
+																className={`px-4 flex items-center gap-2 ${institute?.institute_active_status ===
+																		'Active'
 																		? 'bg-[#68B39F] hover:bg-[#68B39F]'
-																		: institute.status === 'Blocked'
-																		? 'bg-red-500 hover:bg-red-600'
-																		: 'bg-yellow-500 hover:bg-yellow-600'
-																}`}
+																		: 'bg-red-500 hover:bg-red-600'
+																	}`}
 																style={{
 																	...FONTS.pass_head_2,
 																	color: COLORS.white,
 																}}
+																disabled
 															>
-																{institute.status}
+																{institute.institute_active_status}
 																<ChevronDown className='w-4 h-4' />
 															</Button>
-														</DropdownMenuTrigger> */}
+														</DropdownMenuTrigger>
 														<DropdownMenuContent>
 															{statusOptions.map((status) => (
 																<DropdownMenuItem
@@ -613,106 +567,5 @@ const Institutes: React.FC = () => {
 		</div>
 	);
 };
-
-// CircularProgress component (unchanged)
-const CircularProgress = ({
-	percentage,
-	progressColor,
-	isLoading,
-	isHovered,
-}: {
-	percentage: number;
-	progressColor: string;
-	isLoading: boolean;
-	isHovered: boolean;
-}) => {
-	const radius = 40;
-	const circumference = 2 * Math.PI * radius;
-	const visibleCircumference = circumference * 0.75;
-	const startAngle = -135;
-	const strokeDashoffset = isLoading
-		? visibleCircumference
-		: visibleCircumference + (percentage / 100) * visibleCircumference;
-
-	return (
-		<div className='relative w-24 h-24'>
-			<svg className='w-full h-full' viewBox='0 0 100 100'>
-				{/* Background circle - only showing 270 degrees */}
-				<path
-					d={describeArc(50, 50, radius, startAngle, startAngle + 270)}
-					stroke={isHovered ? 'rgba(255,255,255,0.3)' : '#e5e7eb'}
-					strokeWidth='8'
-					fill='none'
-					strokeLinecap='round'
-				/>
-				{/* Progress circle - only showing 270 degrees */}
-				<path
-					d={describeArc(50, 50, radius, startAngle, startAngle + 270)}
-					stroke={isHovered ? 'white' : progressColor}
-					strokeWidth='8'
-					fill='none'
-					strokeDasharray={visibleCircumference}
-					strokeDashoffset={strokeDashoffset}
-					strokeLinecap='round'
-					className='transition-all duration-1000 ease-out'
-				/>
-			</svg>
-			{/* Center percentage text */}
-			<div className='absolute inset-0 flex items-center justify-center'>
-				<span
-					className={`text-lg font-bold ${
-						isHovered ? '!text-white' : '!text-[#242731]'
-					} ${isLoading ? 'animate-pulse' : ''}`}
-					style={{ ...FONTS.tableheader }}
-				>
-					{`${percentage}%`}
-				</span>
-			</div>
-		</div>
-	);
-};
-
-// Helper function to describe an arc for the SVG path
-function describeArc(
-	x: number,
-	y: number,
-	radius: number,
-	startAngle: number,
-	endAngle: number
-) {
-	const start = polarToCartesian(x, y, radius, endAngle);
-	const end = polarToCartesian(x, y, radius, startAngle);
-
-	const largeArcFlag = endAngle - startAngle <= 180 ? '0' : '1';
-
-	return [
-		'M',
-		start.x,
-		start.y,
-		'A',
-		radius,
-		radius,
-		0,
-		largeArcFlag,
-		0,
-		end.x,
-		end.y,
-	].join(' ');
-}
-
-// Helper function to convert polar coordinates to Cartesian
-function polarToCartesian(
-	centerX: number,
-	centerY: number,
-	radius: number,
-	angleInDegrees: number
-) {
-	const angleInRadians = ((angleInDegrees - 90) * Math.PI) / 180.0;
-
-	return {
-		x: centerX + radius * Math.cos(angleInRadians),
-		y: centerY + radius * Math.sin(angleInRadians),
-	};
-}
 
 export default Institutes;

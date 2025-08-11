@@ -26,24 +26,28 @@ const Dashboard = () => {
 	const [selectedMonth, setSelectedMonth] = useState<string | null>(null);
 	const [selectedYear, setSelectedYear] = useState<string | null>(null);
 	const [revenueYear, setRevenueYear] = useState('2025');
-	const nowDate = new Date()
-	const currentMonth = nowDate.getMonth()
-	const currentYear = nowDate.getFullYear()
+	const nowDate = new Date();
+	const currentMonth = nowDate.getMonth();
+	const currentYear = nowDate.getFullYear();
 
-	const dispatch = useAppDispatch()
-	const DashBoardDatas = useAppSelector<any>(GetDashboardSelector)
+	const dispatch = useAppDispatch();
+	const DashBoardDatas = useAppSelector<any>(GetDashboardSelector);
 
 	useEffect(() => {
 		if (selectedMonth || selectedYear) {
-			dispatch(GetDashboardThunks({ month: selectedMonth ?? 0, year: selectedYear ?? currentYear }))
+			dispatch(
+				GetDashboardThunks({
+					month: selectedMonth ?? 0,
+					year: selectedYear ?? currentYear,
+				})
+			);
 		}
-		dispatch(GetDashboardThunks({ month: currentMonth, year: currentYear }))
+		dispatch(GetDashboardThunks({ month: currentMonth, year: currentYear }));
 		const timer = setTimeout(() => {
 			setIsLoading(false);
 		}, 2000);
 		return () => clearTimeout(timer);
 	}, [currentMonth, currentYear, dispatch, selectedMonth, selectedYear]);
-
 
 	function setSubcriptionData() {
 		try {
@@ -60,28 +64,51 @@ const Dashboard = () => {
 				oct: 0,
 				nov: 0,
 				dec: 0,
-			}
+			};
 
 			DashBoardDatas?.instituteSubscriptions?.forEach((item: any) => {
-				const date = new Date(item?.createdAt)
-				const month = date.getMonth()
+				const date = new Date(item?.createdAt);
+				const month = date.getMonth();
 
 				switch (month) {
-					case 0: ++data.jan; break;
-					case 1: ++data.feb; break;
-					case 2: ++data.mar; break;
-					case 3: ++data.apr; break;
-					case 4: ++data.may; break;
-					case 5: ++data.jun; break;
-					case 6: ++data.jul; break;
-					case 7: ++data.aug; break;
-					case 8: ++data.sep; break;
-					case 9: ++data.oct; break;
-					case 10: ++data.nov; break;
-					case 11: ++data.dec; break;
+					case 0:
+						++data.jan;
+						break;
+					case 1:
+						++data.feb;
+						break;
+					case 2:
+						++data.mar;
+						break;
+					case 3:
+						++data.apr;
+						break;
+					case 4:
+						++data.may;
+						break;
+					case 5:
+						++data.jun;
+						break;
+					case 6:
+						++data.jul;
+						break;
+					case 7:
+						++data.aug;
+						break;
+					case 8:
+						++data.sep;
+						break;
+					case 9:
+						++data.oct;
+						break;
+					case 10:
+						++data.nov;
+						break;
+					case 11:
+						++data.dec;
+						break;
 				}
 			});
-
 
 			return [
 				{ month: 'Jan', subscriptions: data.jan },
@@ -96,17 +123,13 @@ const Dashboard = () => {
 				{ month: 'Oct', subscriptions: data.oct },
 				{ month: 'Nov', subscriptions: data.nov },
 				{ month: 'Dec', subscriptions: data.dec },
-			]
-
+			];
 		} catch (error) {
-			console.log(error, "sub filter")
+			console.log(error, 'sub filter');
 		}
 	}
 
-
-
-	const subscriptionData = setSubcriptionData()
-
+	const subscriptionData = setSubcriptionData();
 
 	const [kpiData, setKpiData] = useState<any[]>([]);
 
@@ -153,7 +176,12 @@ const Dashboard = () => {
 				progressColor: '#f59e0b',
 			},
 		]);
-	}, [DashBoardDatas?.activeSubscriptions, DashBoardDatas?.instituteSubscriptions?.length, DashBoardDatas?.supportTickets, DashBoardDatas?.totalInstituteCount]);
+	}, [
+		DashBoardDatas?.activeSubscriptions,
+		DashBoardDatas?.instituteSubscriptions?.length,
+		DashBoardDatas?.supportTickets,
+		DashBoardDatas?.totalInstituteCount,
+	]);
 
 	const CircularProgress = ({
 		percentage,
@@ -210,7 +238,6 @@ const Dashboard = () => {
 			</div>
 		);
 	};
-
 
 	function describeArc(
 		x: number,
@@ -327,7 +354,6 @@ const Dashboard = () => {
 		);
 	};
 
-
 	const months = [
 		'Jan',
 		'Feb',
@@ -343,11 +369,11 @@ const Dashboard = () => {
 		'Dec',
 	];
 
-	const revenueData: any[] | undefined = []
+	const revenueData: any[] | undefined = [];
 
 	DashBoardDatas?.revenue?.forEach((item: number, index: number) => {
-		revenueData.push({ month: months[index], amount: item })
-	})
+		revenueData.push({ month: months[index], amount: item });
+	});
 	const years = ['2022', '2023', '2024', '2025'];
 
 	const resetFilters = () => {
@@ -458,58 +484,58 @@ const Dashboard = () => {
 
 						return (
 							<Card
-  key={index}
-  className={`
+								key={index}
+								className={`
     shadow-lg transition-all duration-300 cursor-pointer border-0
     rounded-tl-3xl rounded-br-3xl rounded-bl-none rounded-tr-none
     ${hoveredCard === index
-      ? 'bg-[#2D6974] text-white hover:scale-105'
-      : 'bg-white text-gray-900 hover:scale-100'
-    }
+										? 'bg-[#2D6974] text-white hover:scale-105'
+										: 'bg-white text-gray-900 hover:scale-100'
+									}
   `}
-  onMouseEnter={() => setHoveredCard(index)}
-  onMouseLeave={() => setHoveredCard(null)}
->
-  <CardContent className="p-6">
-    <div className="flex flex-col items-center text-center space-y-4">
-      {/* Icon with background circle */}
-      <div
-        className={`
+								onMouseEnter={() => setHoveredCard(index)}
+								onMouseLeave={() => setHoveredCard(null)}
+							>
+								<CardContent className="p-6">
+									<div className="flex flex-col items-center text-center space-y-4">
+										{/* Icon with background circle */}
+										<div
+											className={`
           w-12 h-12 rounded-full flex items-center justify-center
           ${hoveredCard === index ? 'bg-white/20' : kpi.iconBg}
         `}
-      >
-        <IconComponent
-          className={`
+										>
+											<IconComponent
+												className={`
             w-6 h-6
             ${hoveredCard === index ? 'text-white' : kpi.iconColor}
           `}
-        />
-      </div>
+											/>
+										</div>
 
-      {/* Title */}
-      <h3
-        className={`
+										{/* Title */}
+										<h3
+											className={`
           text-sm font-medium leading-tight
           ${hoveredCard === index ? 'text-white/90' : 'text-gray-600'}
         `}
-        style={{ ...FONTS.card_text }}
-      >
-        {kpi.title}
-      </h3>
+											style={{ ...FONTS.card_text }}
+										>
+											{kpi.title}
+										</h3>
 
-      {/* Circular progress */}
-      <div className="flex flex-col items-center">
-        <CircularProgress
-          percentage={kpi.percentage}
-          progressColor={kpi.progressColor}
-          isLoading={isLoading}
-          isHovered={hoveredCard === index}
-        />
-      </div>
-    </div>
-  </CardContent>
-</Card>
+										{/* Circular progress */}
+										<div className="flex flex-col items-center">
+											<CircularProgress
+												percentage={kpi.percentage}
+												progressColor={kpi.progressColor}
+												isLoading={isLoading}
+												isHovered={hoveredCard === index}
+											/>
+										</div>
+									</div>
+								</CardContent>
+							</Card>
 
 						);
 					})}
