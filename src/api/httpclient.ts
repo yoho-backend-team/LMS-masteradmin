@@ -14,7 +14,7 @@ Axios.interceptors.request.use((config: any) => {
 	// if (token) {
 	config.headers[
 		'Authorization'
-	] = `Token eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6Im1lcm5zdGFja2Rldi55b2hvQGdtYWlsLmNvbSIsInJvbGUiOjEsInV1aWQiOiJjY2QzZTRkMC1mOWM5LTQ0MzEtYmIyMi01ODhhY2NmYzYwMjIiLCJ1c2VyX3R5cGUiOiJwbGF0Zm9ybSIsImlhdCI6MTc1NDg4NjA3NSwiZXhwIjoxNzU0OTcyNDc1fQ.TNOg-3l2kDyoeeCSr-iJnbwGNeAtA-gK3IeW3eDFOr4`;
+	] = `Token eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6Im1lcm5zdGFja2Rldi55b2hvQGdtYWlsLmNvbSIsInJvbGUiOjEsInV1aWQiOiJjY2QzZTRkMC1mOWM5LTQ0MzEtYmIyMi01ODhhY2NmYzYwMjIiLCJ1c2VyX3R5cGUiOiJwbGF0Zm9ybSIsImlhdCI6MTc1NDk4Nzg4MywiZXhwIjoxNzU1MDc0MjgzfQ.D6AuGryzxdoBPKsZV9J6vErAcOsjF5AcgE-arWsoOPg`;
 	// }
 	return config;
 });

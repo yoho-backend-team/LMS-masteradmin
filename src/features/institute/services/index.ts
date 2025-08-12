@@ -35,3 +35,26 @@ export const  getInstituteDetails = async (params:any)=>{
 	}
 }
 
+export const getCourseDetails = async (data:any,params:any)=>{
+	try{
+    const response = await Client.institute.getCourseList(data,params)
+	if (response){
+		return response;
+	}
+	}
+	catch(error){
+		console.log(error)
+	}
+}
+
+export const getActivitylogDetails = async (params:any)=>{
+	try{
+		const response = await Client.activity.get(params)
+		if(response){
+			return response
+		}
+	}
+	catch(error){
+		console.log('error',error)
+	}
+}
