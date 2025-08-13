@@ -16,7 +16,7 @@ export default function LoginPage() {
         });
 
         setTimeout(() => {
-            navigate("/home");
+            navigate("/dashboard");
         }, 2000);
     };
 
