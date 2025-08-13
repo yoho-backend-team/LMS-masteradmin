@@ -88,7 +88,6 @@ const EditSubscription = () => {
                 onSubmit={handleSubmit}
                 className="w-full"
             >
-                {/* Image Upload */}
                 <div className="flex justify-between p-4">
                     <div>
                         <img
@@ -108,7 +107,6 @@ const EditSubscription = () => {
                         />
                     </div>
                     <div className="space-x-2 m-4">
-                        {/* Upload Button */}
                         <Link
                             to="/upload"
                             className="bg-[#62A89C] hover:bg-[#4f9084] text-white px-4 py-2 rounded shadow transition duration-200"
@@ -116,7 +114,6 @@ const EditSubscription = () => {
                             Upload
                         </Link>
 
-                        {/* Reset Button */}
                         <button
                             type="button"
                             className="bg-gray-300 hover:bg-gray-400 text-gray-800 px-4 py-2 rounded shadow transition duration-200"
@@ -127,7 +124,6 @@ const EditSubscription = () => {
                     </div>
                 </div>
 
-                {/* Plan Name */}
                 <div className="grid grid-cols-3 gap-8 my-8">
                     <div>
                         <label className="block mb-1">Plan</label>
@@ -140,7 +136,6 @@ const EditSubscription = () => {
                         />
                     </div>
 
-                    {/* Plan Price */}
                     <div>
                         <label className="block mb-1">Plan Price</label>
                         <input
@@ -152,7 +147,6 @@ const EditSubscription = () => {
                         />
                     </div>
 
-                    {/* Support Level */}
                     <div>
                         <label className="block mb-1">Support Level</label>
                         <input
@@ -165,7 +159,6 @@ const EditSubscription = () => {
                     </div>
                 </div>
 
-                {/* Plan Description */}
                 <div className="md:col-span-2">
                     <label className="block mb-1">Plan Description</label>
                     <textarea
@@ -177,7 +170,6 @@ const EditSubscription = () => {
                     />
                 </div>
 
-                {/* Duration */}
                 <div>
                     <label className="block mb-1">Duration</label>
                     <input
@@ -189,7 +181,6 @@ const EditSubscription = () => {
                     />
                 </div>
 
-                {/* Duration Type */}
                 <div>
                     <label className="block mb-1">Duration Type</label>
                     <input
@@ -201,7 +192,6 @@ const EditSubscription = () => {
                     />
                 </div>
 
-                {/* Features */}
                 {Object.keys(formData.features).map((feature) => (
                     <div key={feature}>
                         <label className="block mb-1">{`Number of ${feature}`}</label>
@@ -227,7 +217,6 @@ const EditSubscription = () => {
                     </div>
                 ))}
 
-                {/* Buttons */}
                 <div className="flex justify-between md:col-span-2 mt-4">
                     <button
                         type="button"

@@ -1,12 +1,14 @@
 import { Link } from "react-router-dom";
 import { useState, useEffect, type SetStateAction } from "react";
 import { TbSquareRoundedCheck } from "react-icons/tb";
-import { toast, ToastContainer } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
 
 const Subscription = () => {
   const [currentPage, setCurrentPage] = useState(1);
-  const [isOpen, setIsOpen] = useState(false);
+  const [isOpen, setIsOpen] = useState<number | null>(null);
+  const [showConfirm, setShowConfirm] = useState(false);
+  const [showStatusChanged, setShowStatusChanged] = useState(false);
+  const [planToDelete, setPlanToDelete] = useState<string | null>(null);
+
   const itemsPerPage = 3;
 
   const defaultPlans = [
@@ -108,19 +110,6 @@ const Subscription = () => {
     },
   ];
 
-  const handleDelete = (planName: string) => {
-    setPlans((prevPlans) => prevPlans.filter((p) => p.name !== planName));
-
-    const savedPlans = JSON.parse(localStorage.getItem("plans")) || [];
-    const updatedPlans = savedPlans.filter((p: { name: any; }) => p.name !== planName);
-    localStorage.setItem("plans", JSON.stringify(updatedPlans));
-
-    toast.success(`"${planName}" has been deleted!`, {
-      position: "top-right",
-      autoClose: 3000,
-    });
-  };
-
   const [plans, setPlans] = useState(defaultPlans);
 
   useEffect(() => {
@@ -137,6 +126,17 @@ const Subscription = () => {
     }
   }, []);
 
+  const handleDelete = (planName: string) => {
+    setPlans((prevPlans) => prevPlans.filter((p) => p.name !== planName));
+
+    const savedPlans = JSON.parse(localStorage.getItem("plans") || "[]");
+    const updatedPlans = savedPlans.filter((p: { name: string }) => p.name !== planName);
+    localStorage.setItem("plans", JSON.stringify(updatedPlans));
+
+    setShowConfirm(false);
+    setShowStatusChanged(true);
+  };
+
   const totalPages = Math.ceil(plans.length / itemsPerPage);
   const indexOfLastItem = currentPage * itemsPerPage;
   const indexOfFirstItem = indexOfLastItem - itemsPerPage;
@@ -148,8 +148,6 @@ const Subscription = () => {
 
   return (
     <div>
-      <ToastContainer />
-
       <div className="flex justify-between items-center mb-6">
         <h2 className="text-2xl font-semibold">Subscription Plan</h2>
         <Link
@@ -159,6 +157,7 @@ const Subscription = () => {
           + Add Institute
         </Link>
       </div>
+
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
         {currentPlans.map((plan, index) => (
           <div
@@ -223,7 +222,10 @@ const Subscription = () => {
                         Edit
                       </Link>
                       <button
-                        onClick={() => handleDelete(plan.name)}
+                        onClick={() => {
+                          setPlanToDelete(plan.name);
+                          setShowConfirm(true);
+                        }}
                         className="bg-white text-[#68B39F] px-4 py-2 rounded-md w-full hover:bg-[#559d88] hover:text-white"
                       >
                         Delete
@@ -267,6 +269,49 @@ const Subscription = () => {
           Next
         </button>
       </div>
+
+      {showConfirm && (
+        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
+          <div className="bg-white rounded-lg shadow-lg p-6 max-w-sm w-full text-center">
+            <div className="mb-4">
+              <div className="text-red-500 text-6xl">⚠️</div>
+            </div>
+            <h2 className="text-2xl font-bold mb-2">Are You Sure?</h2>
+            <p className="text-gray-600 mb-6">Are you sure you want to delete this plan?</p>
+            <div className="flex justify-center gap-4">
+              <button
+                onClick={() => handleDelete(planToDelete!)}
+                className="bg-[#68B39F] text-white px-4 py-2 rounded-md hover:bg-emerald-500"
+              >
+                Change
+              </button>
+              <button
+                onClick={() => setShowConfirm(false)}
+                className="bg-gray-200 text-gray-700 px-4 py-2 rounded-md hover:bg-gray-300"
+              >
+                Cancel
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {showStatusChanged && (
+        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
+          <div className="bg-white rounded-lg shadow-lg p-6 max-w-sm w-full text-center">
+            <div className="mb-6">
+              <div className="text-green-500 text-6xl">✅</div>
+            </div>
+            <h2 className="text-2xl font-bold mb-6">Status Changed</h2>
+            <button
+              onClick={() => setShowStatusChanged(false)}
+              className="bg-[#68B39F] text-white px-6 py-2 rounded-md hover:bg-emerald-500"
+            >
+              Ok
+            </button>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
