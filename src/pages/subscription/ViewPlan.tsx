@@ -1,7 +1,7 @@
 import { useLocation, useParams, Link } from "react-router-dom";
 
 const ViewPlan = () => {
-    const { planName } = useParams();
+    useParams();
     const location = useLocation();
     const plan = location.state?.plan;
 
