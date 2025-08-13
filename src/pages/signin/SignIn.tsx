@@ -5,7 +5,7 @@ import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { AiOutlineExclamationCircle } from "react-icons/ai";
 
-export default function LoginPage() {
+export default function SignIn() {
     const [showPassword, setShowPassword] = useState(false);
     const navigate = useNavigate();
 

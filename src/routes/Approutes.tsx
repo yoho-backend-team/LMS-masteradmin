@@ -33,68 +33,31 @@ function Approutes() {
   if (isLoading) return null; // you could add a loader here
 
   return (
-    <Routes>
-      {/* Public Routes */}
-      {!isAuthenticated && (
-        <>
-          <Route path="/sign-in" element={<SignIn />} />
-          <Route path="/forgot-password" element={<ForgotPassword />} />
-          <Route path="/otp-verification" element={<OtpVerification />} />
-          <Route path="/send-otp" element={<SendOtp />} />
-          <Route path="*" element={<Navigate to="/sign-in" />} />
-        </>
-      )}
+<Routes>
+  {/* Public routes */}
+  <Route path="/" element={<SignIn />} />
+  <Route path="/forgot-password" element={<ForgotPassword />} />
+  <Route path="/otp-verification" element={<OtpVerification />} />
 
-      {/* Protected Routes */}
-      {isAuthenticated && (
-        <Route path="/" element={<MainLayout />}>
-          <Route index element={<DashBoard />} />
-          <Route path="dashboard" element={<DashBoard />} />
-
-          {/* Institute */}
-          <Route path="institute">
-            <Route index element={<Institute />} />
-            <Route path="add" element={<StepperForm />} />
-            <Route path="view/:id" element={<UniversityDashboard />} />
-          </Route>
-
-          {/* Payments */}
-          <Route path="payments" element={<Payments />} />
-
-          {/* Subscriptions */}
-          <Route path="subscriptions" element={<Subscription />} />
-          <Route path="add-subscription" element={<AddSubscription />} />
-          <Route path="subscription-view" element={<SubscriptionView />} />
-          <Route path="subscription-edit" element={<SubscriptionEdit />} />
-          <Route path="add-institute" element={<SubscriptionForm />} />
-          <Route path="view/:planName" element={<ViewPlan />} />
-          <Route path="edit-subscription" element={<EditSubscription />} />
-
-          {/* Notifications */}
-          <Route path="notifications" element={<Notifications />} />
-          <Route path="add-notificationform" element={<AddNotificationForm />} />
-
-          {/* Profile */}
-          <Route path="profile" element={<Profile />} />
-          <Route path="edit-detail" element={<EditDetail />} />
-
-          {/* Help Center */}
-          <Route path="helpcenter">
-            <Route path="faq" element={<HelpcenterFaq />} />
-            <Route path="tickets" element={<HelpcenterTickets />} />
-          </Route>
-
-          {/* FAQ Management */}
-          <Route path="faq">
-            <Route path="faqs" element={<Faq />} />
-            <Route path="categories" element={<Categories />} />
-          </Route>
-
-          {/* Fallback for protected routes */}
-          <Route path="*" element={<Navigate to="/" />} />
-        </Route>
-      )}
-    </Routes>
+  {/* Protected routes */}
+  <Route path="/" element={<MainLayout />}>
+    <Route path="dashboard" element={<DashBoard />} />  {/* default after login */}
+    <Route path="institute" element={<Institute />} />
+    <Route path="payments" element={<Payments />} />
+    <Route path="subscriptions" element={<Subscription />} />
+    <Route path="add-institute" element={<SubscriptionForm />} />
+    <Route path="view/:planName" element={<ViewPlan />} />
+    <Route path="edit-subscription" element={<EditSubscription />} />
+    <Route path="notifications" element={<Notifications />} />
+    <Route path="add-notificationform" element={<AddNotificationForm />} />
+    <Route path="profile" element={<Profile />} />
+    <Route path="edit-detail" element={<EditDetail />} />
+    <Route path="helpcenter/faq" element={<HelpcenterFaq />} />
+    <Route path="helpcenter/tickets" element={<HelpcenterTickets />} />
+    <Route path="faq/faqs" element={<Faq />} />
+    <Route path="faq/categories" element={<Categories />} />
+  </Route>
+</Routes>
   );
 }
 
