@@ -78,7 +78,7 @@ const Subscription: React.FC = () => {
             <SubscriptionCard
               key={index}
               {...plan}
-              onDelete={() => setDeleteIndex(index)} // 🔹 Now sets the index instead of deleting immediately
+              onDelete={() => setDeleteIndex(index)} // 
             />
           ))}
         </div>

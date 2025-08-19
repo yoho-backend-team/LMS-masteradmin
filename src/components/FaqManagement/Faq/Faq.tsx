@@ -26,7 +26,9 @@ const FAQ = () => {
   const [isEditOpen, setIsEditOpen] = useState(false);
   const [editFaq, setEditFaq] = useState<any>(null);
    const [page, setPage] = useState(1);
-  const [totalPages, setTotalPages] = useState(3);
+  const [totalPages, setTotalPages] = useState(7);
+
+    const [loading, setLoading] = useState(true);
 
   const [isOpen, setIsOpen] = useState(false);
 
@@ -56,6 +58,8 @@ const FAQ = () => {
   const AllFaqs = useSelector(getAllFaq);
   console.log("faqs", AllFaqs);
 
+  console.log("pages",AllFaqs.length)
+
 
   const mappedFaqs = AllFaqs.map((faq: any) => ({
     id: faq._id,
@@ -74,11 +78,12 @@ const FAQ = () => {
   );
 
   useEffect(() => {
-    const params = {
-      page: page,
+    const fetchData = async () => {
+      setLoading(true); // show skeleton
+      await dispatch(fetchFAQsThunk({ page }));
+      setLoading(false); 
     };
-    console.log("current page",page)
-    dispatch(fetchFAQsThunk(params));
+    fetchData();
   }, [dispatch, page]);
 
   const categoriess = useSelector((state: any) => state.CategoriesSlice.data);
@@ -88,8 +93,6 @@ const FAQ = () => {
   }, [dispatch]);
 
   console.log("category", categoriess);
-
-  // console.log('local Storage', localStorage.getItem('token'))
 
   const handleStatusToggle = (id: any) => {
     setStatusConfirm({ isOpen: true, faqId: id });
@@ -201,6 +204,46 @@ const FAQ = () => {
     }
   };
 
+  const SkeletonHeader = () => (
+  <thead className="animate-pulse w-full h-16 rounded-xl">
+    <tr>
+      <th className="px-6 py-3 rounded-l-xl">
+        <div className="h-6 w-32 bg-gray-300 rounded"></div>
+      </th>
+      <th className="px-6 py-3">
+        <div className="h-6 w-32 bg-gray-300 rounded"></div>
+      </th>
+      <th className="px-6 py-3">
+        <div className="h-6 w-32 bg-gray-300 rounded"></div>
+      </th>
+      <th className="px-6 py-3 rounded-r-xl text-right">
+        <div className="h-6 w-32 bg-gray-300 rounded ml-auto"></div>
+      </th>
+    </tr>
+  </thead>
+);
+
+  const SkeletonRow = () => (
+    
+    <tr className="animate-pulse bg-white/30 backdrop-blur-xl h-30 rounded-xl">
+      <td className="px-6 py-4">
+        <div className="h-4 w-40 bg-gray-300 rounded"></div>
+      </td>
+      <td className="px-6 py-4">
+        <div className="h-4 w-32 bg-gray-300 rounded"></div>
+      </td>
+      <td className="px-6 py-4">
+        <div className="h-6 w-12 bg-gray-300 rounded-full"></div>
+      </td>
+      <td className="px-6 py-4 text-right">
+        <div className="flex justify-end space-x-3">
+          <div className="h-6 w-6 bg-gray-300 rounded"></div>
+          <div className="h-6 w-6 bg-gray-300 rounded"></div>
+        </div>
+      </td>
+    </tr>
+  );
+
   return (
     <div className="p-5 min-h-screen relative">
       <div className="flex mt-5 items-center mb-4">
@@ -221,6 +264,12 @@ const FAQ = () => {
 
       
         <table className="min-w-full text-[#999999] text-sm border-separate border-spacing-y-4">
+         {loading ? (
+          <>
+           < SkeletonHeader  />
+          </>
+        ):(
+        <>
           <thead className="bg-[#2D6974] text-white h-16 text-left text-lg font-semibold">
             <tr>
               <th className="px-6 py-3 rounded-l-xl">Faq Name</th>
@@ -228,76 +277,87 @@ const FAQ = () => {
               <th className="px-6 py-3">Status</th>
               <th className="px-6 py-3 rounded-r-xl text-right">Actions</th>
             </tr>
-          </thead>
+          </thead></>)
+         }
           <tbody>
-            {filteredFaqs.map((faq: any) => (
-              <tr
-                key={faq.id}
-                className="bg-white/30 backdrop-blur-xl text-base shadow-xl h-20 rounded-xl font-medium transition"
-              >
-                <td className="px-6 py-4 rounded-l-xl">{faq.question}</td>
-                <td className="px-6 py-4">{faq.category}</td>
-
-                <td className="px-6 py-4">
-                  <label className="inline-flex items-center cursor-pointer">
-                
-                    <input
-                      type="checkbox"
-                      checked={faq.status}
-                      onChange={() => handleStatusToggle(faq.id)}
-                      className="sr-only peer"
-                    />
-
-                    <div
-                      className={`relative w-12 h-6 rounded-full transition-colors duration-300 ${
-                        faq.status ? "bg-green-500" : "bg-gray-300"
-                      }`}
-                    >
-                      <span
-                        className={`absolute top-1 left-1 w-4 h-4 bg-white rounded-full shadow-md transition-transform duration-300 ${
-                          faq.status ? "translate-x-3" : "translate-x-0"
-                        }`}
-                      ></span>
-                    </div>
-                  </label>
-                </td>
-                <td className="px-6 py-4 rounded-r-xl">
-                  <div className="flex justify-end space-x-3">
-                    <button
-                      onClick={() => {
-                        setEditFaq(faq);
-                        setFormData({
-                          question: faq.question,
-                          description: faq.description,
-                          categoryId: faq.categoryId,
-                          categoryName: faq.category,
-                          status: faq.status,
-                        });
-
-                        setIsEditOpen(true);
-                      }}
-                    >
-                      <img src={editIcon} alt="Edit" />
-                    </button>
-                    <button
-                      className="text-red-500"
-                      onClick={() => handleDeleteClick(faq.uuid)}
-                    >
-                      <img src={deleteIcon} alt="Delete" />
-                    </button>
-                  </div>
-                </td>
-              </tr>
-            ))}
-
-            {filteredFaqs.length === 0 && (
-              <tr>
-                <td colSpan={5} className="text-center p-4 text-gray-500">
-                  No FAQs found
-                </td>
-              </tr>
-            )}
-          </tbody>
+  {loading ? (
+    
+    <>
+    
+      <SkeletonRow />
+      <SkeletonRow />
+      <SkeletonRow />
+      <SkeletonRow />
+    </>
+  ) : (
+    
+    <>
+      {filteredFaqs.length > 0 ? (
+        filteredFaqs.map((faq: any) => (
+          <tr
+            key={faq.id}
+            className="bg-white/30 backdrop-blur-xl text-base shadow-xl h-20 rounded-xl font-medium transition"
+          >
+            <td className="px-6 py-4 rounded-l-xl">{faq.question}</td>
+            <td className="px-6 py-4">{faq.category}</td>
+            <td className="px-6 py-4">
+              <label className="inline-flex items-center cursor-pointer">
+                <input
+                  type="checkbox"
+                  checked={faq.status}
+                  onChange={() => handleStatusToggle(faq.id)}
+                  className="sr-only peer"
+                />
+                <div
+                  className={`relative w-12 h-6 rounded-full transition-colors duration-300 ${
+                    faq.status ? "bg-green-500" : "bg-gray-300"
+                  }`}
+                >
+                  <span
+                    className={`absolute top-1 left-1 w-4 h-4 bg-white rounded-full shadow-md transition-transform duration-300 ${
+                      faq.status ? "translate-x-3" : "translate-x-0"
+                    }`}
+                  ></span>
+                </div>
+              </label>
+            </td>
+            <td className="px-6 py-4 rounded-r-xl">
+              <div className="flex justify-end space-x-3">
+                <button
+                  onClick={() => {
+                    setEditFaq(faq);
+                    setFormData({
+                      question: faq.question,
+                      description: faq.description,
+                      categoryId: faq.categoryId,
+                      categoryName: faq.category,
+                      status: faq.status,
+                    });
+                    setIsEditOpen(true);
+                  }}
+                >
+                  <img src={editIcon} alt="Edit" />
+                </button>
+                <button
+                  className="text-red-500"
+                  onClick={() => handleDeleteClick(faq.uuid)}
+                >
+                  <img src={deleteIcon} alt="Delete" />
+                </button>
+              </div>
+            </td>
+          </tr>
+        ))
+      ) : (
+        <tr>
+          <td colSpan={5} className="text-center p-4 text-gray-500">
+            No FAQs found
+          </td>
+        </tr>
+      )}
+    </>
+  )}
+</tbody>
         </table>
      
 
