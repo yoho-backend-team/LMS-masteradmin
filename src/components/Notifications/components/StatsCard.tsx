@@ -28,15 +28,12 @@ const StatsCard: React.FC = () => {
   useEffect(() => {
     dispatch(GetAllNotificationThunks({}) as any);
   }, [dispatch]);
-  console.log(notifications, "check")
+  // console.log(notifications, "check")
 
   const totalNotifications = notifications?.length;
-  const seenNotifications = notifications?.filter((n: any) => n.status === 'read').length;
-  const unseenNotifications = notifications?.filter((n: any) => n.status === 'unread').length;
-
-  console.log('Total:', totalNotifications);
-  console.log('Seen:', seenNotifications);
-  console.log('Unseen:', unseenNotifications);
+  const seenNotifications = notifications?.filter((n: any) => n?.status === 'read').length;
+  const unseenNotifications = notifications?.filter((n: any) => n?.status === 'unread').length;
+  
   const maxNotifications = 100;
 
   const kpiData = [
