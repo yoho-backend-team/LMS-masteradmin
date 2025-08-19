@@ -20,7 +20,7 @@ Axios.interceptors.request.use((config: any) => {
 
 Axios.interceptors.response.use(
     (response: any) => response,
-    (error) => {
+    (error: any) => {
         if (
             error?.response &&
             error?.response?.status === 401 &&

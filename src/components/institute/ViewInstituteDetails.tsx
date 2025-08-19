@@ -21,8 +21,8 @@ import {
 	Activity,
 	Share2,
 } from 'lucide-react';
-import instituteImg from '../../assets/institute/institute.png';
-import logoImg from '../../assets/institute/logo.png';
+//import instituteImg from '../../assets/institute/institute.png';
+//import logoImg from '../../assets/institute/logo.png';
 import locationImg from '../../assets/institute/location.png';
 import phoneImg from '../../assets/institute/Call.png';
 import messageImg from '../../assets/institute/Mail.png';
@@ -32,7 +32,8 @@ import { useNavigate, useParams } from 'react-router-dom';
 import EditInstituteForm from '../../components/institute/EditInstitute';
 import DocumentsPage from './Documents';
 import { TimelineComponent } from './activity';
-import { getInstituteDetails } from '@/features/institute/services';
+import { getCourseDetails, getInstituteDetails } from '@/features/institute/services';
+import { GetImageUrl } from '@/utils/helper';
 
 type Institute = {
   id: string;
@@ -45,19 +46,31 @@ address: any;
   status: string;
   registeredDate: string;
 logo : string;
+image:string;
 institute_name:string;
+registered_date:string;
 contact_info:string;
 phone_no:any;
   bannerUrl: string;
   about: string;
-  socialLinks: {
-    facebook?: string;
-    linkedin?: string;
-    instagram?: string;
-    twitter?: string;
+ social_media: {
+   facebook_id?: string;
+   linkedin_id?: string;
+    instagram_id?: string;
+    twitter_id?: string;
   };
-  galleryImages: string[];
+  gallery_images: string[];
 };
+
+// interface Course {
+//   id: string;
+//   name: string;
+//   description: string;
+//   duration: string;
+//   modules: number;
+//   imageUrl?: string;
+//   isFeatured?: boolean;
+// }
 
 type ActiveSection = 'about' | 'profile' | 'courses';
 type ProfileSection =
@@ -76,6 +89,7 @@ export default function UniversityDashboard() {
 	const params = useParams();
 const [isEditing, setIsEditing] = useState(false);
 const [institute, setInstitute] = useState<Institute | null>(null);
+// const [courses, setCourses] = useState<Course[]>([]);
 
 useEffect(() => {
     const fetchInstituteData = async () => {
@@ -83,6 +97,11 @@ useEffect(() => {
         
         const response:any = await getInstituteDetails({id: params.id});
         setInstitute(response?.data?.data);
+
+		// const responses = await getCourseDetails({ instituteId }, {});
+		// if (responses?.data) {
+        //   setCourses(responses.data);
+        // }
       } catch (err) {
        
         console.error('Error fetching institute:', err);
@@ -90,10 +109,10 @@ useEffect(() => {
     };
 
     fetchInstituteData();
-  }, [params.id]);
+  }, [params.id, ]);
 
  if (!institute) return <div className="p-6">No institute data available</div>;
-console.log(institute,'institute................')
+console.log(institute?.gallery_images,'image')
 	const Header = () => (
 		<div className='bg-[#2D6974] text-white rounded-xl'>
 			<div className='flex items-center px-4 py-3'>
@@ -104,7 +123,7 @@ console.log(institute,'institute................')
 				<div className='flex items-center'>
 					<div className='w-12 h-12 rounded-full flex items-center justify-center mr-3'>
 						<img
-							src={institute.logo || logoImg}
+							src={GetImageUrl(institute.logo)}
                   alt={institute.institute_name}
 							className='w-full h-full bg-[#2D6974] rounded-full object-cover'
 						/>
@@ -116,7 +135,7 @@ console.log(institute,'institute................')
 			</div>
 			<div className='w-full h-64 relative'>
 				<img
-					src={instituteImg}
+					src={ GetImageUrl(institute?.image)}
 					alt='Bharathidasan University Campus'
 					className='object-cover rounded-b-xl w-full h-full'
 				/>
@@ -170,14 +189,13 @@ console.log(institute,'institute................')
 						<div className='w-2/3 flex flex-col items-center justify-center'>
 							<div className='w-32 h-32 rounded-full overflow-hidden'>
 								<img
-									 src={institute.logo}
+									 src={GetImageUrl( institute.logo)}
                   alt={institute.institute_name}
 									className='w-full h-full object-cover rounded-full mb-2'
 								/>
 							</div>
 							<div className='text-center mt-3'>
 								<p style={{ ...FONTS.pass_head_2 }}>{institute.institute_name}
-									{/* Bharathidasan University */}
 									</p>
 								<p
 									style={{
@@ -247,14 +265,8 @@ console.log(institute,'institute................')
 								color: COLORS.gray_01,
 								fontWeight: 500,
 							}}
-						>{institute?.description}
-							{/* Bharathidasan University established in February 1982, and was
-							named after the great revolutionary Tamil Poet, Bharathidasan
-							(1891-1964). The motto of the University "We will create a brave
-							new world" has been framed from Bharathidasan's poetic words
-							"புதியுலகம் புதுமையுடன் படைப்போம்". The University endeavours to
-							be true to such a vision by creating in the region a brave new
-							world of academic innovation for social change. */}
+						>{institute?.description || 'Not available'}
+							
 						</p>
 					</div>
 				</Card>
@@ -443,55 +455,54 @@ console.log(institute,'institute................')
 			case 'personal-info':
 				return <PersonalInfoForm />;
 			case 'profile':
-				return (
-					<div className="p-6 bg-white rounded-lg shadow-md">
-					<h2 className="text-xl font-semibold mb-6">Profile Settings</h2>
+  return (
+    <div className="p-6 bg-white rounded-lg shadow-md">
+      <h2 className="text-xl font-semibold mb-6">Profile Settings</h2>
 
-					<div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-						{/* Logo Section */}
-						<div className="flex flex-col items-center border p-4 rounded-lg">
-							<h2 className='text-black font-bold'>LOGO</h2>
-						<img
-							src="https://i.pinimg.com/736x/d1/f1/cf/d1f1cfa32ebc3e606acd2785ecca811d.jpg"
-							alt="Bharathidasan University Logo"
-							className="w-67 h-67 object-contain mb-4"
-						/>
-						
-						</div>
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+        {/* Logo Section */}
+        <div className="flex flex-col items-center border p-4 rounded-lg">
+          <h2 className='text-black font-bold'>LOGO</h2>
+          <img
+            src={GetImageUrl(institute.logo )} 
+            alt={institute.institute_name}
+            className="w-67 h-67 object-contain mb-4"
+          />
+        </div>
 
-						{/* Gallery Section */}
-						<div className="md:col-span-2">
-						<h3 className="text-lg font-semibold mb-4">Gallery Images</h3>
-						<div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
-							{[
-							"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSXOHKZal9x4hk2mATL4hev-Kn4KzUPNTSynQ&s",
-							"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ9jOVIVylm2bF2QaIAXXxrMQqGdvr1liQjmQ&s",
-							"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTYMXVHnzdoC761gGL06NqWTiwyEotLAKlFfA&s",
-							
-							].map((img, idx) => (
-							<div
-								key={idx}
-								className="border rounded-lg overflow-hidden shadow-sm"
-							>
-								<img
-								src={img}
-								alt={`Gallery ${idx + 1}`}
-								className="w-full h-28 object-cover"
-								/>
-							</div>
-							))}
-						</div>
-						</div>
-					</div>
-					</div>
-				);
-
+        {/* Gallery Section */}
+        <div className="md:col-span-2">
+          <h3 className="text-lg font-semibold mb-4">Gallery Images</h3>
+          {institute.gallery_images?.length > 0 ? (
+            <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
+              {institute.gallery_images.map((img, idx) => (
+                <div
+                  key={idx}
+                  className="border rounded-lg overflow-hidden shadow-sm"
+                >
+                  <img
+                    src={GetImageUrl(img)}
+                    alt={`Gallery ${idx + 1}`}
+                    className="w-full h-28 object-cover"
+                  
+                  />
+                </div>
+              ))}
+            </div>
+          ) : (
+            <p className="text-gray-500">No gallery images available</p>
+          )}
+        </div>
+      </div>
+    </div>
+  );
+				
 			case 'social-media':
 			const socialLinks = [
-				{ name: 'Facebook', url: 'https://facebook.com', icon: '🌐' },
-				{ name: 'LinkedIn', url: 'https://linkedin.com', icon: '🌐' },
-				{ name: 'Instagram', url: 'https://instagram.com', icon: '🌐' },
-				{ name: 'X', url: 'https://x.com', icon: '🌐' }
+				{ name: 'Facebook', url: institute?.social_media?.facebook_id, icon: '🌐' },
+				{ name: 'LinkedIn', url:  institute?.social_media?.linkedin_id,icon: '🌐' },
+				{ name: 'Instagram', url: institute?.social_media?.instagram_id, icon: '🌐' },
+				{ name: 'X', url: institute?.social_media?.twitter_id, icon: '🌐' }
 			];
 
   return (
@@ -525,7 +536,7 @@ console.log(institute,'institute................')
 					<div className='p-6'>
 						<h2 className='text-xl font-semibold mb-4'>Documents</h2>
 						<p className='text-gray-600'>Upload and manage your documents.</p>
-						<DocumentsPage/>
+						<DocumentsPage institute={institute}/>
 					</div>
 				);
 			case 'change-password':
@@ -564,7 +575,7 @@ console.log(institute,'institute................')
 						<p className='text-gray-600'>
 							View your recent activity and system logs.
 						</p>
-						<TimelineComponent/>
+						<TimelineComponent instituteId={params.id} />
 					</div>
 				);
 			default:
