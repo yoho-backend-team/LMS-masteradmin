@@ -453,7 +453,7 @@ const StepperForm: React.FC = () => {
 					navigate('/institute');
 				} else {
 					toast.error('Failed to add institute');
-				}
+				} 
 			} catch (error) {
 				toast.error('Failed to add institute');
 			}
