@@ -62,15 +62,15 @@ phone_no:any;
   gallery_images: string[];
 };
 
-// interface Course {
-//   id: string;
-//   name: string;
-//   description: string;
-//   duration: string;
-//   modules: number;
-//   imageUrl?: string;
-//   isFeatured?: boolean;
-// }
+interface Course {
+  id: string;
+  course_name: string;
+  description: string;
+  duration: string;
+  modules: number;
+  imageUrl?: string;
+  isFeatured?: boolean;
+}
 
 type ActiveSection = 'about' | 'profile' | 'courses';
 type ProfileSection =
@@ -89,19 +89,23 @@ export default function UniversityDashboard() {
 	const params = useParams();
 const [isEditing, setIsEditing] = useState(false);
 const [institute, setInstitute] = useState<Institute | null>(null);
-// const [courses, setCourses] = useState<Course[]>([]);
-
+const [courses, setCourses] = useState<Course[]>([]);
+console.log (courses,'cooooooooooooooooooooooo')
 useEffect(() => {
     const fetchInstituteData = async () => {
       try {
         
         const response:any = await getInstituteDetails({id: params.id});
         setInstitute(response?.data?.data);
-
-		// const responses = await getCourseDetails({ instituteId }, {});
-		// if (responses?.data) {
-        //   setCourses(responses.data);
-        // }
+      
+		const payload= {institute_id: params.id }
+		const courseresponses = await getCourseDetails(payload);
+		console.log('Courses API payload:', payload)
+		if (courseresponses?.data?.data) {
+          setCourses(courseresponses?.data);
+		  console.log('Courses Data:', courseresponses.data); 
+        }
+		
       } catch (err) {
        
         console.error('Error fetching institute:', err);
@@ -110,7 +114,7 @@ useEffect(() => {
 
     fetchInstituteData();
   }, [params.id, ]);
-
+  
  if (!institute) return <div className="p-6">No institute data available</div>;
 console.log(institute?.gallery_images,'image')
 	const Header = () => (
@@ -439,7 +443,9 @@ console.log(institute?.gallery_images,'image')
     <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-40 z-50">
       <div className="bg-white p-6 rounded-lg shadow-lg w-full max-w-4xl max-h-[90vh] overflow-y-auto">
         <h2 className="text-xl font-bold mb-4">Edit Institute Information</h2>
-        <EditInstituteForm onCancel={() => setIsEditing(false)}/>
+        <EditInstituteForm 
+		 instituteData={institute} 
+		  onCancel={() => setIsEditing(false)}/>
       
       </div>
     </div>
@@ -593,48 +599,62 @@ console.log(institute?.gallery_images,'image')
 	);
 
 	const CoursesSection = () => (
-		<div className='p-6'>
-			<div className='max-w-sm'>
-				<Card>
-					<CardHeader className='pb-2'>
-						<div className='flex items-center gap-2 mb-2'>
-							<img src={courseImg} alt='course-image' />
-						</div>
-						<div
-							className='bg-[#68B39F] text-white rounded-tl-2xl rounded-br-2xl rounded-bl-none rounded-tr-none px-4 py-3 w-24 text-center'
-							style={{ ...FONTS.text4 }}
-						>
-							Featured
-						</div>
-					</CardHeader>
-					<CardContent>
-						<CardTitle
-							className='mb-2'
-							style={{ ...FONTS.percentage_text, color: COLORS.black }}
-						>
-							MERN STACK
-						</CardTitle>
-						<CardDescription
-							className=' mb-4'
-							style={{ ...FONTS.text1, color: COLORS.gray_01 }}
-						>
-							A MERN stack developer is responsible for front-end and back-end
-							development, database management, server configuration, and API
-							integration.
-						</CardDescription>
-						<div className='flex justify-between items-center text-sm'>
-							<span style={{ ...FONTS.text3, color: COLORS.button }}>
-								Modules
-							</span>
-							<span style={{ ...FONTS.text3, color: COLORS.button }}>
-								Duration: 30 days
-							</span>
-						</div>
-					</CardContent>
-				</Card>
-			</div>
-		</div>
-	);
+  <div className='p-6'>
+    <div className='grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6'>
+      {courses?.length > 0 ? (
+        courses.map((course) => (
+          <Card key={course.id} className='max-w-sm'>
+            <CardHeader className='pb-2'>
+              <div className='flex items-center gap-2 mb-2'>
+                <img 
+                  src={ GetImageUrl(course?.image)|| courseImg}
+                  alt={course?.course_name}
+                  className='w-full h-40 object-cover rounded-md'
+                />
+              </div>
+              {course.isFeatured && (
+                <div
+                  className='bg-[#68B39F] text-white rounded-tl-2xl rounded-br-2xl rounded-bl-none rounded-tr-none px-4 py-3 w-24 text-center'
+                  style={{ ...FONTS.text4 }}
+                >
+                  Featured
+                </div>
+              )}
+            </CardHeader>
+            <CardContent>
+              <CardTitle
+                className='mb-2'
+                style={{ ...FONTS.percentage_text, color: COLORS.black }}
+              >
+                {course?.course_name}
+              </CardTitle>
+              <CardDescription
+                className='mb-4'
+                style={{ ...FONTS.text1, color: COLORS.gray_01 }}
+              >
+                {course?.description}
+              </CardDescription>
+              <div className='flex justify-between items-center text-sm'>
+                <span style={{ ...FONTS.text3, color: COLORS.button }}>
+                  Modules: {course?.modules}
+                </span>
+                <span style={{ ...FONTS.text3, color: COLORS.button }}>
+                  Duration: {course?.duration}
+                </span>
+              </div>
+            </CardContent>
+          </Card>
+        ))
+      ) : (
+        <div className='col-span-full text-center py-8'>
+          <p style={{ ...FONTS.text1, color: COLORS.gray_01 }}>
+            No courses available for this institute
+          </p>
+        </div>
+      )}
+    </div>
+  </div>
+);
 
 	const renderContent = () => {
 		switch (activeSection) {
