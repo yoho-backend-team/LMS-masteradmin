@@ -26,15 +26,14 @@ export interface SubscriptionPlanProps {
   unit: string;
   image: string;
   features: Feature[];
-  active: boolean;
+  is_Active: boolean;
 }
 
 const Subscription: React.FC = () => {
   const [plans, setPlans] = useState<SubscriptionPlanProps[]>([]);
   const [deleteIndex, setDeleteIndex] = useState<number | null>(null);
   const [showActionsIndex, setShowActionsIndex] = useState<number | null>(null);
-  const [activeStates, setActiveStates] = useState<boolean[]>(plans.map(p => p.active));
-
+  const [activeStates, setActiveStates] = useState<boolean[]>([]);
   const dispatch = useDispatch();
   const subscriptionData = useSelector((state: any) => state.Subscription.subscription);
   const output = subscriptionData?.data || [];
@@ -46,9 +45,18 @@ const Subscription: React.FC = () => {
 
   useEffect(() => {
     if (output.length > 0) {
+    
       setPlans(output);
+      const states = output.map((p: any) => {
+   
+        return p.is_Active ?? p.is_active ?? p.status ?? false;
+      });
+      console.log("Mapped states:", states);
+      setActiveStates(states);
     }
   }, [output]);
+
+
 
   const handleDeletePlan = () => {
     if (deleteIndex !== null) {
@@ -68,10 +76,6 @@ const Subscription: React.FC = () => {
     setShowActionsIndex((prev) => (prev === index ? null : index));
   };
 
-  useEffect(() => {
-    console.log("subscription data:", subscriptionData);
-  }, [subscriptionData]);
-
   return (
     <div className="p-2">
       <div className="flex justify-between items-center mb-2">
@@ -82,7 +86,7 @@ const Subscription: React.FC = () => {
           Subscription Plan
         </h1>
         <button
-         onClick={() => navigate("/add-subscription")}
+          onClick={() => navigate("/add-subscription")}
           className="flex items-center gap-2 bg-[#68B39F] px-4 py-2 rounded-tl-xl rounded-br-xl text-white hover:bg-[#58a18e] transition"
         >
           <Plus size={18} /> Add Subscription
@@ -157,8 +161,7 @@ const Subscription: React.FC = () => {
                     <div className="absolute bottom-full mb-2 right-0 bg-white border rounded-md shadow-md flex flex-col text-sm z-10">
                       <button
                         className="px-4 py-2 hover:bg-gray-100 text-left"
-                        onClick={() => navigate("/subscription-view")}
-                      >
+                        onClick={() => navigate("/subscription-view", { state: { plan } })}                      >
                         View
                       </button>
                       <button
