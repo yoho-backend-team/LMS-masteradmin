@@ -51,7 +51,6 @@ const Subscription: React.FC = () => {
    
         return p.is_Active ?? p.is_active ?? p.status ?? false;
       });
-      console.log("Mapped states:", states);
       setActiveStates(states);
     }
   }, [output]);
@@ -114,7 +113,7 @@ const Subscription: React.FC = () => {
               </p>
 
               <div className="mt-2 text-[#1D3A4E] font-bold text-xl flex justify-center items-center">
-                ₹{plan?.duration?.value || "0"}
+                ₹{plan?.price|| "0"}
                 <span className="text-gray-500 font-normal text-base">
                   /{plan?.duration?.unit || "month"}
                 </span>
