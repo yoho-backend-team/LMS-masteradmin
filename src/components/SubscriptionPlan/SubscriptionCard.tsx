@@ -1,6 +1,8 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { MoreVertical, Check } from "lucide-react";
 import { useNavigate } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { GettingAllSubscriptionThunks } from "@/features/subscription/redux/thunks";
 
 export interface Feature {
   label: string;
@@ -35,6 +37,21 @@ const SubscriptionCard: React.FC<SubscriptionPlanProps> = ({
   const toggleActive = () => {
     setActive((prev) => !prev);
   };
+
+  const toggleActions = () => {
+    setShowActions(!showActions);
+  };
+
+  const dispatch = useDispatch();
+  const subscriptionData = useSelector((state: any) => state.Subscription.subscription);
+  const output = subscriptionData.data
+  useEffect(() => {
+    dispatch(GettingAllSubscriptionThunks() as any);
+  }, [dispatch]);
+
+  useEffect(() => {
+    console.log("subscription data:", output);
+  }, [subscriptionData, output]);
 
   return (
     <div className="bg-white rounded-xl border shadow-sm overflow-hidden border-gray-200 flex flex-col relative">
@@ -74,14 +91,15 @@ const SubscriptionCard: React.FC<SubscriptionPlanProps> = ({
           </ul>
         </div>
 
-        <div className="flex items-center justify-between mt-4 relative">
+       
+      </div>
+       <div className="flex items-center justify-between mt-4 relative">
           <button
             onClick={toggleActive}
-            className={`px-4 py-2 rounded-tl-xl rounded-br-xl text-sm font-medium transition-colors ${
-              active
+            className={`px-4 py-2 rounded-tl-xl rounded-br-xl text-sm font-medium transition-colors ${active
                 ? "bg-[#68B39F] text-white"
                 : "bg-gray-300 text-gray-700"
-            }`}
+              }`}
           >
             {active ? "Active" : "Inactive"}
           </button>
@@ -89,8 +107,7 @@ const SubscriptionCard: React.FC<SubscriptionPlanProps> = ({
           <div className="relative">
             <MoreVertical
               className="cursor-pointer bg-[#68B39F] text-white px-2 py-2 rounded-tl-xl rounded-br-xl"
-              onClick={() => setShowActions((prev) => !prev)}
-            />
+              onClick={toggleActions} />
 
             {showActions && (
               <div className="absolute bottom-full mb-2 right-0 bg-white border rounded-md shadow-md flex flex-col text-sm z-10">
@@ -116,7 +133,6 @@ const SubscriptionCard: React.FC<SubscriptionPlanProps> = ({
             )}
           </div>
         </div>
-      </div>
     </div>
   );
 };

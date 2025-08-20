@@ -14,7 +14,7 @@ const HelpcenterFaq: React.FC = () => {
   const [showModal, setShowModal] = useState(false);
 
   return (
-    <div className="h-[300px] w-auto bg-white p-2 font-Montserrat text-[#999999] flex flex-col">
+    <div className="h-[300px] w-auto bg-white p-3 font-Montserrat text-[#999999] flex flex-col">
       {/* Header Section */}
       <div className="flex items-start justify-between mb-7">
         {/* Left Section */}

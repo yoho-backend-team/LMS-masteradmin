@@ -269,7 +269,7 @@ const getReadableDate = (dateStr: string) => {
   }
 
   return (
-    <div className="flex gap-2 h-[100%] bg-white">
+    <div className="flex gap-2 h-[100%]  p-3">
       {/* Left Sidebar */}
       <div className=" bg-white border border-gray-100 transition-shadow duration-200 shadow-[0_0_6px_rgba(0,0,0,0.1)] ">
         {/* Search Bar */}

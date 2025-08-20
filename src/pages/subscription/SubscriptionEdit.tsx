@@ -1,10 +1,13 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
+
 import { useLocation, useNavigate } from "react-router-dom";
 
 const SubscriptionEdit = () => {
     const navigate = useNavigate();
     const location = useLocation();
     const incomingPlan = location.state?.plan;
+
+  
 
     const [formData, setFormData] = useState({
         name: "Basic Plan - Free",
@@ -33,12 +36,7 @@ const SubscriptionEdit = () => {
         imagePreview: null,
     });
 
-    const handleInputChange = (e) => {
-        const { name, value } = e.target;
-        setFormData((prev) => ({ ...prev, [name]: value }));
-    };
-
-    const handleFeatureChange = (e, key) => {
+    const handleInputChange = (e:any, key:any)  => {
         const { value } = e.target;
         setFormData((prev) => ({
             ...prev,
@@ -49,7 +47,7 @@ const SubscriptionEdit = () => {
         }));
     };
 
-    const handleUnlimitedChange = (key) => {
+    const handleUnlimitedChange = (key:any) => {
         setFormData((prev) => ({
             ...prev,
             unlimited: {
@@ -63,7 +61,7 @@ const SubscriptionEdit = () => {
         }));
     };
 
-    const handleImageChange = (e) => {
+    const handleImageChange = (e:any) => {
         const file = e.target.files[0];
         if (file) {
             setFormData((prev) => ({
@@ -148,7 +146,7 @@ const SubscriptionEdit = () => {
                                 Upload
                                 <input
                                     type="file"
-                                    accept="image/png, image/jpeg"
+                                    accept="image/png"
                                     onChange={handleImageChange}
                                     className="hidden"
                                 />

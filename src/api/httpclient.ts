@@ -7,9 +7,9 @@ const Axios = axios.create({
     baseURL: import.meta.env.VITE_PUBLIC_API_URL,
     timeout: 50000,
     headers: {
-        "Content-Type": "application/json"
-    }
-})
+        'Content-Type': 'application/json',
+    },
+});
 
 Axios.interceptors.request.use((config: any) => {
     const token = GetLocalStorage("AdminToken")
@@ -25,31 +25,33 @@ Axios.interceptors.response.use((response: any) => response,
             ClearLocalStorage();
             showSessionExpireModal();
         }
-        return Promise.reject(error)
+        return Promise.reject(error);
     }
-)
+);
 
 class HttpClient {
     async get(url: string, params?: any) {
-        const reponse = Axios.get(url, { params })
-        return reponse
+        const reponse = Axios.get(url, { params });
+        return reponse;
     }
     async post(url: string, data: any, params?: any) {
-        const response = Axios.post(url, data, { params })
-        return response
+        const response = Axios.post(url, data, { params });
+        return response;
     }
     async patch(url: string, data: any) {
-        const response = Axios.patch(url, data)
-        return response
+        const response = Axios.patch(url, data);
+        return response;
     }
     async delete(url: string) {
-        const response = Axios.delete(url)
-        return response
+        const response = Axios.delete(url);
+        return response;
     }
     async uploadFile(url: string, data: any) {
-        const response = Axios.post(url, data, { headers: { "Content-Type": "multipart/form-data" } })
-        return response
+        const response = Axios.post(url, data, {
+            headers: { 'Content-Type': 'multipart/form-data' },
+        });
+        return response;
     }
 }
 
-export default new HttpClient()
+export default new HttpClient();
