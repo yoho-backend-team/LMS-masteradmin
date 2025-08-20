@@ -29,6 +29,7 @@ class Client {
 			httpClient.get(API_END_POINTS.institute.get + params.id),
 		create: (data: any) =>
 			httpClient.post(API_END_POINTS.institute.create, data),
+		update:(data:{instituteId:any})=>httpClient.put(API_END_POINTS.institute.update+data.instituteId,data.payload),
 		getCourseList: ( params: any) =>
 			httpClient.get(
 				API_END_POINTS.institute.get + params.institute_id + '/courses',

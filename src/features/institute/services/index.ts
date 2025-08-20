@@ -67,3 +67,15 @@ export const getActivitylogDetails = async (params: any) => {
 		console.log('error', error)
 	}
 }
+
+export const updateInstituteDetails = async (data:any)=>{
+	try{
+		const response = await Client.institute.update(data)
+		if(response){
+			return response
+		}
+	}
+	catch(error){
+		console.log(error,'error')
+	}
+}

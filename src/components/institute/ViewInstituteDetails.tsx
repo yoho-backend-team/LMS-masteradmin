@@ -443,7 +443,9 @@ console.log(institute?.gallery_images,'image')
     <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-40 z-50">
       <div className="bg-white p-6 rounded-lg shadow-lg w-full max-w-4xl max-h-[90vh] overflow-y-auto">
         <h2 className="text-xl font-bold mb-4">Edit Institute Information</h2>
-        <EditInstituteForm onCancel={() => setIsEditing(false)}/>
+        <EditInstituteForm 
+		 instituteData={institute} 
+		  onCancel={() => setIsEditing(false)}/>
       
       </div>
     </div>
