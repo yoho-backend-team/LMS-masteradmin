@@ -15,11 +15,8 @@ import {
 } from "@/components/ui/dialog";
 import { getCategoriesThunks } from "@/features/FaqCategories/reducers/thunks";
 import { useDispatch, useSelector } from "react-redux";
-import {
-  createCategoriesData,
-  deleteCategoriesData,
-  updateCategoriesData,
-} from "@/features/FaqCategories/services";
+import { createCategoriesData, deleteCategoriesData, updateCategoriesData } from "@/features/FaqCategories/services";
+import { FONTS } from "@/constants/ui constants";
 
 interface Category {
   id: string;
@@ -214,7 +211,7 @@ const SkeletonRow = () => (
 
 
   return (
-    <div className="p-6  min-h-screen overflow-x-hidden">
+    <div className="p-3  min-h-screen overflow-x-hidden">
       <div className="flex flex-col md:flex-row items-center justify-between mb-6 gap-4">
         <Input
           type="search"
@@ -293,26 +290,40 @@ const SkeletonRow = () => (
       </div>
 
       {/* Table */}
-     <div className="bg-white rounded-lg overflow-hidden">
-  {loading ? (
-    <>
-      <SkeletonHeader />
-      <SkeletonRow />
-      <SkeletonRow />
-      <SkeletonRow />
-      <SkeletonRow />
-    </>
-  ) : (
-    <>
-      <div className="grid grid-cols-3 items-center bg-[#2D6974] text-white font-semibold p-4 text-sm md:text-base">
-        <div className="col-span-1">Category Name</div>
-        <div className="col-span-1 text-center">Status</div>
-        <div className="col-span-1 text-right pr-4">Actions</div>
-      </div>
-      {categoriess.map((category: any) => (
-         <div
+      <div className="bg-white ">
+        
+       {loading? (
+        <>
+        <SkeletonHeader />
+        </>
+      ):(
+      <>
+       <div className="grid grid-cols-3 items-center bg-[#2D6974] text-white font-semibold p-4 text-sm md:text-base rounded-lg"
+        style={{ ...FONTS.tableheader }}>
+          <div className="col-span-1">Category Name</div>
+          <div className="col-span-1 text-center">Status</div>
+          <div className="col-span-1 text-right pr-4">Actions</div>
+        </div>
+      </>
+      )}
+
+        {/* Category Rows */}
+       <div className="grid gap-1"
+       style={{ ...FONTS.description }}>
+         {loading? (
+          <>
+          <SkeletonRow />
+          <SkeletonRow />
+          <SkeletonRow />
+          <SkeletonRow />
+          <SkeletonRow />
+          </>
+        ):(
+        <>
+        {categoriess.map((category:any) => (
+          <div
             key={category._id}
-            className="grid grid-cols-3 my-2 gap-4 rounded-lg items-center py-6 px-4 border-[1px] border-t-0 last:border-b-0 text-sm md:text-base shadow-sm"
+            className="grid grid-cols-3 my-2 gap-4 rounded-lg items-center p-3 border-[1px] border-t-0 last:border-b-0 text-sm md:text-base shadow-sm"
           >
             <div className="col-span-1 text-gray-700">{category.identity}</div>
             <div className="col-span-1 flex justify-center">
@@ -453,10 +464,11 @@ const SkeletonRow = () => (
               </Dialog>
             </div>
           </div>
-      ))}
-    </>
-  )}
-</div>
+        ))}
+        </>
+        )}
+       </div>
+      </div>
 
       {/* Success Dialog */}
       <Dialog open={isSuccessModalOpen} onOpenChange={setIsSuccessModalOpen}>
