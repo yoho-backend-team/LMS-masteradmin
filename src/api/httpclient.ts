@@ -12,7 +12,7 @@ const Axios = axios.create({
 Axios.interceptors.request.use((config: any) => {
     // const token = localStorage.getItem("token")
     // if (token) {
-    config.headers["Authorization"] = `Token eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6Im1lcm5zdGFja2Rldi55b2hvQGdtYWlsLmNvbSIsInJvbGUiOjEsInV1aWQiOiJjY2QzZTRkMC1mOWM5LTQ0MzEtYmIyMi01ODhhY2NmYzYwMjIiLCJ1c2VyX3R5cGUiOiJwbGF0Zm9ybSIsImlhdCI6MTc1NTU3NjI5NSwiZXhwIjoxNzU1NjYyNjk1fQ.cgHs51e2VYZUNu3FdralSNRnNPJ7w3_nYfsEhA-SIQc`
+    config.headers["Authorization"] = `Token eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6Im1lcm5zdGFja2Rldi55b2hvQGdtYWlsLmNvbSIsInJvbGUiOjEsInV1aWQiOiJjY2QzZTRkMC1mOWM5LTQ0MzEtYmIyMi01ODhhY2NmYzYwMjIiLCJ1c2VyX3R5cGUiOiJwbGF0Zm9ybSIsImlhdCI6MTc1NTY2Mjc0MSwiZXhwIjoxNzU1NzQ5MTQxfQ.I_XQTRoOisBj0nYFS34uTnC0t-YbcO8Qwth5uFNzHKI`
     // }
     return config
 })
