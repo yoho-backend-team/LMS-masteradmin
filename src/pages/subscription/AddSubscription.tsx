@@ -20,6 +20,7 @@ const AddSubscription: React.FC<AddSubscriptionProps> = ({ onCancel, onSubmit })
     duration: "",
     durationType: "",
     students: "",
+    identity: "",
     unlimitedStudents: false,
     admins: "",
     unlimitedAdmins: false,
@@ -47,74 +48,60 @@ const AddSubscription: React.FC<AddSubscriptionProps> = ({ onCancel, onSubmit })
     }));
   };
 
-  // const handleSubmit = () => {
-  //   const features = [
-  //     { label: "Students", value: form.unlimitedStudents ? "Unlimited" : form.students },
-  //     { label: "Admins", value: form.unlimitedAdmins ? "Unlimited" : form.admins },
-  //     { label: "Teachers", value: form.unlimitedTeachers ? "Unlimited" : form.teachers },
-  //     { label: "Batches", value: form.unlimitedBatches ? "Unlimited" : form.batches },
-  //     { label: "Courses", value: form.unlimitedCourses ? "Unlimited" : form.courses },
-  //     { label: "Classes", value: form.unlimitedClasses ? "Unlimited" : form.classes },
-  //   ];
-
-  //   const newPlan: SubscriptionPlanProps = {
-  //     title: form.title,
-  //     description: form.description,
-  //     price: form.price,
-  //     duration: `${form.duration} ${form.durationType}`,
-  //     image: form.image,
-  //     features,
-  //     active: true,
-  //   };
-
-  //   setSubmittedPlan(newPlan); // 🔹 Save submitted plan to trigger useEffect
-  //   onSubmit && onSubmit(newPlan);
-  // };
 
   const handleSubmit = () => {
-  const features = [
-    {
-      label: "Students",
-      count: form.unlimitedStudents ? "Unlimited" : Number(form.students || 0),
-    },
-    {
-      label: "Admins",
-      count: form.unlimitedAdmins ? "Unlimited" : Number(form.admins || 0),
-    },
-    {
-      label: "Teachers",
-      count: form.unlimitedTeachers ? "Unlimited" : Number(form.teachers || 0),
-    },
-    {
-      label: "Batches",
-      count: form.unlimitedBatches ? "Unlimited" : Number(form.batches || 0),
-    },
-    {
-      label: "Courses",
-      count: form.unlimitedCourses ? "Unlimited" : Number(form.courses || 0),
-    },
-    {
-      label: "Classes",
-      count: form.unlimitedClasses ? "Unlimited" : Number(form.classes || 0),
-    },
-  ];
+    const features = [
+      {
+        feature: "Students",
+        count: form.unlimitedStudents ? "Unlimited" : Number(form.students || 0),
+       
+      },
+      {
+        feature: "Admins",
+        count: form.unlimitedAdmins ? "Unlimited" : Number(form.admins || 0),
+       
+      },
+      {
+        feature: "Teachers",
+        count: form.unlimitedTeachers ? "Unlimited" : Number(form.teachers || 0),
+       
+      },
+      {
+        feature: "Batches",
+        count: form.unlimitedBatches ? "Unlimited" : Number(form.batches || 0),
+        
+      },
+      {
+        feature: "Courses",
+        count: form.unlimitedCourses ? "Unlimited" : Number(form.courses || 0),
+        
+      },
+      {
+        feature: "Classes",
+        count: form.unlimitedClasses ? "Unlimited" : Number(form.classes || 0),
+       
+      },
+    ];
 
-  const newPlan: SubscriptionPlanProps = {
-    title: form.title,
-    description: form.description,
-    price: form.price,
-    duration: {
-      value: Number(form.duration || 0),
-      unit: form.durationType || "Monthly",
-    },
-    image: form.image,
-    features,
-    active: true,
+    const newPlan: SubscriptionPlanProps = {
+      title: form.title,
+      description: form.description,
+      price: form.price,
+      duration: {
+        value: Number(form.duration || 0),
+        unit: form.durationType || "Monthly",
+      },
+      image: form.image,
+      features,
+      active: true,
+      identity: form.identity
+    };
+
+    setSubmittedPlan(newPlan);
+    onSubmit && onSubmit(newPlan);
+
+    navigate("/subscriptions");
   };
-
-  setSubmittedPlan(newPlan);
-  onSubmit && onSubmit(newPlan);
-};
 
 
   useEffect(() => {
@@ -189,6 +176,19 @@ const AddSubscription: React.FC<AddSubscriptionProps> = ({ onCancel, onSubmit })
             id="price"
             name="price"
             value={form.price}
+            onChange={handleChange}
+            className="border rounded p-2"
+          />
+        </div>
+
+        <div className="flex flex-col">
+          <label htmlFor="price" className="text-sm font-medium text-gray-700 mb-1">
+            Identity
+          </label>
+          <input
+            id="identity"
+            name="identity"
+            value={form.identity}
             onChange={handleChange}
             className="border rounded p-2"
           />

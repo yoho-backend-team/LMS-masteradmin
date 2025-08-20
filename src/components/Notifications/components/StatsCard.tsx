@@ -135,7 +135,7 @@ const StatsCard: React.FC = () => {
                     {/* Circular progress */}
                     <div className='flex flex-col items-center'>
                       <CircularProgress
-                        percentage={kpi.percentage}
+                        percentage={kpi.value}
                         progressColor={kpi.progressColor}
                         isLoading={isLoading}
                         isHovered={isHovered}

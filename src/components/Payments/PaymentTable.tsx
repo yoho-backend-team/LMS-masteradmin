@@ -10,6 +10,7 @@ import { GetImageUrl } from "@/utils/helper";
 export default function PaymentsTable() {
   const dispatch = useDispatch<any>();
   const paymentData = useSelector(selectPayment);
+  // console.log(paymentData,"frfrrffffffffffffffffffff")
 
   const [page, setPage] = useState(1);
 
