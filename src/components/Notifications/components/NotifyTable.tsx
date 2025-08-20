@@ -26,7 +26,9 @@ const NotifyTable: React.FC<props> = ({ setFormModalOpen }) => {
   const handleResend = async (notification: any) => {
     try {
       const queryParams = {
-        uuid: notification._id,
+        institute_id:notification?.instituteId?.uuid,
+        notification_id: notification?.uuid,
+        branch_id:notification?.branch?.uuid
       };
 
       const data = await ResendNotification(queryParams);
