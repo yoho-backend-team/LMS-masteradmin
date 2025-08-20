@@ -2,7 +2,7 @@ import { ClearLocalStorage } from "@/utils/localStorage";
 import { createRoot } from "react-dom/client";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "../ui/dialog";
 import { Button } from "../ui/button";
-import { COLORS } from "@/constants/ui constants";
+import { COLORS, FONTS } from "@/constants/ui constants";
 
 export const showSessionExpireModal = () => {
     if (document.getElementById("session-expire-modal")) return;
@@ -44,7 +44,8 @@ const SessionExpireModal: React.FC<props> = ({ onConfirm }) => {
                 <div>
                     <Button
                         onClick={onConfirm}
-                        className={`w-full bg-[${COLORS.primary}] hover:bg-cyan-600 text-white`}
+                        className={`w-full bg-[${COLORS.primary}] text-gray-600 hover:bg-gray-600 hover:text-[${COLORS.primary}]`}
+                        style={{...FONTS.text4}}
                     >
                         Logout
                     </Button>

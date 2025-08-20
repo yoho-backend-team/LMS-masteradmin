@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { showSessionExpireModal } from "@/components/Session/SessionExpireModal";
-import { ClearLocalStorage } from "@/utils/localStorage";
+import { ClearLocalStorage, GetLocalStorage } from "@/utils/localStorage";
 import axios from "axios";
 
 const Axios = axios.create({
@@ -12,16 +12,16 @@ const Axios = axios.create({
 })
 
 Axios.interceptors.request.use((config: any) => {
-    // const token = localStorage.getItem("token")
-    // if (token) {
-    config.headers["Authorization"] = `Token eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6Im1lcm5zdGFja2Rldi55b2hvQGdtYWlsLmNvbSIsInJvbGUiOjEsInV1aWQiOiJjY2QzZTRkMC1mOWM5LTQ0MzEtYmIyMi01ODhhY2NmYzYwMjIiLCJ1c2VyX3R5cGUiOiJwbGF0Zm9ybSIsImlhdCI6MTc1NDc0NTU4NywiZXhwIjoxNzU0ODMxOTg3fQ.kM4v3JWAKiLrgH8PyffjaPERQdb8gKWpU3fx_Li9fdU`
-    // }
+    const token = GetLocalStorage("AdminToken")
+    if (token) {
+        config.headers["Authorization"] = `Token ${token}`
+    }
     return config
 })
 
 Axios.interceptors.response.use((response: any) => response,
     (error) => {
-        if (error?.response && error?.response?.status === 401 && error?.response?.statusText === "Unauthorized") {
+        if (error?.response && error?.response?.status === 401) {
             ClearLocalStorage();
             showSessionExpireModal();
         }
