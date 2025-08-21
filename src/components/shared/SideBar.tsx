@@ -15,12 +15,17 @@ import {
 } from "lucide-react";
 import { NavLink, useLocation, useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
+import { ClearLocalStorage } from "@/utils/localStorage";
+import { useAuth } from "../Auth/AuthContext";
 
 const Sidebar = () => {
   const [expanded, setExpanded] = useState<string | null>(null);
   const navigate = useNavigate();
   const location = useLocation();
+  const{logout}=useAuth();
   const [showsigninpage,setshowsigninpage] = useState(false);
+
+  
 
   const sidebarItems = [
     { label: "Dashboard", path: "/", icon: LayoutDashboard },
@@ -57,11 +62,14 @@ const Sidebar = () => {
   ];
 
   const handleLogout = () => {
-    toast.success("logout successfully");
-    setshowsigninpage(!showsigninpage)
-    navigate('/sign-in')
+  toast.success("Logout successfully");
+  setshowsigninpage(!showsigninpage);
+  // ClearLocalStorage()
+  logout()
+  navigate("/sign-in");
+  window.location.reload(); 
+};
 
-  };
 
   return (
     <div className=" h-screen bg-[#E0ECDE] p-4">
@@ -75,7 +83,7 @@ const Sidebar = () => {
               // Check if any child route is currently active
               const isChildActive = hasChildren
                 ? item.children.some((child) => {
-                    // Check for exact match or if current path starts with child path
+                    
                     return location.pathname === child.path || 
                            location.pathname.startsWith(child.path + '/');
                   })
