@@ -83,7 +83,7 @@ const Sidebar = () => {
               // Check if any child route is currently active
               const isChildActive = hasChildren
                 ? item.children.some((child) => {
-                    // Check for exact match or if current path starts with child path
+                    
                     return location.pathname === child.path || 
                            location.pathname.startsWith(child.path + '/');
                   })

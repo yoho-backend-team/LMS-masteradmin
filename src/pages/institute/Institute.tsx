@@ -4,7 +4,6 @@ import { Button } from "@/components/ui/button";
 import { Zap, Component, Droplet, Plus, ChevronDown } from "lucide-react";
 import filterImg from "../../assets/dashboard/filter.png";
 import { COLORS, FONTS } from "@/constants/ui constants";
-import instituteImg from "../../assets/institute/instituteImage.png";
 import locationImg from "../../assets/institute/location.png";
 import buildingImg from "../../assets/institute/building.png";
 import {
@@ -453,7 +452,7 @@ const Institutes: React.FC = () => {
                       shadow-lg transition-all duration-300 cursor-pointer border-0
                       rounded-tl-3xl rounded-br-3xl rounded-bl-none rounded-tr-none
                       ${hoveredCard === index
-                        ? 'bg-[#2D6974] text-white hover:scale-105'
+                        ? 'bg-[#2D6974] text-white hover:scale-90'
                         : 'bg-white text-gray-900 hover:scale-100'
                       }
                     `}
