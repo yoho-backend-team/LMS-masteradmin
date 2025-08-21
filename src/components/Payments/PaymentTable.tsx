@@ -20,7 +20,7 @@ export default function PaymentsTable() {
       await dispatch(getPaymentThunks({ page: currentPage }));
       isLoading(false);
     } catch (error) {
-      console.log("Error fetching course data:", error);
+      console.log("Error fetching payments data:", error);
     }
   };
 
