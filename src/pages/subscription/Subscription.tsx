@@ -1,4 +1,3 @@
-
 import React, { useEffect, useState } from "react";
 import { Plus, MoreVertical, Check } from "lucide-react";
 import { FONTS } from "@/constants/ui constants";
@@ -17,7 +16,6 @@ export interface Feature {
   };
 }
 
-
 export interface SubscriptionPlanProps {
   identity: string;
   description: string;
@@ -29,29 +27,92 @@ export interface SubscriptionPlanProps {
   is_Active: boolean;
 }
 
+const SkeletonLoader = () => {
+  return (
+    <div className="p-2">
+      <div className="flex justify-between items-center mb-6">
+        <div className="h-8 bg-gray-200 rounded w-1/4"></div>
+        <div className="h-10 bg-gray-200 rounded-tl-xl rounded-br-xl w-40"></div>
+      </div>
+
+      <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+        {[...Array(3)].map((_, index) => (
+          <div
+            key={index}
+            className="bg-white rounded-xl border shadow-sm overflow-hidden border-gray-200 flex flex-col relative animate-pulse"
+          >
+            <div className="p-4 flex flex-col flex-grow">
+
+              <div className="h-40 w-full bg-gray-200 rounded-md mb-4"></div>
+
+
+              <div className="h-6 bg-gray-200 rounded w-3/4 mb-2"></div>
+
+
+              <div className="h-4 bg-gray-200 rounded w-full mb-2"></div>
+              <div className="h-4 bg-gray-200 rounded w-2/3 mb-4"></div>
+
+
+              <div className="h-7 bg-gray-200 rounded w-1/3 mx-auto mb-4"></div>
+
+
+              <div className="mt-4 border p-3 rounded-md">
+                <div className="h-5 bg-gray-200 rounded w-1/4 mb-3"></div>
+                <ul className="space-y-2">
+                  {[...Array(3)].map((_, idx) => (
+                    <li key={idx} className="flex items-center">
+                      <div className="w-4 h-4 bg-gray-200 rounded-full mr-2"></div>
+                      <div className="h-3 bg-gray-200 rounded w-3/4"></div>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            </div>
+
+
+            <div className="p-4 flex flex-col flex-grow">
+              <div className="flex items-center justify-between mt-4">
+                <div className="h-9 bg-gray-200 rounded-tl-xl rounded-br-xl w-20"></div>
+                <div className="h-9 w-9 bg-gray-200 rounded-tl-xl rounded-br-xl"></div>
+              </div>
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+};
+
 const Subscription: React.FC = () => {
   const [plans, setPlans] = useState<SubscriptionPlanProps[]>([]);
   const [deleteIndex, setDeleteIndex] = useState<number | null>(null);
   const [showActionsIndex, setShowActionsIndex] = useState<number | null>(null);
-  const [activeStates, setActiveStates] = useState<boolean[]>([]);
+  const [activeStates, setActiveStates] = useState<boolean[]>(plans.map(p => p.active));
+
   const dispatch = useDispatch();
   const subscriptionData = useSelector((state: any) => state.Subscription.subscription);
   const output = subscriptionData?.data || [];
   const navigate = useNavigate();
 
   useEffect(() => {
-    dispatch(GettingAllSubscriptionThunks() as any);
+    const fetchData = async () => {
+      setIsLoading(true);
+      try {
+        await dispatch(GettingAllSubscriptionThunks() as any);
+      } catch (error) {
+        console.error("Error fetching subscription data:", error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchData();
   }, [dispatch]);
 
   useEffect(() => {
     if (output.length > 0) {
-    
+
       setPlans(output);
-      const states = output.map((p: any) => {
-   
-        return p.is_Active ?? p.is_active ?? p.status ?? false;
-      });
-      setActiveStates(states);
     }
   }, [output]);
 
@@ -74,6 +135,10 @@ const Subscription: React.FC = () => {
   const toggleActions = (index: number) => {
     setShowActionsIndex((prev) => (prev === index ? null : index));
   };
+
+  useEffect(() => {
+    console.log("subscription data:", subscriptionData);
+  }, [subscriptionData]);
 
   return (
     <div className="p-2">
@@ -113,7 +178,7 @@ const Subscription: React.FC = () => {
               </p>
 
               <div className="mt-2 text-[#1D3A4E] font-bold text-xl flex justify-center items-center">
-                ₹{plan?.price|| "0"}
+                ₹{plan?.price || "0"}
                 <span className="text-gray-500 font-normal text-base">
                   /{plan?.duration?.unit || "month"}
                 </span>
