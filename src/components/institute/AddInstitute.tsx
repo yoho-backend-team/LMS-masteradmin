@@ -170,7 +170,7 @@ const InputField = ({
 				value={value}
 				style={{ ...FONTS.text4, color: COLORS.gray_01 }}
 				onChange={(e) => onChange(field, e.target.value)}
-				placeholder={placeholder}
+				placeholder={placeholder}                
 				className='mt-1'
 			/>
 		</div>
@@ -331,7 +331,6 @@ const StepperForm: React.FC = () => {
 		}
 	};
 
-	// Add this handler for state selection (for both main and branch address)
 	const handleStateChange = async (
 		value: string,
 		countryCode: string,
@@ -381,7 +380,7 @@ const StepperForm: React.FC = () => {
 							formData.append('files', file);
 						});
 
-						const response = await UploadMultipleImages(formData); // Use the multiple upload function
+						const response = await UploadMultipleImages(formData); 
 						console.log(`Files uploaded for ${field}:`, response);
 						if (response) {
 							toast.success(
@@ -453,7 +452,7 @@ const StepperForm: React.FC = () => {
 					navigate('/institute');
 				} else {
 					toast.error('Failed to add institute');
-				}
+				} 
 			} catch (error) {
 				toast.error('Failed to add institute');
 			}

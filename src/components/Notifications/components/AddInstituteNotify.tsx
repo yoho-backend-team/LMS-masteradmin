@@ -65,8 +65,8 @@ const AddInstituteNotify: React.FC<props> = ({
     }
 
     const dataToSend = {
-      institute: selectedInstitute,
-      branch: selectedBranch,
+      institute_id: selectedInstitute,
+      branches: [selectedBranch],
       title,
       body,
       link,

@@ -5,12 +5,9 @@ import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { GetAllNotificationThunks } from '@/features/notification/redux/thunks';
 
-
 const StatsCard: React.FC = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [hoveredCard, setHoveredCard] = useState<number | null>(null);
-
-
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -28,22 +25,19 @@ const StatsCard: React.FC = () => {
   useEffect(() => {
     dispatch(GetAllNotificationThunks({}) as any);
   }, [dispatch]);
-  console.log(notifications, "check")
 
   const totalNotifications = notifications?.length;
-  const seenNotifications = notifications?.filter((n: any) => n.status === 'read').length;
-  const unseenNotifications = notifications?.filter((n: any) => n.status === 'unread').length;
-
-  console.log('Total:', totalNotifications);
-  console.log('Seen:', seenNotifications);
-  console.log('Unseen:', unseenNotifications);
+  const seenNotifications = notifications?.filter((n: any) => n?.status === 'read').length;
+  const unseenNotifications = notifications?.filter((n: any) => n?.status === 'unread').length;
+  
   const maxNotifications = 100;
 
   const kpiData = [
     {
       title: 'Total Notifications',
       value: totalNotifications,
-      percentage: totalNotifications > 0 ? Math.min((totalNotifications / maxNotifications) * 100, 100) : 0, icon: Zap,
+      percentage: totalNotifications > 0 ? Math.min((totalNotifications / maxNotifications) * 100, 100) : 0, 
+      icon: Zap,
       bgColor: 'bg-teal-600',
       iconBg: 'bg-teal-100',
       iconColor: 'text-teal-600',
@@ -51,7 +45,7 @@ const StatsCard: React.FC = () => {
     },
     {
       title: 'Seen Notifications',
-      value: seenNotifications, // number count displayed
+      value: seenNotifications,
       percentage: totalNotifications ? (seenNotifications / totalNotifications) * 100 : 0,
       icon: Component,
       bgColor: 'bg-white',
@@ -61,8 +55,9 @@ const StatsCard: React.FC = () => {
     },
     {
       title: 'Unseen Notifications',
-      value: unseenNotifications, // number count displayed
-      percentage: totalNotifications > 0 ? Math.min((totalNotifications / maxNotifications) * 100, 100) : 0, icon: Droplet,
+      value: unseenNotifications,
+      percentage: totalNotifications > 0 ? Math.min((totalNotifications / maxNotifications) * 100, 100) : 0, 
+      icon: Droplet,
       bgColor: 'bg-white',
       iconBg: 'bg-yellow-100',
       iconColor: 'text-yellow-500',
@@ -70,14 +65,42 @@ const StatsCard: React.FC = () => {
     },
   ];
 
-
-
+  // Show skeleton loader while loading
+  if (isLoading) {
+    return (
+      <div className='w-full'>
+        <div className='w-full mx-auto space-y-6'>
+          <div className='flex justify-evenly gap-6 w-full'>
+            {[1, 2, 3].map((_, index) => (
+              <Card
+                key={index}
+                className='shadow-2xl transition-all w-80 h-85 cursor-pointer border-0 rounded-tl-3xl rounded-br-3xl rounded-bl-none rounded-tr-none bg-white'
+              >
+                <CardContent className='p-6'>
+                  <div className='flex flex-col items-center text-center space-y-4 -mt-5'>
+                   
+                    <div className='w-16 h-16 rounded-full bg-gray-200 animate-pulse'></div>
+                        
+                    <div className='w-32 h-6 bg-gray-200 rounded animate-pulse'></div>
+              
+                    <div className='w-16 h-8 bg-gray-200 rounded animate-pulse'></div>
+                    
+                    <div className='relative w-30 h-30'>
+                      <div className='w-full h-full rounded-full bg-gray-200 animate-pulse'></div>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+            ))}
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className=' w-full'>
       <div className='w-full mx-auto space-y-6'>
-        {/* Header */}
-
         {/* KPI Cards */}
         <div className='flex justify-evenly gap-6 w-full'>
           {kpiData.map((kpi, index) => {
@@ -138,7 +161,7 @@ const StatsCard: React.FC = () => {
                     {/* Circular progress */}
                     <div className='flex flex-col items-center'>
                       <CircularProgress
-                        percentage={kpi.percentage}
+                        percentage={kpi.value}
                         progressColor={kpi.progressColor}
                         isLoading={isLoading}
                         isHovered={isHovered}
@@ -150,7 +173,6 @@ const StatsCard: React.FC = () => {
             );
           })}
         </div>
-
       </div>
     </div>
   );

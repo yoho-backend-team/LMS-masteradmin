@@ -1,8 +1,11 @@
 import React from "react";
 import { useFormik } from "formik";
 import * as Yup from "yup";
+import { updateInstituteDetails } from "@/features/institute/services";
+import toast from "react-hot-toast";
 
 interface EditInstituteFormProps {
+  instituteData: Institute;
   onCancel: () => void;
 }
 
@@ -15,48 +18,95 @@ const validationSchema = Yup.object({
     .matches(/^\d{6}$/, "Pin Code must be 6 digits")
     .required("Pin Code is required"),
   addressLine1: Yup.string().required("Address Line 1 is required"),
+  addressLine2: Yup.string(), // optional
   phoneNumber: Yup.string()
     .matches(/^\d{10}$/, "Phone Number must be 10 digits")
     .required("Phone Number is required"),
+  altPhoneNumber: Yup.string().matches(/^\d{10}$/, "Alt Phone Number must be 10 digits"),
   officialEmail: Yup.string()
     .email("Invalid email format")
     .required("Official Email is required"),
   officialWebsite: Yup.string().url("Invalid URL"),
-  description: Yup.string().max(300, "Description can’t be longer than 300 characters"),
+  description: Yup.string().max(300, "Description can't be longer than 300 characters"),
   instagram: Yup.string().url("Invalid Instagram URL"),
   facebook: Yup.string().url("Invalid Facebook URL"),
   linkedin: Yup.string().url("Invalid LinkedIn URL"),
   twitter: Yup.string().url("Invalid Twitter URL"),
-  pinterest: Yup.string().url("Invalid Pinterest URL"),
+  // pinterest: Yup.string().url("Invalid Pinterest URL"),
 });
 
-const EditInstituteForm: React.FC<EditInstituteFormProps> = ({ onCancel }) => {
+const EditInstituteForm: React.FC<EditInstituteFormProps> = ({
+  instituteData,
+  onCancel,
+}) => {
   const formik = useFormik({
     initialValues: {
-      instituteName: "",
-      registeredDate: "",
-      state: "",
-      city: "",
-      pinCode: "",
-      addressLine1: "",
-      addressLine2: "",
-      phoneNumber: "",
-      altPhoneNumber: "",
-      officialEmail: "",
-      officialWebsite: "",
-      description: "",
-      instagram: "",
-      facebook: "",
-      linkedin: "",
-      email: "",
-      twitter: "",
-      pinterest: "",
+      instituteName: instituteData?.institute_name || "",
+      registeredDate: instituteData?.registered_date
+        ? new Date(instituteData.registered_date).toISOString().split("T")[0]
+        : "",
+      state: instituteData?.contact_info?.address?.state || "",
+      city: instituteData?.contact_info?.address?.city || "",
+      pinCode: instituteData?.contact_info?.address?.pincode || "",
+      addressLine1: instituteData?.contact_info?.address?.address1 || "",
+      addressLine2: instituteData?.contact_info?.address?.address2 || "",
+      phoneNumber: instituteData?.contact_info?.phone_no || "",
+      altPhoneNumber: instituteData?.contact_info?.alternate_no || "",
+      officialEmail: instituteData?.email || "",
+      officialWebsite: instituteData?.website || "",
+      description: instituteData?.description || "",
+      instagram: instituteData?.social_media?.instagram_id || "",
+      facebook: instituteData?.social_media?.facebook_id || "",
+      linkedin: instituteData?.social_media?.linkedin_id || "",
+      twitter: instituteData?.social_media?.twitter_id || "",
+      // pinterest: instituteData?.social_media?.pinterest_id || "",
     },
     validationSchema,
-    onSubmit: (values) => {
-      console.log("Form Submitted:", values);
-      // Optional: Go back to view mode after save
-      onCancel();
+    onSubmit: async (values) => {
+      const payload = {
+        institute_name: values.instituteName,
+      //  registered_date: values.registeredDate,
+        email: values.officialEmail,
+        website: values.officialWebsite,
+        description: values.description,
+        contact_info: {
+          phone_no: values.phoneNumber,
+          alternate_no: values.altPhoneNumber,
+          address: {
+            state: values.state,
+            city: values.city,
+            pincode: values.pinCode,
+            address1: values.addressLine1,
+            address2: values.addressLine2,
+          },
+        },
+        social_media: {
+          instagram_id: values.instagram,
+          facebook_id: values.facebook,
+          linkedin_id: values.linkedin,
+          twitter_id: values.twitter,
+          // pinterest_id: values.pinterest,
+        },
+      };
+console.log(onsubmit,'onnnnnn')
+      try {
+       
+        const response = await updateInstituteDetails({
+          instituteId: instituteData?.uuid,
+          payload
+        });
+        
+        if (response) {
+          toast.success("Institute updated successfully 🎉");
+          console.log("Institute updated:", response);
+          onCancel();
+        } else {
+          throw new Error("No response received");
+        }
+      } catch (error) {
+        console.error("Update failed:", error);
+        toast.error("Failed to update institute ❌");
+      }
     },
   });
 
@@ -66,7 +116,7 @@ const EditInstituteForm: React.FC<EditInstituteFormProps> = ({ onCancel }) => {
   return (
     <form
       onSubmit={formik.handleSubmit}
-      className="max-w-5xl mx-auto bg-white p-6 shadow-lg rounded-lg grid grid-cols-1 md:grid-cols-2 gap-4  max-h-[80vh]"
+      className="max-w-5xl mx-auto bg-white p-6 shadow-lg rounded-lg grid grid-cols-1 md:grid-cols-2 gap-4 max-h-[80vh] overflow-y-auto"
     >
       {/* Basic fields */}
       {[
@@ -121,13 +171,12 @@ const EditInstituteForm: React.FC<EditInstituteFormProps> = ({ onCancel }) => {
         { name: "instagram", placeholder: "Instagram URL" },
         { name: "facebook", placeholder: "Facebook URL" },
         { name: "linkedin", placeholder: "LinkedIn URL" },
-        { name: "email", placeholder: "Email", type: "email" },
         { name: "twitter", placeholder: "Twitter URL" },
-        { name: "pinterest", placeholder: "Pinterest URL" },
+        // { name: "pinterest", placeholder: "Pinterest URL" },
       ].map((field) => (
         <div key={field.name}>
           <input
-            type={field.type || "text"}
+            type="text"
             name={field.name}
             placeholder={field.placeholder}
             value={(formik.values as any)[field.name]}
@@ -148,17 +197,19 @@ const EditInstituteForm: React.FC<EditInstituteFormProps> = ({ onCancel }) => {
       <div className="flex gap-4 md:col-span-2 mt-4">
         <button
           type="submit"
-          className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition"
+          disabled={formik.isSubmitting}
+          className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition disabled:bg-blue-400"
         >
-          Submit
+          {formik.isSubmitting ? "Submitting..." : "Submit"}
         </button>
+
         <button
           type="button"
           onClick={() => {
             formik.resetForm();
             onCancel();
           }}
-          className="px-4 py-2 justify-end bg-gray-300 rounded hover:bg-gray-400 transition"
+          className="px-4 py-2 bg-gray-300 rounded hover:bg-gray-400 transition"
         >
           Cancel
         </button>
