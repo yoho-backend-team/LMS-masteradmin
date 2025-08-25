@@ -21,7 +21,6 @@ const NotifyTable: React.FC<props> = ({ setFormModalOpen }) => {
 
   useEffect(() => {
     dispatch(GetAllNotificationThunks({}) as any);
-    // Simulate loading for 2 seconds
     const timer = setTimeout(() => {
       setIsLoading(false);
     }, 2000);
@@ -38,10 +37,8 @@ const NotifyTable: React.FC<props> = ({ setFormModalOpen }) => {
 
       const data = await ResendNotification(queryParams);
       console.log("Resend response:", data);
-      // Optionally, add success feedback here (toast, refresh list, etc.)
     } catch (error) {
       console.error("Error resending notification:", error);
-      // Optionally, add error feedback here
     }
   };
 

@@ -12,7 +12,7 @@ type InstituteDocument = {
   file: string;
 };
 
-type InstituteDocs = {
+export type InstituteDocs = {
   gst: InstituteDocument;
   pan: InstituteDocument;
 };

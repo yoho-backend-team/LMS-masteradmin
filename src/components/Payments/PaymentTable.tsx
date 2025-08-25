@@ -64,12 +64,9 @@ export default function PaymentsTable() {
 
   return (
     <div className=" space-y-4">
-      {/* Header */}
       <div className="mb-2" style={{ ...FONTS.bold_heading }}>
         Fees
       </div>
-
-      {/* Table Header Card */}
       {loading ? (
         <>
           {" "}
@@ -93,8 +90,6 @@ export default function PaymentsTable() {
           </Card>
         </>
       )}
-
-      {/* Data Rows */}
       {loading ? (
         <>
           <SkeletonRow />
@@ -150,7 +145,6 @@ export default function PaymentsTable() {
       )}
 
       <div className="flex justify-center items-center gap-4 mt-6">
-        {/* Prev Button */}
         <button
           disabled={page === 1}
           onClick={() => setPage((p) => p - 1)}
@@ -158,13 +152,9 @@ export default function PaymentsTable() {
         >
           ← Prev
         </button>
-
-        {/* Page Info */}
         <span className="px-4 py-2 bg-[#6bc1a3] text-white border border-gray-200 rounded-tl-xl rounded-br-xl rounded-tr-none rounded-bl-none text-sm font-medium ">
           {paymentData?.page ?? page} of {paymentData?.last_page ?? 1}
         </span>
-
-        {/* Next Button */}
         <button
           disabled={page === paymentData?.last_page}
           onClick={() => setPage((p) => p + 1)}

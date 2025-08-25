@@ -3,9 +3,10 @@ import { useFormik } from "formik";
 import * as Yup from "yup";
 import { updateInstituteDetails } from "@/features/institute/services";
 import toast from "react-hot-toast";
+import type { Institute } from "./ViewInstituteDetails";
 
 interface EditInstituteFormProps {
-  instituteData: Institute;
+  instituteData: Institute ;
   onCancel: () => void;
 }
 
@@ -18,7 +19,7 @@ const validationSchema = Yup.object({
     .matches(/^\d{6}$/, "Pin Code must be 6 digits")
     .required("Pin Code is required"),
   addressLine1: Yup.string().required("Address Line 1 is required"),
-  addressLine2: Yup.string(), // optional
+  addressLine2: Yup.string(),
   phoneNumber: Yup.string()
     .matches(/^\d{10}$/, "Phone Number must be 10 digits")
     .required("Phone Number is required"),
@@ -32,7 +33,6 @@ const validationSchema = Yup.object({
   facebook: Yup.string().url("Invalid Facebook URL"),
   linkedin: Yup.string().url("Invalid LinkedIn URL"),
   twitter: Yup.string().url("Invalid Twitter URL"),
-  // pinterest: Yup.string().url("Invalid Pinterest URL"),
 });
 
 const EditInstituteForm: React.FC<EditInstituteFormProps> = ({
@@ -59,13 +59,11 @@ const EditInstituteForm: React.FC<EditInstituteFormProps> = ({
       facebook: instituteData?.social_media?.facebook_id || "",
       linkedin: instituteData?.social_media?.linkedin_id || "",
       twitter: instituteData?.social_media?.twitter_id || "",
-      // pinterest: instituteData?.social_media?.pinterest_id || "",
     },
     validationSchema,
     onSubmit: async (values) => {
       const payload = {
         institute_name: values.instituteName,
-      //  registered_date: values.registeredDate,
         email: values.officialEmail,
         website: values.officialWebsite,
         description: values.description,
@@ -85,7 +83,6 @@ const EditInstituteForm: React.FC<EditInstituteFormProps> = ({
           facebook_id: values.facebook,
           linkedin_id: values.linkedin,
           twitter_id: values.twitter,
-          // pinterest_id: values.pinterest,
         },
       };
 console.log(onsubmit,'onnnnnn')
@@ -145,7 +142,7 @@ console.log(onsubmit,'onnnnnn')
           {formik.touched[field.name as keyof typeof formik.touched] &&
             formik.errors[field.name as keyof typeof formik.errors] && (
               <p className="text-red-500 text-sm">
-                {formik.errors[field.name as keyof typeof formik.errors]}
+                {formik.errors[field.name as keyof typeof formik.errors]as string}
               </p>
             )}
         </div>
@@ -165,14 +162,11 @@ console.log(onsubmit,'onnnnnn')
           <p className="text-red-500 text-sm">{formik.errors.description}</p>
         )}
       </div>
-
-      {/* Social Links */}
       {[
         { name: "instagram", placeholder: "Instagram URL" },
         { name: "facebook", placeholder: "Facebook URL" },
         { name: "linkedin", placeholder: "LinkedIn URL" },
         { name: "twitter", placeholder: "Twitter URL" },
-        // { name: "pinterest", placeholder: "Pinterest URL" },
       ].map((field) => (
         <div key={field.name}>
           <input
@@ -187,13 +181,11 @@ console.log(onsubmit,'onnnnnn')
           {formik.touched[field.name as keyof typeof formik.touched] &&
             formik.errors[field.name as keyof typeof formik.errors] && (
               <p className="text-red-500 text-sm">
-                {formik.errors[field.name as keyof typeof formik.errors]}
+                {formik.errors[field.name as keyof typeof formik.errors]as string}
               </p>
             )}
         </div>
       ))}
-
-      {/* Buttons */}
       <div className="flex gap-4 md:col-span-2 mt-4">
         <button
           type="submit"

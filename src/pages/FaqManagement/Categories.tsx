@@ -133,21 +133,29 @@ export default function Categories() {
   };
 
   const handleEditSubmit = async (event: React.FormEvent) => {
-    event.preventDefault();
+  event.preventDefault();
 
-    if (!editingCategory?.id) {
-      console.error("Missing _id for update");
-      return;
-    }
+  if (!editingCategory?.id) {
+    console.error("Missing id for update");
+    return;
+  }
 
-    try {
-      await updateCategoriesData(editingCategory);
-      setIsEditModalOpen(false);
-      setEditingCategory(null);
-    } catch (err) {
-      console.error(err);
-    }
-  };
+  try {
+    const payload = {
+      uuid: editingCategory.id,               
+      identity: editingCategory.identity,
+      description: editingCategory.description,
+      is_active: editingCategory.isActive,   
+    };
+
+    await updateCategoriesData(payload);
+    setIsEditModalOpen(false);
+    setEditingCategory(null);
+  } catch (err) {
+    console.error(err);
+  }
+};
+
   const handleDeleteClick = (id: string) => {
     setCategoryToDeleteId(id);
     setIsDeleteConfirmModalOpen(true);

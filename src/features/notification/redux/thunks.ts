@@ -8,7 +8,6 @@ export const GetAllNotificationThunks = (params: any) => async (dispatch: any) =
     const response = await GetAllNotification(params);
     const notificationsArray = response?.data?.data?.data || [];
     dispatch(getNotification(notificationsArray));
-    // console.log("Notification data in thunks", notificationsArray);
     return { payload: notificationsArray };
   } catch (error) {
     console.log("Error in GetAllNotification Thunks:", error);
@@ -19,7 +18,6 @@ export const GetAllNotificationThunks = (params: any) => async (dispatch: any) =
 export const GetAllInstituteThunks = (params?: any) => async (dispatch: any) => {
   try {
     const response = await GetAllInstitute(params);
-    // console.log(response, "institute id");
     dispatch(getInstitute(response.data));
     return { payload: response.data };
   } catch (error) {

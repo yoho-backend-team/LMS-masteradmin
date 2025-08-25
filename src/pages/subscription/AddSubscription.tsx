@@ -1,7 +1,7 @@
 
 
 import React, { useEffect, useState } from "react";
-import { SubscriptionPlanProps } from "../../components/SubscriptionPlan/SubscriptionCard";
+import type { SubscriptionPlanProps } from "../../components/SubscriptionPlan/SubscriptionCard";
 import subcard1 from "../../assets/subcard1.png";
 import { useNavigate } from "react-router-dom";
 import { CreatSubscription } from "@/features/subscription/services";
@@ -11,7 +11,7 @@ interface AddSubscriptionProps {
   onSubmit?: (plan: SubscriptionPlanProps) => void;
 }
 
-const AddSubscription: React.FC<AddSubscriptionProps> = ({ onCancel, onSubmit }) => {
+const AddSubscription: React.FC<AddSubscriptionProps> = ({ onSubmit }) => {
   const [form, setForm] = useState({
     title: "",
     price: "",
@@ -38,70 +38,64 @@ const AddSubscription: React.FC<AddSubscriptionProps> = ({ onCancel, onSubmit })
   const [submittedPlan, setSubmittedPlan] = useState<SubscriptionPlanProps | null>(null);
   const navigate = useNavigate();
 
-  const handleChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>
-  ) => {
-    const { name, value, type, checked } = e.target;
-    setForm((prev) => ({
-      ...prev,
-      [name]: type === "checkbox" ? checked : value,
-    }));
-  };
+const handleChange = (
+  e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>
+) => {
+  const target = e.target as HTMLInputElement; 
+  const { name, value, type } = target;
+
+  setForm((prev) => ({
+    ...prev,
+    [name]: type === "checkbox" ? target.checked : value,
+  }));
+};
+
 
 
   const handleSubmit = () => {
-    const features = [
-      {
-        feature: "Students",
-        count: form.unlimitedStudents ? "Unlimited" : Number(form.students || 0),
-       
-      },
-      {
-        feature: "Admins",
-        count: form.unlimitedAdmins ? "Unlimited" : Number(form.admins || 0),
-       
-      },
-      {
-        feature: "Teachers",
-        count: form.unlimitedTeachers ? "Unlimited" : Number(form.teachers || 0),
-       
-      },
-      {
-        feature: "Batches",
-        count: form.unlimitedBatches ? "Unlimited" : Number(form.batches || 0),
-        
-      },
-      {
-        feature: "Courses",
-        count: form.unlimitedCourses ? "Unlimited" : Number(form.courses || 0),
-        
-      },
-      {
-        feature: "Classes",
-        count: form.unlimitedClasses ? "Unlimited" : Number(form.classes || 0),
-       
-      },
-    ];
+  const features = [
+    {
+      label: "Students",
+      value: form.unlimitedStudents ? "Unlimited" : Number(form.students || 0),
+    },
+    {
+      label: "Admins",
+      value: form.unlimitedAdmins ? "Unlimited" : Number(form.admins || 0),
+    },
+    {
+      label: "Teachers",
+      value: form.unlimitedTeachers ? "Unlimited" : Number(form.teachers || 0),
+    },
+    {
+      label: "Batches",
+      value: form.unlimitedBatches ? "Unlimited" : Number(form.batches || 0),
+    },
+    {
+      label: "Courses",
+      value: form.unlimitedCourses ? "Unlimited" : Number(form.courses || 0),
+    },
+    {
+      label: "Classes",
+      value: form.unlimitedClasses ? "Unlimited" : Number(form.classes || 0),
+    },
+  ];
 
-    const newPlan: SubscriptionPlanProps = {
-      title: form.title,
-      description: form.description,
-      price: form.price,
-      duration: {
-        value: Number(form.duration || 0),
-        unit: form.durationType || "Monthly",
-      },
-      image: form.image,
-      features,
-      active: true,
-      identity: form.identity
-    };
-
-    setSubmittedPlan(newPlan);
-    onSubmit && onSubmit(newPlan);
-
-    navigate("/subscriptions");
+  const newPlan: SubscriptionPlanProps = {
+    title: form.title,
+    description: form.description,
+    price: form.price,
+    duration: form.duration + " " + (form.durationType || "Monthly"), // keep it string
+    image: form.image,
+    features, // ✅ correct shape
+    active: true,
   };
+
+  setSubmittedPlan(newPlan);
+  onSubmit && onSubmit(newPlan);
+
+  navigate("/subscriptions");
+};
+
 
 
   useEffect(() => {

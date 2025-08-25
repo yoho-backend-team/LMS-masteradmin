@@ -19,7 +19,7 @@ const StatsCard: React.FC = () => {
 
   // Filter institutes based on selected filters
 
-  const [kpiData, setKpiData] = useState([
+  const [kpiData] = useState([
     {
       title: 'Total Notifications',
       value: '45',
@@ -61,7 +61,6 @@ const StatsCard: React.FC = () => {
         {/* KPI Cards */}
         <div className='grid grid-cols-1 md:grid-cols-4 gap-6'>
           {kpiData.map((kpi, index) => {
-            const isHovered = hoveredCard === index;
             const IconComponent = kpi.icon;
 
             return (

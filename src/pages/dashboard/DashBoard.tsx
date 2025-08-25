@@ -27,7 +27,6 @@ const Dashboard = () => {
   const [showFilter, setShowFilter] = useState(false);
   const [selectedMonth, setSelectedMonth] = useState<string | null>(null);
   const [selectedYear, setSelectedYear] = useState<string | null>(null);
-  const [revenueYear, setRevenueYear] = useState("2025");
   const [skeletonloading, isSkeletonLoading] = useState<boolean>(false);
   const nowDate = new Date();
   const currentMonth = nowDate.getMonth();

@@ -1,5 +1,4 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { GetLocalStorage } from "@/utils/localStorage";
 import axios from "axios";
 
 const Axios = axios.create({

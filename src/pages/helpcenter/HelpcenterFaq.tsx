@@ -1,6 +1,5 @@
 
 import React, { useState } from 'react';
-import { useNavigate } from "react-router-dom";
 import prfimg from '../../assets/profileimg.png';
 import backimg1 from '../../assets/image1.png';
 import backimg2 from '../../assets/image2.png';

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { IoIosArrowDown, IoMdAdd } from "react-icons/io";
 import editIcon from "../../../assets/EditIcon.svg";
 import deleteIcon from "../../../assets/Mask group (2).svg";
@@ -18,7 +18,7 @@ const FAQ = () => {
   const [isEditOpen, setIsEditOpen] = useState(false);
   const [editFaq, setEditFaq] = useState<any>(null);
   const [page, setPage] = useState(1);
-  const [totalPages, setTotalPages] = useState(3);
+  const [totalPages, _setTotalPages] = useState(3);
 const [loading, setLoading] = useState(true);
 
   const [isOpen, setIsOpen] = useState(false);
@@ -70,7 +70,7 @@ const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const fetchData = async () => {
-      setLoading(true); // show skeleton
+      setLoading(true);
       await dispatch(fetchFAQsThunk({ page }));
       setLoading(false); 
     };

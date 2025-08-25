@@ -31,7 +31,7 @@ const SubscriptionCard: React.FC<SubscriptionPlanProps> = ({
   onDelete,
 }) => {
   const [showActions, setShowActions] = useState(false);
-  const [active, setActive] = useState(initialActive); // 🔹 Local state for toggle
+  const [active, setActive] = useState(initialActive); 
   const navigate = useNavigate();
 
   const toggleActive = () => {

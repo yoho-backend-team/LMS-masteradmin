@@ -1,24 +1,15 @@
 import { useEffect, useState } from 'react'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { Badge } from '@/components/ui/badge'
-import ticketBg from '../../assets/ticket/Frame 6135 (1).png'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { ScrollArea } from '@/components/ui/scroll-area'
 import {
   Dialog,
   DialogContent,
-  DialogHeader,
-  DialogTitle,
 } from '@/components/ui/dialog'
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger
-} from '@/components/ui/dropdown-menu'
 import { BsThreeDotsVertical } from "react-icons/bs";
-import { ChevronDown, Send, Paperclip, X } from 'lucide-react'
+import {  Send, Paperclip, X } from 'lucide-react'
 import { useDispatch, useSelector } from 'react-redux'
 import { getHelpcenterTicketData } from '@/features/Profile/helpcenter-ticket/reducers/Thunks'
 import { helpcenterTicketSelect } from '@/features/Profile/helpcenter-ticket/reducers/Selector'
@@ -62,17 +53,6 @@ interface UserProfile {
   locationTime: string
   language: string
   role?: string
-}
-
-const userProfiles: Record<string, UserProfile> = {
-  'Chandran': {
-    name: 'Chandran R',
-    email: 'chandran.r@example.com',
-    phone: '+91 98765 45678',
-    location: 'New York, USA',
-    locationTime: 'Mon - Fri 9 AM - 5 PM',
-    language: 'English',
-  }
 }
 
 // Skeleton Loader Components
@@ -293,34 +273,6 @@ const HelpcenterTickets = () => {
     setIsProfileModalOpen(true)
   }
 
-  const groupMessagesByDate = (messages: Message[]) => {
-    return messages.reduce((acc: Record<string, Message[]>, message) => {
-      const date = new Date(message.createdAt).toDateString(); // e.g. "Sat Aug 09 2025"
-      if (!acc[date]) acc[date] = [];
-      acc[date].push(message);
-      return acc;
-    }, {});
-  };
-
-  const getReadableDate = (dateStr: string) => {
-    const today = new Date();
-    const targetDate = new Date(dateStr);
-    const yesterday = new Date();
-    yesterday.setDate(today.getDate() - 1);
-
-    const todayStr = today.toDateString();
-    const yesterdayStr = yesterday.toDateString();
-
-    if (dateStr === todayStr) return 'Today';
-    if (dateStr === yesterdayStr) return 'Yesterday';
-
-    return targetDate.toLocaleDateString(undefined, {
-      day: 'numeric',
-      month: 'short',
-      year: 'numeric',
-    }); // e.g. 9 Aug 2025
-  };
-
   const formatRelativeTime = (isoString: string) => {
     const now = new Date()
     const date = new Date(isoString)
@@ -405,7 +357,7 @@ const HelpcenterTickets = () => {
                           handleAvatarClick(ticket.user)
                         }}
                       >
-                        <AvatarImage src={GetImageUrl(ticket.user.image) || "/placeholder.svg"} alt={ticket.user.first_name} />
+                        <AvatarImage src={GetImageUrl(ticket.user.image||"") || "/placeholder.svg"} alt={ticket.user.first_name} />
                         <AvatarFallback className="bg-orange-400 text-white">
                           {ticket.user.first_name[0]}
                         </AvatarFallback>
@@ -489,7 +441,7 @@ const HelpcenterTickets = () => {
                   className="w-10 h-10 cursor-pointer hover:ring-2 hover:ring-[#68b39f] transition-all"
                   onClick={() => handleAvatarClick(selectedTicket.user)}
                 >
-                  <AvatarImage src={GetImageUrl(selectedTicket.user.image) || "/placeholder.svg"} alt={selectedTicket.user.first_name} />
+                  <AvatarImage src={GetImageUrl(selectedTicket.user.image||"") || "/placeholder.svg"} alt={selectedTicket.user.first_name} />
                   <AvatarFallback className="bg-orange-400 text-white">
                     {selectedTicket.user.first_name[0]}
                   </AvatarFallback>
@@ -542,7 +494,7 @@ const HelpcenterTickets = () => {
                       {message.senderType === 'Users' && (
                         <Avatar 
                           className="w-8 h-8 mb-1 cursor-pointer transition-all" >
-                          <AvatarImage src={GetImageUrl(selectedTicket.user.image) || "/placeholder.svg"} alt={selectedTicket.user.first_name} />
+                          <AvatarImage src={GetImageUrl(selectedTicket.user.image||"") || "/placeholder.svg"} alt={selectedTicket.user.first_name} />
                           <AvatarFallback className="bg-orange-400 text-white">
                             {selectedTicket.user.first_name[0]}
                           </AvatarFallback>

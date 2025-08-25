@@ -63,7 +63,6 @@ const SecurityPage = () => {
         onSubmit={handleSubmit(onSubmit)}
         className="grid grid-cols-2 gap-4 w-full"
       >
-        {/* New Password */}
         <div className="relative">
           <input
             type={showNewPassword ? "text" : "password"}
@@ -95,8 +94,6 @@ const SecurityPage = () => {
           )}
 
         </div>
-
-        {/* Confirm Password */}
         <div className="relative">
           <input
             type={showConfirmPassword ? "text" : "password"}

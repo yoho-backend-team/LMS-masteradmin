@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import type { AppDispatch } from "@/store";
 import { GetDashboardDetails } from "../service";
 import { setDashboardData } from "./slice";

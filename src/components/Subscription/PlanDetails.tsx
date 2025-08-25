@@ -27,7 +27,6 @@ export default function PlanView({ plan, onBack }: PlanViewProps) {
 
   return (
     <div className="p-6  mx-auto space-y-2 bg-white">
-      {/* Back button */}
       <div className="flex items-center gap-4">
         <Button
           variant="ghost"
@@ -38,14 +37,10 @@ export default function PlanView({ plan, onBack }: PlanViewProps) {
         
         </Button>
       </div>
-
-      {/* Title */}
       <div>
         <h1 className=" mb-2"style={{...FONTS.text,fontSize:"26px"}}>{plan.name}</h1>
         <p className=" border-b border-gray-500 pb-2 opacity-50"style={{...FONTS.text5}}>{plan.description}</p>
       </div>
-
-      {/* Plan Overview */}
       <div>
         <h2 className="text-lg font-bold text-gray-900 mt-6 mb-4"style={{...FONTS.text,fontSize:"26px",color:COLORS.black}}>Plan Overview</h2>
         <div className="grid grid-cols-2 md:grid-cols-4 gap-y-6">
@@ -78,14 +73,10 @@ export default function PlanView({ plan, onBack }: PlanViewProps) {
           </div>
         </div>
       </div>
-
-      {/* Created On */}
       <div>
         <p className="text-sm font-medium text-gray-500 mt-4"style={{...FONTS.text,fontSize:"22px",color:COLORS.black}}>Created On</p>
         <p className=" border-b border-gray-500 pb-2 mt-4 mb-4 text-gray-900 opacity-50"style={{...FONTS.text5}}>N/A</p>
       </div>
-
-      {/* Features */}
       <div>
         <h2 className="text-lg font-bold text-gray-900 mb-4"style={{...FONTS.text,fontSize:"26px",color:COLORS.black}}>Features Included</h2>
         <div className="grid grid-cols-2 md:grid-cols-3 gap-y-6">

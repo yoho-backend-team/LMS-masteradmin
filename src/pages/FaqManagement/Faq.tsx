@@ -1,4 +1,3 @@
-import React from 'react'
 import FAQ from '../../components/FaqManagement/Faq/Faq'
 
 function Faq() {

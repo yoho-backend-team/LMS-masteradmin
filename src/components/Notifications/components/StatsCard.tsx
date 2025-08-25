@@ -65,7 +65,6 @@ const StatsCard: React.FC = () => {
     },
   ];
 
-  // Show skeleton loader while loading
   if (isLoading) {
     return (
       <div className='w-full'>
@@ -123,7 +122,6 @@ const StatsCard: React.FC = () => {
               >
                 <CardContent className='p-6'>
                   <div className='flex flex-col items-center text-center space-y-4 -mt-5'>
-                    {/* Icon with background circle */}
                     <div
                       className={`
                         w-16 h-16 rounded-full flex items-center justify-center
@@ -140,8 +138,6 @@ const StatsCard: React.FC = () => {
                         `}
                       />
                     </div>
-
-                    {/* Title */}
                     <h3
                       className={`
                         text-xl font-medium leading-tight
@@ -157,8 +153,6 @@ const StatsCard: React.FC = () => {
                         <div>{kpi.value}</div>
                       </div>
                     </h3>
-
-                    {/* Circular progress */}
                     <div className='flex flex-col items-center'>
                       <CircularProgress
                         percentage={kpi.value}
@@ -177,8 +171,6 @@ const StatsCard: React.FC = () => {
     </div>
   );
 };
-
-// CircularProgress component (unchanged)
 const CircularProgress = ({
   percentage,
   progressColor,
@@ -201,7 +193,6 @@ const CircularProgress = ({
   return (
     <div className='relative w-40 h-40'>
       <svg className='w-full h-full' viewBox='0 0 100 100'>
-        {/* Background circle - only showing 270 degrees */}
         <path
           d={describeArc(50, 50, radius, startAngle, startAngle + 270)}
           stroke={isHovered ? 'rgba(255,255,255,0.3)' : '#e5e7eb'}
@@ -209,7 +200,6 @@ const CircularProgress = ({
           fill='none'
           strokeLinecap='round'
         />
-        {/* Progress circle - only showing 270 degrees */}
         <path
           d={describeArc(50, 50, radius, startAngle, startAngle + 270)}
           stroke={isHovered ? 'white' : progressColor}
@@ -221,7 +211,6 @@ const CircularProgress = ({
           className='transition-all duration-1000 ease-out'
         />
       </svg>
-      {/* Center percentage text */}
       <div className='absolute inset-0 flex items-center justify-center'>
         <span
           className={`text-lg font-bold ${isHovered ? 'text-white' : 'text-gray-800'
@@ -234,8 +223,6 @@ const CircularProgress = ({
     </div>
   );
 };
-
-// Helper function to describe an arc for the SVG path
 function describeArc(
   x: number,
   y: number,
@@ -263,7 +250,6 @@ function describeArc(
   ].join(' ');
 }
 
-// Helper function to convert polar coordinates to Cartesian
 function polarToCartesian(
   centerX: number,
   centerY: number,

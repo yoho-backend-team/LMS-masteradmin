@@ -50,7 +50,7 @@ function MainLayout() {
 			});
 	}
 
-	const [isSidebarOpen, setIsSidebarOpen] = useState(true);
+	const [isSidebarOpen, _setIsSidebarOpen] = useState(true);
 	const sidebarWidth = isSidebarOpen ? 250 : 87;
 	return (
 		<>
@@ -63,7 +63,7 @@ function MainLayout() {
 						className='transition-all duration-300	'
 						style={{ width: `${sidebarWidth}px` }}
 					>
-						<Sidebar isOpen={isSidebarOpen} setIsOpen={setIsSidebarOpen} />
+						<Sidebar />
 					</div>
 					<div className='flex-1 overflow-y-auto p-3 bg-white no-scrollbar'>
 						<Outlet />

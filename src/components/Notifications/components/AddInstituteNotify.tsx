@@ -1,5 +1,3 @@
-
-
 import React, { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Button } from "@/components/ui/button";
@@ -32,7 +30,6 @@ const AddInstituteNotify: React.FC<props> = ({
 }) => {
   const dispatch = useDispatch();
 
-
   const [selectedInstitute, setSelectedInstitute] = useState("");
   const [selectedBranch, setSelectedBranch] = useState("");
   const [title, setTitle] = useState("");
@@ -44,8 +41,6 @@ const AddInstituteNotify: React.FC<props> = ({
   useEffect(() => {
     dispatch(GetAllInstituteThunks() as any);
   }, [dispatch]);
-
-
 
   const branches = useSelector((state: RootState) => state?.Branch?.branch);
 
@@ -63,13 +58,14 @@ const AddInstituteNotify: React.FC<props> = ({
       alert("Please fill all required fields");
       return;
     }
-
     const dataToSend = {
-      institute_id: selectedInstitute,
-      branches: [selectedBranch],
-      title,
-      body,
-      link,
+      institute: {
+        institute_id: selectedInstitute,
+        branches: [selectedBranch],
+        title,
+        body,
+        link,
+      },
     };
 
     dispatch(CreatNotificationThunks(dataToSend) as any)

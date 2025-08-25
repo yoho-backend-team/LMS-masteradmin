@@ -18,10 +18,8 @@ export function TimelineComponent({ instituteId }: { instituteId: string }) {
   const [timelineData, setTimelineData] = useState<TimelineEntry[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-
-  // ✅ Pagination state
   const [currentPage, setCurrentPage] = useState(1);
-  const itemsPerPage = 5; // show 5 per page
+  const itemsPerPage = 5;
 
   useEffect(() => {
     const fetchActivityLogs = async () => {
@@ -65,7 +63,6 @@ export function TimelineComponent({ instituteId }: { instituteId: string }) {
     fetchActivityLogs();
   }, [instituteId]);
 
-  // ✅ Pagination logic
   const indexOfLast = currentPage * itemsPerPage;
   const indexOfFirst = indexOfLast - itemsPerPage;
   const currentData = timelineData.slice(indexOfFirst, indexOfLast);
@@ -98,13 +95,11 @@ export function TimelineComponent({ instituteId }: { instituteId: string }) {
 
   return (
     <div className="relative py-8">
-      {/* Timeline Line */}
       <div className="absolute left-6 top-0 bottom-0 w-px bg-gray-300"></div>
 
       <div className="space-y-16">
         {currentData.map((entry) => (
           <div key={entry.id} className="relative">
-            {/* Timeline Dot */}
             <div
               className={`absolute left-5 w-3 h-3 rounded-full ${
                 entry.status === "completed"
@@ -114,8 +109,6 @@ export function TimelineComponent({ instituteId }: { instituteId: string }) {
                   : "bg-yellow-500"
               }`}
             ></div>
-
-            {/* Status Badge */}
             <div className="mb-4">
               <Badge
                 className={`${
@@ -133,8 +126,6 @@ export function TimelineComponent({ instituteId }: { instituteId: string }) {
                   : "Pending"}
               </Badge>
             </div>
-
-            {/* Content */}
             <div className="ml-12">
               {entry.isEditable ? (
                 <div className="border border-gray-200 rounded-lg p-4 bg-white">
@@ -161,8 +152,6 @@ export function TimelineComponent({ instituteId }: { instituteId: string }) {
           </div>
         ))}
       </div>
-
-      {/* ✅ Pagination Controls */}
       {timelineData.length > itemsPerPage && (
         <div className="flex justify-center mt-8 space-x-2">
           <button

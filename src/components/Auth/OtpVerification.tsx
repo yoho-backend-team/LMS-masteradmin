@@ -1,7 +1,4 @@
-import {
-  verifyOtpService,
-  resendOtpService,
-} from "@/features/Auth/service";
+import { verifyOtpService, resendOtpService } from "@/features/Auth/service";
 import React, { useState } from "react";
 import { CiCircleInfo } from "react-icons/ci";
 import { useLocation, useNavigate } from "react-router-dom";
@@ -63,7 +60,6 @@ const OtpVerification = () => {
       if (response.data?.success) {
         navigate("/");
       } else {
-        
       }
     } catch (err: any) {
       alert(err.message);
@@ -78,7 +74,6 @@ const OtpVerification = () => {
       setToken(response.data.token);
       setServerOtp(response.data.otp);
     } catch (error: any) {
-     
     } finally {
       setLoading(false);
     }

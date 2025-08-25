@@ -9,7 +9,6 @@ import { useAppDispatch, useAppSelector } from '@/hooks/reduxhooks';
 import { GetImageUrl } from '@/utils/helper';
 import {
 	fileupload,
-	getActivityData,
 	updateProfile,
 } from '@/features/Profile/services';
 import toast from 'react-hot-toast';
@@ -40,8 +39,6 @@ const SkeletonLoader = () => {
             ))}
           </div>
         </div>
-        
-        {/* Edit Button Skeleton */}
         <div className="mt-10 text-end">
           <div className="h-10 bg-gray-200 rounded-tl-xl rounded-br-xl w-32 inline-block"></div>
         </div>
@@ -73,7 +70,7 @@ const SkeletonLoader = () => {
 
 const ProfileDetails = () => {
 	const [isModalOpen, setIsModalOpen] = useState(false);
-	const [previewImage, setPreviewImage] = useState<any>(''); // default image
+	const [previewImage, setPreviewImage] = useState<any>(''); 
 	const [formData, setFormData] = useState<any>({
 		first_name: '',
 		last_name: '',
@@ -178,7 +175,6 @@ const ProfileDetails = () => {
 
 	return (
 		<div className='grid gap-4'>
-			{/* Profile Card */}
 			<div className='shadow-[0px_0px_15px_0px_#0000001A] p-4 rounded-lg'>
 				<section className='flex items-center gap-5 '>
 					<img
@@ -191,8 +187,6 @@ const ProfileDetails = () => {
 					</h1>
 				</section>
 				<hr className='my-4' />
-
-				{/* Details */}
 				<div>
 					<h1 style={{ ...FONTS.profile_head }}>Details</h1>
 
@@ -241,8 +235,6 @@ const ProfileDetails = () => {
 						</section>
 					</div>
 				</div>
-
-				{/* Edit Button */}
 				<div className='mt-10 text-end'>
 					<button
 						onClick={openModal}
@@ -253,8 +245,6 @@ const ProfileDetails = () => {
 					</button>
 				</div>
 			</div>
-
-			{/* Activity Timeline */}
 			<div className='shadow-[0px_0px_15px_0px_#0000001A] p-4 rounded-lg min-h-[250px] overflow-x-auto scrollbar-hidden'>
 				<section className='flex justify-between items-center'>
 					<h1 style={{ ...FONTS.pass_head }}>User Activity Timeline</h1>
@@ -290,8 +280,6 @@ const ProfileDetails = () => {
 					})}
 				</div>
 			</div>
-
-			{/* Modal */}
 			{isModalOpen && (
 				<div className='fixed inset-0 flex justify-center items-center bg-black bg-opacity-50 z-50'>
 					<div className='bg-white p-6 rounded-lg w-[70%] max-h-[90vh] overflow-auto scrollbar-hidden shadow-lg'>
@@ -308,26 +296,19 @@ const ProfileDetails = () => {
 						</div>
 
 						<form onSubmit={handleSubmit}>
-							{/* Image Upload */}
 							<div className='flex flex-col gap-2 mb-6'>
 								<div className='flex items-center gap-4'>
-									{/* Preview */}
 									<img
 										src={GetImageUrl(previewImage) ?? undefined}
-										// src={previewImage}
 										alt='Profile Preview'
 										className='w-20 h-20 object-cover rounded-lg border border-gray-300'
 									/>
-
-									{/* Custom Button */}
 									<label
 										htmlFor='profileImage'
 										className='bg-[#68B39F] text-white px-7 py-2 rounded-tl-xl rounded-br-xl cursor-pointer hover:bg-[#5ca08d]'
 									>
 										Upload New Image
 									</label>
-
-									{/* Hidden File Input */}
 									<input
 										type='file'
 										id='profileImage'
@@ -339,7 +320,6 @@ const ProfileDetails = () => {
 							</div>
 
 							<div className='grid grid-cols-2 gap-4 my-6'>
-								{/* First Name */}
 								<div className='flex flex-col gap-4'>
 									<label
 										style={{ ...FONTS.edit_form }}
@@ -358,8 +338,6 @@ const ProfileDetails = () => {
 										className='border border-[#999999] p-2 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#68B39F] focus:border-transparent'
 									/>
 								</div>
-
-								{/* Last Name */}
 								<div className='flex flex-col gap-4'>
 									<label
 										style={{ ...FONTS.edit_form }}
@@ -378,8 +356,6 @@ const ProfileDetails = () => {
 										className='border border-[#999999] p-2 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#68B39F] focus:border-transparent'
 									/>
 								</div>
-
-								{/* Username */}
 								<div className='flex flex-col gap-4'>
 									<label
 										style={{ ...FONTS.edit_form }}
@@ -398,8 +374,6 @@ const ProfileDetails = () => {
 										className='border border-[#999999] p-2 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#68B39F] focus:border-transparent'
 									/>
 								</div>
-
-								{/* Email */}
 								<div className='flex flex-col gap-4'>
 									<label
 										style={{ ...FONTS.edit_form }}
@@ -419,8 +393,6 @@ const ProfileDetails = () => {
 										className='border border-[#999999] p-2 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#68B39F] focus:border-transparent'
 									/>
 								</div>
-
-								{/* Contact */}
 								<div className='flex flex-col gap-4'>
 									<label
 										style={{ ...FONTS.edit_form }}
