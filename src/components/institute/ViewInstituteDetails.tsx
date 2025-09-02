@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 'use client';
 
 import { useEffect, useState } from 'react';
@@ -26,7 +27,6 @@ import {
 import locationImg from '../../assets/institute/location.png';
 import phoneImg from '../../assets/institute/Call.png';
 import messageImg from '../../assets/institute/Mail.png';
-import courseImg from '../../assets/institute/courseImage.png';
 import { COLORS, FONTS } from '@/constants/ui constants';
 import { useNavigate, useParams } from 'react-router-dom';
 import EditInstituteForm from '../../components/institute/EditInstitute';
@@ -36,40 +36,42 @@ import { getCourseDetails, getInstituteDetails } from '@/features/institute/serv
 import { GetImageUrl } from '@/utils/helper';
 
 type Institute = {
-  id: string;
-  name: string;
-  code: string;
-  email: string;
-  contact: string;
-  altContact?: string;
-address: any;
-  status: string;
-  registeredDate: string;
-logo : string;
-image:string;
-institute_name:string;
-registered_date:string;
-contact_info:string;
-phone_no:any;
-  bannerUrl: string;
-  about: string;
- social_media: {
-   facebook_id?: string;
-   linkedin_id?: string;
-    instagram_id?: string;
-    twitter_id?: string;
-  };
-  gallery_images: string[];
+	id: string;
+	name: string;
+	code: string;
+	email: string;
+	contact: string;
+	altContact?: string;
+	address: any;
+	status: string;
+	registeredDate: string;
+	logo: string;
+	image: string;
+	institute_name: string;
+	registered_date: string;
+	contact_info: any;
+	phone_no: any;
+	bannerUrl: string;
+	about: string;
+	social_media: {
+		facebook_id?: string;
+		linkedin_id?: string;
+		instagram_id?: string;
+		twitter_id?: string;
+	};
+	gallery_images: string[];
+	description: string
+	Institute_Status: any
 };
 
 interface Course {
-  id: string;
-  course_name: string;
-  description: string;
-  duration: string;
-  modules: number;
-  imageUrl?: string;
-  isFeatured?: boolean;
+	id: string;
+	course_name: string;
+	description: string;
+	duration: string;
+	modules: number;
+	imageUrl?: string;
+	isFeatured?: boolean;
 }
 
 type ActiveSection = 'about' | 'profile' | 'courses';
@@ -87,36 +89,36 @@ export default function UniversityDashboard() {
 		useState<ProfileSection>('personal-info');
 	const navigate = useNavigate();
 	const params = useParams();
-const [isEditing, setIsEditing] = useState(false);
-const [institute, setInstitute] = useState<Institute | null>(null);
-const [courses, setCourses] = useState<Course[]>([]);
-console.log (courses,'cooooooooooooooooooooooo')
-useEffect(() => {
-    const fetchInstituteData = async () => {
-      try {
-        
-        const response:any = await getInstituteDetails({id: params.id});
-        setInstitute(response?.data?.data);
-      
-		const payload= {institute_id: params.id }
-		const courseresponses = await getCourseDetails(payload);
-		console.log('Courses API payload:', payload)
-		if (courseresponses?.data?.data) {
-          setCourses(courseresponses?.data);
-		  console.log('Courses Data:', courseresponses.data); 
-        }
-		
-      } catch (err) {
-       
-        console.error('Error fetching institute:', err);
-      }
-    };
+	const [isEditing, setIsEditing] = useState(false);
+	const [institute, setInstitute] = useState<Institute | null>(null);
+	const [courses, setCourses] = useState<Course[]>([]);
+	console.log(courses, 'cooooooooooooooooooooooo')
+	useEffect(() => {
+		const fetchInstituteData = async () => {
+			try {
 
-    fetchInstituteData();
-  }, [params.id, ]);
-  
- if (!institute) return <div className="p-6">No institute data available</div>;
-console.log(institute?.gallery_images,'image')
+				const response: any = await getInstituteDetails({ id: params.id });
+				setInstitute(response?.data?.data);
+
+				const payload = { institute_id: params.id }
+				const courseresponses = await getCourseDetails(payload);
+				console.log('Courses API payload:', payload)
+				if (courseresponses?.data?.data) {
+					setCourses(courseresponses?.data);
+					console.log('Courses Data:', courseresponses.data);
+				}
+
+			} catch (err) {
+
+				console.error('Error fetching institute:', err);
+			}
+		};
+
+		fetchInstituteData();
+	}, [params.id,]);
+
+	if (!institute) return <div className="p-6">No institute data available</div>;
+	console.log(institute?.gallery_images, 'image')
 	const Header = () => (
 		<div className='bg-[#2D6974] text-white rounded-xl'>
 			<div className='flex items-center px-4 py-3'>
@@ -127,8 +129,8 @@ console.log(institute?.gallery_images,'image')
 				<div className='flex items-center'>
 					<div className='w-12 h-12 rounded-full flex items-center justify-center mr-3'>
 						<img
-							src={GetImageUrl(institute.logo)}
-                  alt={institute.institute_name}
+							src={GetImageUrl(institute.logo) ?? undefined}
+							alt={institute.institute_name}
 							className='w-full h-full bg-[#2D6974] rounded-full object-cover'
 						/>
 					</div>
@@ -139,7 +141,7 @@ console.log(institute?.gallery_images,'image')
 			</div>
 			<div className='w-full h-64 relative'>
 				<img
-					src={ GetImageUrl(institute?.image)}
+					src={GetImageUrl(institute?.image) ?? undefined}
 					alt='Bharathidasan University Campus'
 					className='object-cover rounded-b-xl w-full h-full'
 				/>
@@ -193,14 +195,14 @@ console.log(institute?.gallery_images,'image')
 						<div className='w-2/3 flex flex-col items-center justify-center'>
 							<div className='w-32 h-32 rounded-full overflow-hidden'>
 								<img
-									 src={GetImageUrl( institute.logo)}
-                  alt={institute.institute_name}
+									src={GetImageUrl(institute.logo) ?? undefined}
+									alt={institute.institute_name}
 									className='w-full h-full object-cover rounded-full mb-2'
 								/>
 							</div>
 							<div className='text-center mt-3'>
 								<p style={{ ...FONTS.pass_head_2 }}>{institute.institute_name}
-									</p>
+								</p>
 								<p
 									style={{
 										...FONTS.button_text,
@@ -208,7 +210,7 @@ console.log(institute?.gallery_images,'image')
 										fontWeight: 500,
 									}}
 								>
-									  {institute.email}
+									{institute.email}
 								</p>
 							</div>
 						</div>
@@ -224,7 +226,7 @@ console.log(institute?.gallery_images,'image')
 											fontWeight: 500,
 										}}
 									>
-				    {`${institute?.contact_info?.address?.address1}, 
+										{`${institute?.contact_info?.address?.address1}, 
                     ${institute?.contact_info?.address?.address2}, 
                     ${institute?.contact_info?.address?.city}, 
                     ${institute?.contact_info?.address?.state} - 
@@ -240,7 +242,7 @@ console.log(institute?.gallery_images,'image')
 											fontWeight: 500,
 										}}
 									>
-										  {institute.email}
+										{institute.email}
 									</span>
 								</div>
 								<div className='flex items-center gap-3'>
@@ -252,7 +254,7 @@ console.log(institute?.gallery_images,'image')
 											fontWeight: 500,
 										}}
 									>
-										 {institute?.contact_info?.phone_no || 'Not available'}
+										{institute?.contact_info?.phone_no || 'Not available'}
 									</span>
 								</div>
 							</div>
@@ -270,7 +272,7 @@ console.log(institute?.gallery_images,'image')
 								fontWeight: 500,
 							}}
 						>{institute?.description || 'Not available'}
-							
+
 						</p>
 					</div>
 				</Card>
@@ -287,11 +289,10 @@ console.log(institute?.gallery_images,'image')
 						variant={
 							activeProfileSection === 'personal-info' ? 'default' : 'ghost'
 						}
-						className={`w-full justify-start ${
-							activeProfileSection === 'personal-info'
-								? 'bg-[#2D6974] hover:bg-[#2D6974] text-white'
-								: 'text-gray-600'
-						}`}
+						className={`w-full justify-start ${activeProfileSection === 'personal-info'
+							? 'bg-[#2D6974] hover:bg-[#2D6974] text-white'
+							: 'text-gray-600'
+							}`}
 						onClick={() => setActiveProfileSection('personal-info')}
 					>
 						<User className='w-4 h-4 mr-2' />
@@ -299,11 +300,10 @@ console.log(institute?.gallery_images,'image')
 					</Button>
 					<Button
 						variant={activeProfileSection === 'profile' ? 'default' : 'ghost'}
-						className={`w-full justify-start ${
-							activeProfileSection === 'profile'
-								? 'bg-[#2D6974] hover:bg-[#2D6974] text-white'
-								: 'text-gray-600'
-						}`}
+						className={`w-full justify-start ${activeProfileSection === 'profile'
+							? 'bg-[#2D6974] hover:bg-[#2D6974] text-white'
+							: 'text-gray-600'
+							}`}
 						onClick={() => setActiveProfileSection('profile')}
 					>
 						<Settings className='w-4 h-4 mr-2' />
@@ -313,11 +313,10 @@ console.log(institute?.gallery_images,'image')
 						variant={
 							activeProfileSection === 'social-media' ? 'default' : 'ghost'
 						}
-						className={`w-full justify-start ${
-							activeProfileSection === 'social-media'
-								? 'bg-[#2D6974] hover:bg-[#2D6974] text-white'
-								: 'text-gray-600'
-						}`}
+						className={`w-full justify-start ${activeProfileSection === 'social-media'
+							? 'bg-[#2D6974] hover:bg-[#2D6974] text-white'
+							: 'text-gray-600'
+							}`}
 						onClick={() => setActiveProfileSection('social-media')}
 					>
 						<Share2 className='w-4 h-4 mr-2' />
@@ -325,11 +324,10 @@ console.log(institute?.gallery_images,'image')
 					</Button>
 					<Button
 						variant={activeProfileSection === 'documents' ? 'default' : 'ghost'}
-						className={`w-full justify-start ${
-							activeProfileSection === 'documents'
-								? 'bg-[#2D6974] hover:bg-[#2D6974] text-white'
-								: 'text-gray-600'
-						}`}
+						className={`w-full justify-start ${activeProfileSection === 'documents'
+							? 'bg-[#2D6974] hover:bg-[#2D6974] text-white'
+							: 'text-gray-600'
+							}`}
 						onClick={() => setActiveProfileSection('documents')}
 					>
 						<FileText className='w-4 h-4 mr-2' />
@@ -339,11 +337,10 @@ console.log(institute?.gallery_images,'image')
 						variant={
 							activeProfileSection === 'change-password' ? 'default' : 'ghost'
 						}
-						className={`w-full justify-start ${
-							activeProfileSection === 'change-password'
-								? 'bg-[#2D6974] hover:bg-[#2D6974] text-white'
-								: 'text-gray-600'
-						}`}
+						className={`w-full justify-start ${activeProfileSection === 'change-password'
+							? 'bg-[#2D6974] hover:bg-[#2D6974] text-white'
+							: 'text-gray-600'
+							}`}
 						onClick={() => setActiveProfileSection('change-password')}
 					>
 						<Lock className='w-4 h-4 mr-2' />
@@ -353,11 +350,10 @@ console.log(institute?.gallery_images,'image')
 						variant={
 							activeProfileSection === 'activity-logs' ? 'default' : 'ghost'
 						}
-						className={`w-full justify-start ${
-							activeProfileSection === 'activity-logs'
-								? 'bg-[#2D6974] hover:bg-[#2D6974] text-white'
-								: 'text-gray-600'
-						}`}
+						className={`w-full justify-start ${activeProfileSection === 'activity-logs'
+							? 'bg-[#2D6974] hover:bg-[#2D6974] text-white'
+							: 'text-gray-600'
+							}`}
 						onClick={() => setActiveProfileSection('activity-logs')}
 					>
 						<Activity className='w-4 h-4 mr-2' />
@@ -391,12 +387,12 @@ console.log(institute?.gallery_images,'image')
 					<Input
 						id='official-email'
 						type='email'
-						placeholder= {institute.email}
+						placeholder={institute.email}
 					/>
 				</div>
 				<div className='space-y-2'>
 					<Label htmlFor='status'>Status</Label>
-					<Input id='status' placeholder=  {institute.Institute_Status.toUpperCase()}/>
+					<Input id='status' placeholder={institute.Institute_Status.toUpperCase()} />
 				</div>
 				<div className='space-y-2'>
 					<Label htmlFor='contact'>Contact</Label>
@@ -410,19 +406,19 @@ console.log(institute?.gallery_images,'image')
 					/>
 				</div>
 				<div className='space-y-2'>
-  <Label htmlFor='registered-date'>Registered Date</Label>
-  <Input 
-    id='registered-date'
-    type="date"
-    value={new Date(institute.registered_date).toISOString().split('T')[0]}
-    readOnly
-  />
-</div>
+					<Label htmlFor='registered-date'>Registered Date</Label>
+					<Input
+						id='registered-date'
+						type="date"
+						value={new Date(institute.registered_date).toISOString().split('T')[0]}
+						readOnly
+					/>
+				</div>
 				<div className='col-span-2 space-y-2'>
 					<Label htmlFor='address'>Address</Label>
 					<Textarea
 						id='address'
-						placeholder= {`${institute?.contact_info.address.address1}, 
+						placeholder={`${institute?.contact_info.address.address1}, 
                     ${institute?.contact_info.address.address2}, 
                     ${institute?.contact_info.address.city}, 
                     ${institute?.contact_info.address.state} - 
@@ -431,26 +427,26 @@ console.log(institute?.gallery_images,'image')
 					/>
 				</div>
 			</div>
-		<div className="p-6 bg-white shadow-md rounded-lg">
-  {!isEditing ? (
-    <div className="flex gap-4 mt-6">
-      <Button variant="outline" onClick={() => setIsEditing(true)}>
-        Edit
-      </Button>
-      <Button className="bg-[#2D6974] hover:bg-[#2D6974]">Suspend</Button>
-    </div>
-  ) : (
-    <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-40 z-50">
-      <div className="bg-white p-6 rounded-lg shadow-lg w-full max-w-4xl max-h-[90vh] overflow-y-auto">
-        <h2 className="text-xl font-bold mb-4">Edit Institute Information</h2>
-        <EditInstituteForm 
-		 instituteData={institute} 
-		  onCancel={() => setIsEditing(false)}/>
-      
-      </div>
-    </div>
-  )}
-</div>
+			<div className="p-6 bg-white shadow-md rounded-lg">
+				{!isEditing ? (
+					<div className="flex gap-4 mt-6">
+						<Button variant="outline" onClick={() => setIsEditing(true)}>
+							Edit
+						</Button>
+						<Button className="bg-[#2D6974] hover:bg-[#2D6974]">Suspend</Button>
+					</div>
+				) : (
+					<div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-40 z-50">
+						<div className="bg-white p-6 rounded-lg shadow-lg w-full max-w-4xl max-h-[90vh] overflow-y-auto">
+							<h2 className="text-xl font-bold mb-4">Edit Institute Information</h2>
+							<EditInstituteForm
+								instituteData={institute}
+								onCancel={() => setIsEditing(false)} />
+
+						</div>
+					</div>
+				)}
+			</div>
 
 
 		</div>
@@ -461,115 +457,117 @@ console.log(institute?.gallery_images,'image')
 			case 'personal-info':
 				return <PersonalInfoForm />;
 			case 'profile':
-  return (
-    <div className="p-6 bg-white rounded-lg shadow-md">
-      <h2 className="text-xl font-semibold mb-6">Profile Settings</h2>
+				return (
+					<div className="p-6 bg-white rounded-lg shadow-md">
+						<h2 className="text-xl font-semibold mb-6">Profile Settings</h2>
 
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-        {/* Logo Section */}
-        <div className="flex flex-col items-center border p-4 rounded-lg">
-          <h2 className='text-black font-bold'>LOGO</h2>
-          <img
-            src={GetImageUrl(institute.logo )} 
-            alt={institute.institute_name}
-            className="w-67 h-67 object-contain mb-4"
-          />
-        </div>
+						<div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+							{/* Logo Section */}
+							<div className="flex flex-col items-center border p-4 rounded-lg">
+								<h2 className='text-black font-bold'>LOGO</h2>
+								<img
+									src={GetImageUrl(institute.logo) ?? undefined}
+									alt={institute.institute_name}
+									className="w-67 h-67 object-contain mb-4"
+								/>
+							</div>
 
-        {/* Gallery Section */}
-        <div className="md:col-span-2">
-          <h3 className="text-lg font-semibold mb-4">Gallery Images</h3>
-          {institute.gallery_images?.length > 0 ? (
-            <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
-              {institute.gallery_images.map((img, idx) => (
-                <div
-                  key={idx}
-                  className="border rounded-lg overflow-hidden shadow-sm"
-                >
-                  <img
-                    src={GetImageUrl(img)}
-                    alt={`Gallery ${idx + 1}`}
-                    className="w-full h-28 object-cover"
-                  
-                  />
-                </div>
-              ))}
-            </div>
-          ) : (
-            <p className="text-gray-500">No gallery images available</p>
-          )}
-        </div>
-      </div>
-    </div>
-  );
-				
+							{/* Gallery Section */}
+							<div className="md:col-span-2">
+								<h3 className="text-lg font-semibold mb-4">Gallery Images</h3>
+								{institute.gallery_images?.length > 0 ? (
+									<div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
+										{institute.gallery_images.map((img, idx) => (
+											<div
+												key={idx}
+												className="border rounded-lg overflow-hidden shadow-sm"
+											>
+												<img
+													src={GetImageUrl(img) ?? undefined}
+													alt={`Gallery ${idx + 1}`}
+													className="w-full h-28 object-cover"
+
+												/>
+											</div>
+										))}
+									</div>
+								) : (
+									<p className="text-gray-500">No gallery images available</p>
+								)}
+							</div>
+						</div>
+					</div>
+				);
+
 			case 'social-media':
-			const socialLinks = [
-				{ name: 'Facebook', url: institute?.social_media?.facebook_id, icon: '🌐' },
-				{ name: 'LinkedIn', url:  institute?.social_media?.linkedin_id,icon: '🌐' },
-				{ name: 'Instagram', url: institute?.social_media?.instagram_id, icon: '🌐' },
-				{ name: 'X', url: institute?.social_media?.twitter_id, icon: '🌐' }
-			];
+				{
+					const socialLinks = [
+						{ name: 'Facebook', url: institute?.social_media?.facebook_id, icon: '🌐' },
+						{ name: 'LinkedIn', url: institute?.social_media?.linkedin_id, icon: '🌐' },
+						{ name: 'Instagram', url: institute?.social_media?.instagram_id, icon: '🌐' },
+						{ name: 'X', url: institute?.social_media?.twitter_id, icon: '🌐' }
+					];
 
-  return (
-    <div className="p-6">
-      <h2 className="text-xl font-semibold mb-4">Social Media</h2>
-      <p className="text-gray-600 mb-6">
-        Connect your social media accounts.
-      </p>
+					return (
+						<div className="p-6">
+							<h2 className="text-xl font-semibold mb-4">Social Media</h2>
+							<p className="text-gray-600 mb-6">
+								Connect your social media accounts.
+							</p>
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-        {socialLinks.map((link, index) => (
-          <a
-            key={index}
-            href={link.url}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="flex items-center gap-3 p-3 border rounded-lg shadow-sm hover:bg-gray-50 transition"
-          >
-            <div className="w-10 h-10 flex items-center justify-center bg-[#e0f2f1] rounded-md text-xl">
-              {link.icon}
-            </div>
-            <span className="text-blue-600 underline">{link.url}</span>
-          </a>
-        ))}
-      </div>
-    </div>
-  );
+							<div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+								{socialLinks.map((link, index) => (
+									<a
+										key={index}
+										href={link.url}
+										target="_blank"
+										rel="noopener noreferrer"
+										className="flex items-center gap-3 p-3 border rounded-lg shadow-sm hover:bg-gray-50 transition"
+									>
+										<div className="w-10 h-10 flex items-center justify-center bg-[#e0f2f1] rounded-md text-xl">
+											{link.icon}
+										</div>
+										<span className="text-blue-600 underline">{link.url}</span>
+									</a>
+								))}
+							</div>
+						</div>
+					);
+				}
 
 			case 'documents':
 				return (
 					<div className='p-6'>
 						<h2 className='text-xl font-semibold mb-4'>Documents</h2>
 						<p className='text-gray-600'>Upload and manage your documents.</p>
-						<DocumentsPage institute={institute}/>
+						<DocumentsPage institute={institute} />
 					</div>
 				);
 			case 'change-password':
-  return (
-    <div className="p-6">
-      <h2 className="text-xl font-semibold mb-4">Change Password</h2>
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-4xl">
-        <div className="space-y-2">
-          <Label htmlFor="current-password">Current Password</Label>
-          <Input id="current-password" type="password" />
-        </div>
-        <div className="space-y-2">
-          <Label htmlFor="new-password">New Password</Label>
-          <Input id="new-password" type="password" />
-        </div>
-        <div className="space-y-2">
-          <Label htmlFor="confirm-password">Confirm Password</Label>
-          <Input id="confirm-password" type="password" />
-        </div>
-      </div>
-      <div className="mt-6">
-        <Button className="bg-[#2D6974] hover:bg-[#2D6974]">
-          Update Password
-        </Button>
-      </div>
-    </div>
-  );
+				return (
+					<div className="p-6">
+						<h2 className="text-xl font-semibold mb-4">Change Password</h2>
+						<div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-4xl">
+							<div className="space-y-2">
+								<Label htmlFor="current-password">Current Password</Label>
+								<Input id="current-password" type="password" />
+							</div>
+							<div className="space-y-2">
+								<Label htmlFor="new-password">New Password</Label>
+								<Input id="new-password" type="password" />
+							</div>
+							<div className="space-y-2">
+								<Label htmlFor="confirm-password">Confirm Password</Label>
+								<Input id="confirm-password" type="password" />
+							</div>
+						</div>
+						<div className="mt-6">
+							<Button className="bg-[#2D6974] hover:bg-[#2D6974]">
+								Update Password
+							</Button>
+						</div>
+					</div>
+				);
 
 			case 'activity-logs':
 				return (
@@ -599,62 +597,62 @@ console.log(institute?.gallery_images,'image')
 	);
 
 	const CoursesSection = () => (
-  <div className='p-6'>
-    <div className='grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6'>
-      {courses?.length > 0 ? (
-        courses.map((course) => (
-          <Card key={course.id} className='max-w-sm'>
-            <CardHeader className='pb-2'>
-              <div className='flex items-center gap-2 mb-2'>
-                <img 
-                  src={ GetImageUrl(course?.image)|| courseImg}
-                  alt={course?.course_name}
-                  className='w-full h-40 object-cover rounded-md'
-                />
-              </div>
-              {course.isFeatured && (
-                <div
-                  className='bg-[#68B39F] text-white rounded-tl-2xl rounded-br-2xl rounded-bl-none rounded-tr-none px-4 py-3 w-24 text-center'
-                  style={{ ...FONTS.text4 }}
-                >
-                  Featured
-                </div>
-              )}
-            </CardHeader>
-            <CardContent>
-              <CardTitle
-                className='mb-2'
-                style={{ ...FONTS.percentage_text, color: COLORS.black }}
-              >
-                {course?.course_name}
-              </CardTitle>
-              <CardDescription
-                className='mb-4'
-                style={{ ...FONTS.text1, color: COLORS.gray_01 }}
-              >
-                {course?.description}
-              </CardDescription>
-              <div className='flex justify-between items-center text-sm'>
-                <span style={{ ...FONTS.text3, color: COLORS.button }}>
-                  Modules: {course?.modules}
-                </span>
-                <span style={{ ...FONTS.text3, color: COLORS.button }}>
-                  Duration: {course?.duration}
-                </span>
-              </div>
-            </CardContent>
-          </Card>
-        ))
-      ) : (
-        <div className='col-span-full text-center py-8'>
-          <p style={{ ...FONTS.text1, color: COLORS.gray_01 }}>
-            No courses available for this institute
-          </p>
-        </div>
-      )}
-    </div>
-  </div>
-);
+		<div className='p-6'>
+			<div className='grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6'>
+				{courses?.length > 0 ? (
+					courses.map((course: any) => (
+						<Card key={course.id} className='max-w-sm'>
+							<CardHeader className='pb-2'>
+								<div className='flex items-center gap-2 mb-2'>
+									<img
+										src={GetImageUrl(course?.image) ?? undefined}
+										alt={course?.course_name}
+										className='w-full h-40 object-cover rounded-md'
+									/>
+								</div>
+								{course.isFeatured && (
+									<div
+										className='bg-[#68B39F] text-white rounded-tl-2xl rounded-br-2xl rounded-bl-none rounded-tr-none px-4 py-3 w-24 text-center'
+										style={{ ...FONTS.text4 }}
+									>
+										Featured
+									</div>
+								)}
+							</CardHeader>
+							<CardContent>
+								<CardTitle
+									className='mb-2'
+									style={{ ...FONTS.percentage_text, color: COLORS.black }}
+								>
+									{course?.course_name}
+								</CardTitle>
+								<CardDescription
+									className='mb-4'
+									style={{ ...FONTS.text1, color: COLORS.gray_01 }}
+								>
+									{course?.description}
+								</CardDescription>
+								<div className='flex justify-between items-center text-sm'>
+									<span style={{ ...FONTS.text3, color: COLORS.button }}>
+										Modules: {course?.modules}
+									</span>
+									<span style={{ ...FONTS.text3, color: COLORS.button }}>
+										Duration: {course?.duration}
+									</span>
+								</div>
+							</CardContent>
+						</Card>
+					))
+				) : (
+					<div className='col-span-full text-center py-8'>
+						<p style={{ ...FONTS.text1, color: COLORS.gray_01 }}>
+							No courses available for this institute
+						</p>
+					</div>
+				)}
+			</div>
+		</div>
+	);
 
 	const renderContent = () => {
 		switch (activeSection) {

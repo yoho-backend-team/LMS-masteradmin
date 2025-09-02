@@ -1,7 +1,8 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 
 
 import React, { useEffect, useState } from "react";
-import { SubscriptionPlanProps } from "../../components/SubscriptionPlan/SubscriptionCard";
+import type { SubscriptionPlanProps } from "../../components/SubscriptionPlan/SubscriptionCard";
 import subcard1 from "../../assets/subcard1.png";
 import { useNavigate } from "react-router-dom";
 import { CreatSubscription } from "@/features/subscription/services";
@@ -11,7 +12,7 @@ interface AddSubscriptionProps {
   onSubmit?: (plan: SubscriptionPlanProps) => void;
 }
 
-const AddSubscription: React.FC<AddSubscriptionProps> = ({ onCancel, onSubmit }) => {
+const AddSubscription: React.FC<AddSubscriptionProps> = ({ onSubmit }) => {
   const [form, setForm] = useState({
     title: "",
     price: "",
@@ -39,7 +40,7 @@ const AddSubscription: React.FC<AddSubscriptionProps> = ({ onCancel, onSubmit })
   const navigate = useNavigate();
 
   const handleChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement | any>
   ) => {
     const { name, value, type, checked } = e.target;
     setForm((prev) => ({
@@ -54,32 +55,32 @@ const AddSubscription: React.FC<AddSubscriptionProps> = ({ onCancel, onSubmit })
       {
         feature: "Students",
         count: form.unlimitedStudents ? "Unlimited" : Number(form.students || 0),
-       
+
       },
       {
         feature: "Admins",
         count: form.unlimitedAdmins ? "Unlimited" : Number(form.admins || 0),
-       
+
       },
       {
         feature: "Teachers",
         count: form.unlimitedTeachers ? "Unlimited" : Number(form.teachers || 0),
-       
+
       },
       {
         feature: "Batches",
         count: form.unlimitedBatches ? "Unlimited" : Number(form.batches || 0),
-        
+
       },
       {
         feature: "Courses",
         count: form.unlimitedCourses ? "Unlimited" : Number(form.courses || 0),
-        
+
       },
       {
         feature: "Classes",
         count: form.unlimitedClasses ? "Unlimited" : Number(form.classes || 0),
-       
+
       },
     ];
 
@@ -98,7 +99,7 @@ const AddSubscription: React.FC<AddSubscriptionProps> = ({ onCancel, onSubmit })
     };
 
     setSubmittedPlan(newPlan);
-    onSubmit && onSubmit(newPlan);
+    onSubmit?.(newPlan);
 
     navigate("/subscriptions");
   };

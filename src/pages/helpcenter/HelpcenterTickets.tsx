@@ -1,24 +1,16 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { useEffect, useState } from 'react'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { Badge } from '@/components/ui/badge'
-import ticketBg from '../../assets/ticket/Frame 6135 (1).png'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { ScrollArea } from '@/components/ui/scroll-area'
 import {
   Dialog,
   DialogContent,
-  DialogHeader,
-  DialogTitle,
 } from '@/components/ui/dialog'
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger
-} from '@/components/ui/dropdown-menu'
 import { BsThreeDotsVertical } from "react-icons/bs";
-import { ChevronDown, Send, Paperclip, X } from 'lucide-react'
+import { Send, Paperclip, X } from 'lucide-react'
 import { useDispatch, useSelector } from 'react-redux'
 import { getHelpcenterTicketData } from '@/features/Profile/helpcenter-ticket/reducers/Thunks'
 import { helpcenterTicketSelect } from '@/features/Profile/helpcenter-ticket/reducers/Selector'
@@ -64,16 +56,16 @@ interface UserProfile {
   role?: string
 }
 
-const userProfiles: Record<string, UserProfile> = {
-  'Chandran': {
-    name: 'Chandran R',
-    email: 'chandran.r@example.com',
-    phone: '+91 98765 45678',
-    location: 'New York, USA',
-    locationTime: 'Mon - Fri 9 AM - 5 PM',
-    language: 'English',
-  }
-}
+// const userProfiles: Record<string, UserProfile> = {
+//   'Chandran': {
+//     name: 'Chandran R',
+//     email: 'chandran.r@example.com',
+//     phone: '+91 98765 45678',
+//     location: 'New York, USA',
+//     locationTime: 'Mon - Fri 9 AM - 5 PM',
+//     language: 'English',
+//   }
+// }
 
 // Skeleton Loader Components
 const TicketItemSkeleton = () => (
@@ -118,12 +110,10 @@ const MessageSkeleton = ({ isUser }: { isUser: boolean }) => (
         <div className="w-8 h-8 rounded-full bg-gray-200 mb-1"></div>
       )}
       <div className="space-y-1">
-        <div className={`px-4 py-3 rounded-xl w-48 h-12 ${
-          isUser ? 'bg-gray-300' : 'bg-gray-200'
-        }`}></div>
-        <div className={`h-2 bg-gray-200 rounded w-16 ${
-          isUser ? 'ml-auto' : ''
-        }`}></div>
+        <div className={`px-4 py-3 rounded-xl w-48 h-12 ${isUser ? 'bg-gray-300' : 'bg-gray-200'
+          }`}></div>
+        <div className={`h-2 bg-gray-200 rounded w-16 ${isUser ? 'ml-auto' : ''
+          }`}></div>
       </div>
       {isUser && (
         <div className="w-8 h-8 rounded-full bg-gray-200 mb-1"></div>
@@ -193,7 +183,7 @@ const HelpcenterTickets = () => {
       }
       setIsLoading(false)
     }
-  }, [ticketData]);
+  }, [selectedTicket, ticketData]);
 
   // Load ticket data on mount
   useEffect(() => {
@@ -207,7 +197,7 @@ const HelpcenterTickets = () => {
         // We'll set loading to false in the other useEffect when data is processed
       }
     }
-    
+
     loadData()
   }, [dispatch])
 
@@ -293,39 +283,39 @@ const HelpcenterTickets = () => {
     setIsProfileModalOpen(true)
   }
 
-  const groupMessagesByDate = (messages: Message[]) => {
-    return messages.reduce((acc: Record<string, Message[]>, message) => {
-      const date = new Date(message.createdAt).toDateString(); // e.g. "Sat Aug 09 2025"
-      if (!acc[date]) acc[date] = [];
-      acc[date].push(message);
-      return acc;
-    }, {});
-  };
+  // const groupMessagesByDate = (messages: Message[]) => {
+  //   return messages.reduce((acc: Record<string, Message[]>, message) => {
+  //     const date = new Date(message.createdAt).toDateString(); // e.g. "Sat Aug 09 2025"
+  //     if (!acc[date]) acc[date] = [];
+  //     acc[date].push(message);
+  //     return acc;
+  //   }, {});
+  // };
 
-  const getReadableDate = (dateStr: string) => {
-    const today = new Date();
-    const targetDate = new Date(dateStr);
-    const yesterday = new Date();
-    yesterday.setDate(today.getDate() - 1);
+  // const getReadableDate = (dateStr: string) => {
+  //   const today = new Date();
+  //   const targetDate = new Date(dateStr);
+  //   const yesterday = new Date();
+  //   yesterday.setDate(today.getDate() - 1);
 
-    const todayStr = today.toDateString();
-    const yesterdayStr = yesterday.toDateString();
+  //   const todayStr = today.toDateString();
+  //   const yesterdayStr = yesterday.toDateString();
 
-    if (dateStr === todayStr) return 'Today';
-    if (dateStr === yesterdayStr) return 'Yesterday';
+  //   if (dateStr === todayStr) return 'Today';
+  //   if (dateStr === yesterdayStr) return 'Yesterday';
 
-    return targetDate.toLocaleDateString(undefined, {
-      day: 'numeric',
-      month: 'short',
-      year: 'numeric',
-    }); // e.g. 9 Aug 2025
-  };
+  //   return targetDate.toLocaleDateString(undefined, {
+  //     day: 'numeric',
+  //     month: 'short',
+  //     year: 'numeric',
+  //   }); // e.g. 9 Aug 2025
+  // };
 
   const formatRelativeTime = (isoString: string) => {
     const now = new Date()
     const date = new Date(isoString)
     const diffInSeconds = Math.floor((now.getTime() - date.getTime()) / 1000)
-    
+
     const minute = 60
     const hour = minute * 60
     const day = hour * 24
@@ -366,14 +356,14 @@ const HelpcenterTickets = () => {
       <div className="bg-white border border-gray-100 transition-shadow duration-200 shadow-[0_0_6px_rgba(0,0,0,0.1)]">
         {/* Search Bar */}
         <div className="p-3 border-gray-200">
-          <Input 
+          <Input
             placeholder="Search"
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             className="w-full rounded-lg bg-gray-50 border-[#999999]"
           />
         </div>
-        
+
         {/* Tickets List */}
         <ScrollArea className="flex-1 p-3 scrollbar-hide bg-white h-[90%]">
           <div className="p-1 bg-white">
@@ -389,23 +379,22 @@ const HelpcenterTickets = () => {
               filteredTickets.map((ticket) => (
                 <div
                   key={ticket._id}
-                  className={`p-3 cursor-pointer my-2 bg-white rounded-xl border border-gray-100 transition-shadow duration-200 shadow-[0_0_5px_rgba(0,0,0,0.1)] hover:shadow-[0_0_20px_rgba(0,0,0,0.15)] border-l-4 ${
-                    selectedTicket?._id === ticket._id 
-                      ? 'bg-gray-50 border-l-[#68b39f]'
-                      : 'hover:bg-gray-50 border-l-transparent'
-                  }`}
+                  className={`p-3 cursor-pointer my-2 bg-white rounded-xl border border-gray-100 transition-shadow duration-200 shadow-[0_0_5px_rgba(0,0,0,0.1)] hover:shadow-[0_0_20px_rgba(0,0,0,0.15)] border-l-4 ${selectedTicket?._id === ticket._id
+                    ? 'bg-gray-50 border-l-[#68b39f]'
+                    : 'hover:bg-gray-50 border-l-transparent'
+                    }`}
                   onClick={() => setSelectedTicket(ticket)}
                 >
                   <div className="flex items-start space-x-3">
                     <div className="relative">
-                      <Avatar 
+                      <Avatar
                         className="w-10 h-10 cursor-pointer hover:ring-2 hover:ring-[#68b39f] transition-all"
                         onClick={(e) => {
                           e.stopPropagation()
                           handleAvatarClick(ticket.user)
                         }}
                       >
-                        <AvatarImage src={GetImageUrl(ticket.user.image) || "/placeholder.svg"} alt={ticket.user.first_name} />
+                        <AvatarImage src={GetImageUrl(ticket.user.image ?? "") ?? undefined} alt={ticket.user.first_name} />
                         <AvatarFallback className="bg-orange-400 text-white">
                           {ticket.user.first_name[0]}
                         </AvatarFallback>
@@ -428,17 +417,16 @@ const HelpcenterTickets = () => {
                         <Badge className="px-4 py-1 text-white bg-[#68b39f] text-sm font-medium h-auto rounded-tl-xl rounded-br-xl rounded-tr-none rounded-bl-none">
                           {ticket.status}
                         </Badge>
-                        
+
                         {/* Priority Badge */}
                         <Badge
                           variant="outline"
-                          className={`px-4 py-1 text-sm font-medium h-auto rounded-tl-xl rounded-br-xl rounded-tr-none rounded-bl-none ${
-                            ticket.priority === 'Low'
-                              ? 'border-[#68b39f] text-[#68b39f] bg-white'
-                              : ticket.priority === 'Medium'
+                          className={`px-4 py-1 text-sm font-medium h-auto rounded-tl-xl rounded-br-xl rounded-tr-none rounded-bl-none ${ticket.priority === 'Low'
+                            ? 'border-[#68b39f] text-[#68b39f] bg-white'
+                            : ticket.priority === 'Medium'
                               ? 'border-[#68b39f] text-[#68b39f] bg-white'
                               : 'border-red-300 text-red-600 bg-red-50'
-                          }`}
+                            }`}
                         >
                           {ticket.priority}
                         </Badge>
@@ -485,11 +473,11 @@ const HelpcenterTickets = () => {
           <div className="shrink-0 bg-white mb-1 border-b rounded-xl border-gray-400 px-6 py-4 transition-shadow duration-200 shadow-[0_0_5px_rgba(0,0,0,0.1)]">
             <div className="flex items-center justify-between">
               <div className="flex items-center space-x-3">
-                <Avatar 
+                <Avatar
                   className="w-10 h-10 cursor-pointer hover:ring-2 hover:ring-[#68b39f] transition-all"
                   onClick={() => handleAvatarClick(selectedTicket.user)}
                 >
-                  <AvatarImage src={GetImageUrl(selectedTicket.user.image) || "/placeholder.svg"} alt={selectedTicket.user.first_name} />
+                  <AvatarImage src={GetImageUrl(selectedTicket.user.image ?? "") ?? undefined} alt={selectedTicket.user.first_name} />
                   <AvatarFallback className="bg-orange-400 text-white">
                     {selectedTicket.user.first_name[0]}
                   </AvatarFallback>
@@ -525,24 +513,22 @@ const HelpcenterTickets = () => {
                       )}
                       <div className="space-y-1">
                         <div
-                          className={`px-4 py-3 rounded-xl bg-white border border-gray-100 transition-shadow duration-200 shadow-[0_0_10px_rgba(0,0,0,0.1)] ${
-                            message.senderType === 'Users'
-                              ? 'bg-[#68b39f] text-white rounded-br-md'
-                              : 'bg-white text-gray-900 rounded-bl-md'
-                          }`}
+                          className={`px-4 py-3 rounded-xl bg-white border border-gray-100 transition-shadow duration-200 shadow-[0_0_10px_rgba(0,0,0,0.1)] ${message.senderType === 'Users'
+                            ? 'bg-[#68b39f] text-white rounded-br-md'
+                            : 'bg-white text-gray-900 rounded-bl-md'
+                            }`}
                         >
                           <p className="text-sm leading-relaxed">{message.content}</p>
                         </div>
-                        <p className={`text-xs px-2 ${
-                          message.senderType === 'Users' ? 'text-right text-gray-500' : 'text-left text-gray-500'
-                        }`}>
+                        <p className={`text-xs px-2 ${message.senderType === 'Users' ? 'text-right text-gray-500' : 'text-left text-gray-500'
+                          }`}>
                           {formatMessageTime(message.createdAt)}
                         </p>
                       </div>
                       {message.senderType === 'Users' && (
-                        <Avatar 
+                        <Avatar
                           className="w-8 h-8 mb-1 cursor-pointer transition-all" >
-                          <AvatarImage src={GetImageUrl(selectedTicket.user.image) || "/placeholder.svg"} alt={selectedTicket.user.first_name} />
+                          <AvatarImage src={GetImageUrl(selectedTicket?.user?.image ?? "") ?? undefined} alt={selectedTicket.user.first_name} />
                           <AvatarFallback className="bg-orange-400 text-white">
                             {selectedTicket.user.first_name[0]}
                           </AvatarFallback>
@@ -572,7 +558,7 @@ const HelpcenterTickets = () => {
                 onKeyPress={(e) => e.key === 'Enter' && handleSendMessage()}
                 className="flex-1 rounded-full bg-gray-50 border-gray-200 px-4"
               />
-              <Button 
+              <Button
                 onClick={handleSendMessage}
                 className="bg-[#68b39f] hover:bg-teal-600 rounded-full p-3"
                 size="sm"
@@ -626,49 +612,49 @@ const HelpcenterTickets = () => {
                   <div className="grid grid-cols-2 gap-4">
                     <div>
                       <label className="text-sm text-[#242731] mb-1 block">Name</label>
-                      <Input 
-                        value={selectedUserProfile?.name || ''} 
-                        readOnly 
+                      <Input
+                        value={selectedUserProfile?.name || ''}
+                        readOnly
                         className="bg-white border-[#999999] text-sm text-[#999999]"
                       />
                     </div>
                     <div>
                       <label className="text-sm text-gray-600 mb-1 block">Email</label>
-                      <Input 
-                        value={selectedUserProfile?.email || ''} 
-                        readOnly 
+                      <Input
+                        value={selectedUserProfile?.email || ''}
+                        readOnly
                         className="bg-white border-[#999999] text-sm"
                       />
                     </div>
                     <div>
                       <label className="text-sm text-gray-600 mb-1 block">Phone</label>
-                      <Input 
-                        value={selectedUserProfile?.phone || ''} 
-                        readOnly 
+                      <Input
+                        value={selectedUserProfile?.phone || ''}
+                        readOnly
                         className="bg-white border-[#999999] text-sm text-[#999999]"
                       />
                     </div>
                     <div>
                       <label className="text-sm text-gray-600 mb-1 block">Location</label>
-                      <Input 
-                        value={selectedUserProfile?.location || ''} 
-                        readOnly 
+                      <Input
+                        value={selectedUserProfile?.location || ''}
+                        readOnly
                         className="bg-white border-[#999999] text-sm text-[#999999]"
                       />
                     </div>
                     <div>
                       <label className="text-sm text-gray-600 mb-1 block">Location Time</label>
-                      <Input 
-                        value={selectedUserProfile?.locationTime || ''} 
-                        readOnly 
+                      <Input
+                        value={selectedUserProfile?.locationTime || ''}
+                        readOnly
                         className="bg-white border-[#999999] text-sm text-[#999999]"
                       />
                     </div>
                     <div>
                       <label className="text-sm text-gray-600 mb-1 block">Language</label>
-                      <Input 
-                        value={selectedUserProfile?.language || ''} 
-                        readOnly 
+                      <Input
+                        value={selectedUserProfile?.language || ''}
+                        readOnly
                         className="bg-white border-[#999999] text-sm text-[#999999]"
                       />
                     </div>

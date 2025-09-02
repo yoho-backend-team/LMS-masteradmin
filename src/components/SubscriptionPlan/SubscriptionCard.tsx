@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import React, { useEffect, useState } from "react";
 import { MoreVertical, Check } from "lucide-react";
 import { useNavigate } from "react-router-dom";
@@ -13,9 +14,10 @@ export interface SubscriptionPlanProps {
   title: string;
   description: string;
   price: string;
-  duration: string;
+  duration: any;
   image: string;
-  features: Feature[];
+  identity: any;
+  features: any[];
   active: boolean;
   onDelete?: () => void;
 }
@@ -91,48 +93,48 @@ const SubscriptionCard: React.FC<SubscriptionPlanProps> = ({
           </ul>
         </div>
 
-       
+
       </div>
-       <div className="flex items-center justify-between mt-4 relative">
-          <button
-            onClick={toggleActive}
-            className={`px-4 py-2 rounded-tl-xl rounded-br-xl text-sm font-medium transition-colors ${active
-                ? "bg-[#68B39F] text-white"
-                : "bg-gray-300 text-gray-700"
-              }`}
-          >
-            {active ? "Active" : "Inactive"}
-          </button>
+      <div className="flex items-center justify-between mt-4 relative">
+        <button
+          onClick={toggleActive}
+          className={`px-4 py-2 rounded-tl-xl rounded-br-xl text-sm font-medium transition-colors ${active
+            ? "bg-[#68B39F] text-white"
+            : "bg-gray-300 text-gray-700"
+            }`}
+        >
+          {active ? "Active" : "Inactive"}
+        </button>
 
-          <div className="relative">
-            <MoreVertical
-              className="cursor-pointer bg-[#68B39F] text-white px-2 py-2 rounded-tl-xl rounded-br-xl"
-              onClick={toggleActions} />
+        <div className="relative">
+          <MoreVertical
+            className="cursor-pointer bg-[#68B39F] text-white px-2 py-2 rounded-tl-xl rounded-br-xl"
+            onClick={toggleActions} />
 
-            {showActions && (
-              <div className="absolute bottom-full mb-2 right-0 bg-white border rounded-md shadow-md flex flex-col text-sm z-10">
-                <button
-                  className="px-4 py-2 hover:bg-gray-100 text-left"
-                  onClick={() => navigate("/subscription-view")}
-                >
-                  View
-                </button>
-                <button
-                  className="px-4 py-2 hover:bg-gray-100 text-left"
-                  onClick={() => navigate("/subscription-Edit")}
-                >
-                  Edit
-                </button>
-                <button
-                  className="px-4 py-2 hover:bg-gray-100 text-left text-red-500"
-                  onClick={onDelete}
-                >
-                  Delete
-                </button>
-              </div>
-            )}
-          </div>
+          {showActions && (
+            <div className="absolute bottom-full mb-2 right-0 bg-white border rounded-md shadow-md flex flex-col text-sm z-10">
+              <button
+                className="px-4 py-2 hover:bg-gray-100 text-left"
+                onClick={() => navigate("/subscription-view")}
+              >
+                View
+              </button>
+              <button
+                className="px-4 py-2 hover:bg-gray-100 text-left"
+                onClick={() => navigate("/subscription-Edit")}
+              >
+                Edit
+              </button>
+              <button
+                className="px-4 py-2 hover:bg-gray-100 text-left text-red-500"
+                onClick={onDelete}
+              >
+                Delete
+              </button>
+            </div>
+          )}
         </div>
+      </div>
     </div>
   );
 };

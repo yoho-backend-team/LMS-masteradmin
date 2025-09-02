@@ -1,5 +1,4 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { GetLocalStorage } from "@/utils/localStorage";
 import axios from "axios";
 
 const Axios = axios.create({
@@ -49,7 +48,7 @@ class HttpClient {
         const response = Axios.patch(url, data);
         return response;
     }
-     async put(url: string, data: any) {
+    async put(url: string, data: any) {
         const response = Axios.put(url, data);
         return response;
     }

@@ -1,4 +1,5 @@
-import React, { useState } from "react";
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import { useState } from "react";
 import { CiCircleInfo } from "react-icons/ci";
 import { useNavigate } from "react-router-dom";
 
@@ -10,7 +11,7 @@ const SendOtp = () => {
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
- 
+
 
   const handleSendOtp = async () => {
 
@@ -18,23 +19,24 @@ const SendOtp = () => {
     setLoading(true);
 
     try {
-      const response = await SendOtps({ email }); 
+      const response = await SendOtps({ email });
       console.log("OTP API response:", response);
 
-      
+
       if (!response) {
-      
+        console.log("no response")
       } else {
-          navigate("/otp-verification", { 
-        state: { 
-          email,
-          otp: response.data.data.otp,
-          token: response.data?.data.token 
-        } 
-      });
-        
+        navigate("/otp-verification", {
+          state: {
+            email,
+            otp: response.data.data.otp,
+            token: response.data?.data.token
+          }
+        });
+
       }
     } catch (err: any) {
+      console.log(err)
       setError("Enter a valid email");
     } finally {
       setLoading(false);
@@ -65,11 +67,9 @@ const SendOtp = () => {
                 setError("");
               }}
               placeholder="Enter your email"
-              className={`w-full h-14 border ${
-                error ? "border-red-500" : "border-[#68B39F]"
-              } rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 ${
-                error ? "focus:ring-red-500" : "focus:ring-[#68B39F]"
-              }`}
+              className={`w-full h-14 border ${error ? "border-red-500" : "border-[#68B39F]"
+                } rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 ${error ? "focus:ring-red-500" : "focus:ring-[#68B39F]"
+                }`}
             />
             {error && <p className="text-red-500 text-xs mt-1">{error}</p>}
           </div>
