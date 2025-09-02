@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { useEffect, useState } from 'react';
 import { FONTS } from '@/constants/ui constants';
 import { MoreVertical, X } from 'lucide-react';
@@ -9,7 +10,6 @@ import { useAppDispatch, useAppSelector } from '@/hooks/reduxhooks';
 import { GetImageUrl } from '@/utils/helper';
 import {
 	fileupload,
-	getActivityData,
 	updateProfile,
 } from '@/features/Profile/services';
 import toast from 'react-hot-toast';
@@ -17,58 +17,58 @@ import dayjs from 'dayjs';
 
 
 const SkeletonLoader = () => {
-  return (
-    <div className="grid gap-4 animate-pulse">
-      
-      <div className="shadow-[0px_0px_15px_0px_#0000001A] p-4 rounded-lg">
-        <section className="flex items-center gap-5">
-          <div className="h-[60px] w-[60px] bg-gray-200 rounded-lg"></div>
-          <div className="h-6 bg-gray-200 rounded w-1/3"></div>
-        </section>
-        <hr className="my-4" />
-        
-      
-        <div>
-          <div className="h-5 bg-gray-200 rounded w-1/6 mb-6"></div>
-          
-          <div className="mt-6 grid grid-cols-4 gap-5">
-            {[...Array(7)].map((_, i) => (
-              <section key={i}>
-                <div className="h-4 bg-gray-200 rounded w-2/3 mb-2"></div>
-                <div className="h-5 bg-gray-300 rounded w-full"></div>
-              </section>
-            ))}
-          </div>
-        </div>
-        
-        {/* Edit Button Skeleton */}
-        <div className="mt-10 text-end">
-          <div className="h-10 bg-gray-200 rounded-tl-xl rounded-br-xl w-32 inline-block"></div>
-        </div>
-      </div>
+	return (
+		<div className="grid gap-4 animate-pulse">
 
-      
-      <div className="shadow-[0px_0px_15px_0px_#0000001A] p-4 rounded-lg min-h-[250px]">
-        <section className="flex justify-between items-center">
-          <div className="h-6 bg-gray-200 rounded w-1/4"></div>
-          <div className="h-6 w-6 bg-gray-200 rounded-full"></div>
-        </section>
+			<div className="shadow-[0px_0px_15px_0px_#0000001A] p-4 rounded-lg">
+				<section className="flex items-center gap-5">
+					<div className="h-[60px] w-[60px] bg-gray-200 rounded-lg"></div>
+					<div className="h-6 bg-gray-200 rounded w-1/3"></div>
+				</section>
+				<hr className="my-4" />
 
-        <div className="flex gap-4 overflow-x-scroll scrollbar-hidden p-3 my-3">
-          {[...Array(3)].map((_, i) => (
-            <div key={i} className="shadow-[0px_0px_15px_0px_#0000001A] min-w-[400px] rounded-lg p-4">
-              <div className="h-4 bg-gray-200 rounded w-1/6 mb-3"></div>
-              <div className="my-1">
-                <div className="h-4 bg-gray-300 rounded w-full mb-2"></div>
-                <div className="h-3 bg-gray-200 rounded w-5/6"></div>
-              </div>
-              <div className="h-3 bg-gray-200 rounded w-2/3 mt-3 ml-auto"></div>
-            </div>
-          ))}
-        </div>
-      </div>
-    </div>
-  );
+
+				<div>
+					<div className="h-5 bg-gray-200 rounded w-1/6 mb-6"></div>
+
+					<div className="mt-6 grid grid-cols-4 gap-5">
+						{[...Array(7)].map((_, i) => (
+							<section key={i}>
+								<div className="h-4 bg-gray-200 rounded w-2/3 mb-2"></div>
+								<div className="h-5 bg-gray-300 rounded w-full"></div>
+							</section>
+						))}
+					</div>
+				</div>
+
+				{/* Edit Button Skeleton */}
+				<div className="mt-10 text-end">
+					<div className="h-10 bg-gray-200 rounded-tl-xl rounded-br-xl w-32 inline-block"></div>
+				</div>
+			</div>
+
+
+			<div className="shadow-[0px_0px_15px_0px_#0000001A] p-4 rounded-lg min-h-[250px]">
+				<section className="flex justify-between items-center">
+					<div className="h-6 bg-gray-200 rounded w-1/4"></div>
+					<div className="h-6 w-6 bg-gray-200 rounded-full"></div>
+				</section>
+
+				<div className="flex gap-4 overflow-x-scroll scrollbar-hidden p-3 my-3">
+					{[...Array(3)].map((_, i) => (
+						<div key={i} className="shadow-[0px_0px_15px_0px_#0000001A] min-w-[400px] rounded-lg p-4">
+							<div className="h-4 bg-gray-200 rounded w-1/6 mb-3"></div>
+							<div className="my-1">
+								<div className="h-4 bg-gray-300 rounded w-full mb-2"></div>
+								<div className="h-3 bg-gray-200 rounded w-5/6"></div>
+							</div>
+							<div className="h-3 bg-gray-200 rounded w-2/3 mt-3 ml-auto"></div>
+						</div>
+					))}
+				</div>
+			</div>
+		</div>
+	);
 };
 
 const ProfileDetails = () => {
@@ -153,7 +153,7 @@ const ProfileDetails = () => {
 				setIsLoading(false);
 			}
 		};
-		
+
 		fetchData();
 	}, [dispatch]);
 

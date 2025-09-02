@@ -1,4 +1,5 @@
-import React, { useEffect, useState } from "react";
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import { useEffect, useState } from "react";
 import { IoIosArrowDown, IoMdAdd } from "react-icons/io";
 import editIcon from "../../../assets/EditIcon.svg";
 import deleteIcon from "../../../assets/Mask group (2).svg";
@@ -18,8 +19,8 @@ const FAQ = () => {
   const [isEditOpen, setIsEditOpen] = useState(false);
   const [editFaq, setEditFaq] = useState<any>(null);
   const [page, setPage] = useState(1);
-  const [totalPages, setTotalPages] = useState(3);
-const [loading, setLoading] = useState(true);
+  const [totalPages,] = useState(3);
+  const [loading, setLoading] = useState(true);
 
   const [isOpen, setIsOpen] = useState(false);
 
@@ -49,7 +50,7 @@ const [loading, setLoading] = useState(true);
   const AllFaqs = useSelector(getAllFaq);
   console.log("faqs", AllFaqs);
 
-  console.log("pages",AllFaqs.length)
+  console.log("pages", AllFaqs.length)
 
 
   const mappedFaqs = AllFaqs.map((faq: any) => ({
@@ -72,7 +73,7 @@ const [loading, setLoading] = useState(true);
     const fetchData = async () => {
       setLoading(true); // show skeleton
       await dispatch(fetchFAQsThunk({ page }));
-      setLoading(false); 
+      setLoading(false);
     };
     fetchData();
   }, [dispatch, page]);
@@ -194,26 +195,26 @@ const [loading, setLoading] = useState(true);
   };
 
   const SkeletonHeader = () => (
-  <thead className="animate-pulse w-full h-16 rounded-xl">
-    <tr>
-      <th className="px-6 py-3 rounded-l-xl">
-        <div className="h-6 w-32 bg-gray-300 rounded"></div>
-      </th>
-      <th className="px-6 py-3">
-        <div className="h-6 w-32 bg-gray-300 rounded"></div>
-      </th>
-      <th className="px-6 py-3">
-        <div className="h-6 w-32 bg-gray-300 rounded"></div>
-      </th>
-      <th className="px-6 py-3 rounded-r-xl text-right">
-        <div className="h-6 w-32 bg-gray-300 rounded ml-auto"></div>
-      </th>
-    </tr>
-  </thead>
-);
+    <thead className="animate-pulse w-full h-16 rounded-xl">
+      <tr>
+        <th className="px-6 py-3 rounded-l-xl">
+          <div className="h-6 w-32 bg-gray-300 rounded"></div>
+        </th>
+        <th className="px-6 py-3">
+          <div className="h-6 w-32 bg-gray-300 rounded"></div>
+        </th>
+        <th className="px-6 py-3">
+          <div className="h-6 w-32 bg-gray-300 rounded"></div>
+        </th>
+        <th className="px-6 py-3 rounded-r-xl text-right">
+          <div className="h-6 w-32 bg-gray-300 rounded ml-auto"></div>
+        </th>
+      </tr>
+    </thead>
+  );
 
   const SkeletonRow = () => (
-    
+
     <tr className="animate-pulse bg-white/30 backdrop-blur-xl h-30 rounded-xl">
       <td className="px-6 py-4">
         <div className="h-4 w-40 bg-gray-300 rounded"></div>
@@ -253,93 +254,93 @@ const [loading, setLoading] = useState(true);
 
 
       <table className="min-w-full text-[#999999] text-sm border-separate border-spacing-y-4">
-       {loading? (
-        <>
-        <SkeletonHeader />
-       </>
-      ):(
-      <>
-        <thead className="bg-[#2D6974] text-white  text-left text-lg font-semibold"
-          style={{ ...FONTS.tableheader }}>
-          <tr>
-            <th className="px-6 py-3 rounded-l-xl">Faq Name</th>
-            <th className="px-6 py-3">Category</th>
-            <th className="px-6 py-3">Status</th>
-            <th className="px-6 py-3 rounded-r-xl text-right">Actions</th>
-          </tr>
-        </thead></>)}
+        {loading ? (
+          <>
+            <SkeletonHeader />
+          </>
+        ) : (
+          <>
+            <thead className="bg-[#2D6974] text-white  text-left text-lg font-semibold"
+              style={{ ...FONTS.tableheader }}>
+              <tr>
+                <th className="px-6 py-3 rounded-l-xl">Faq Name</th>
+                <th className="px-6 py-3">Category</th>
+                <th className="px-6 py-3">Status</th>
+                <th className="px-6 py-3 rounded-r-xl text-right">Actions</th>
+              </tr>
+            </thead></>)}
         <tbody>
 
-          {loading? (
+          {loading ? (
             <>
-            <SkeletonRow />
-             <SkeletonRow />
               <SkeletonRow />
-               <SkeletonRow />
-                <SkeletonRow />
-                 <SkeletonRow />
+              <SkeletonRow />
+              <SkeletonRow />
+              <SkeletonRow />
+              <SkeletonRow />
+              <SkeletonRow />
             </>
-          ):(
+          ) : (
             <>
-          {filteredFaqs.map((faq: any) => (
-            <tr
-              key={faq.id}
-              className="bg-white/30 backdrop-blur-xl text-base shadow-lg  rounded-xl font-medium transition"
-              style={{ ...FONTS.description }}
-            >
-              <td className="px-6 py-4 rounded-l-xl">{faq.question}</td>
-              <td className="px-6 py-4">{faq.category}</td>
+              {filteredFaqs.map((faq: any) => (
+                <tr
+                  key={faq.id}
+                  className="bg-white/30 backdrop-blur-xl text-base shadow-lg  rounded-xl font-medium transition"
+                  style={{ ...FONTS.description }}
+                >
+                  <td className="px-6 py-4 rounded-l-xl">{faq.question}</td>
+                  <td className="px-6 py-4">{faq.category}</td>
 
-              <td className="px-6 py-4">
-                <label className="inline-flex items-center cursor-pointer">
+                  <td className="px-6 py-4">
+                    <label className="inline-flex items-center cursor-pointer">
 
-                  <input
-                    type="checkbox"
-                    checked={faq.status}
-                    onChange={() => handleStatusToggle(faq.id)}
-                    className="sr-only peer"
-                  />
+                      <input
+                        type="checkbox"
+                        checked={faq.status}
+                        onChange={() => handleStatusToggle(faq.id)}
+                        className="sr-only peer"
+                      />
 
-                  <div
-                    className={`relative w-12 h-6 rounded-full transition-colors duration-300 ${faq.status ? "bg-green-500" : "bg-gray-300"
-                      }`}
-                  >
-                    <span
-                      className={`absolute top-1 left-1 w-4 h-4 bg-white rounded-full shadow-md transition-transform duration-300 ${faq.status ? "translate-x-3" : "translate-x-0"
-                        }`}
-                    ></span>
-                  </div>
-                </label>
-              </td>
-              <td className="px-6 py-4 rounded-r-xl">
-                <div className="flex justify-end space-x-3">
-                  <button
-                    onClick={() => {
-                      setEditFaq(faq);
-                      setFormData({
-                        question: faq.question,
-                        description: faq.description,
-                        categoryId: faq.categoryId,
-                        categoryName: faq.category,
-                        status: faq.status,
-                      });
+                      <div
+                        className={`relative w-12 h-6 rounded-full transition-colors duration-300 ${faq.status ? "bg-green-500" : "bg-gray-300"
+                          }`}
+                      >
+                        <span
+                          className={`absolute top-1 left-1 w-4 h-4 bg-white rounded-full shadow-md transition-transform duration-300 ${faq.status ? "translate-x-3" : "translate-x-0"
+                            }`}
+                        ></span>
+                      </div>
+                    </label>
+                  </td>
+                  <td className="px-6 py-4 rounded-r-xl">
+                    <div className="flex justify-end space-x-3">
+                      <button
+                        onClick={() => {
+                          setEditFaq(faq);
+                          setFormData({
+                            question: faq.question,
+                            description: faq.description,
+                            categoryId: faq.categoryId,
+                            categoryName: faq.category,
+                            status: faq.status,
+                          });
 
-                      setIsEditOpen(true);
-                    }}
-                  >
-                    <img src={editIcon} alt="Edit" />
-                  </button>
-                  <button
-                    className="text-red-500"
-                    onClick={() => handleDeleteClick(faq.uuid)}
-                  >
-                    <img src={deleteIcon} alt="Delete" />
-                  </button>
-                </div>
-              </td>
-            </tr>
-          ))}
-</>)}
+                          setIsEditOpen(true);
+                        }}
+                      >
+                        <img src={editIcon} alt="Edit" />
+                      </button>
+                      <button
+                        className="text-red-500"
+                        onClick={() => handleDeleteClick(faq.uuid)}
+                      >
+                        <img src={deleteIcon} alt="Delete" />
+                      </button>
+                    </div>
+                  </td>
+                </tr>
+              ))}
+            </>)}
           {filteredFaqs.length === 0 && (
             <tr>
               <td colSpan={5} className="text-center p-4 text-gray-500">
@@ -356,8 +357,8 @@ const [loading, setLoading] = useState(true);
           onClick={() => setPage((prev) => Math.max(prev - 1, 1))}
           disabled={page === 1}
           className={`px-4 rounded-tl-xl rounded-br-xl py-2 rounded ${page === 1
-              ? "bg-gray-300 cursor-not-allowed"
-              : "bg-[#68B39F] text-white"
+            ? "bg-gray-300 cursor-not-allowed"
+            : "bg-[#68B39F] text-white"
             }`}
         >
           Prev
@@ -368,8 +369,8 @@ const [loading, setLoading] = useState(true);
             key={i + 1}
             onClick={() => setPage(i + 1)}
             className={`px-4 rounded-tl-xl rounded-br-xl py-2 rounded ${page === i + 1
-                ? "bg-[#2D6974] text-white"
-                : "bg-gray-200 text-gray-700"
+              ? "bg-[#2D6974] text-white"
+              : "bg-gray-200 text-gray-700"
               }`}
           >
             {i + 1}
@@ -380,8 +381,8 @@ const [loading, setLoading] = useState(true);
           onClick={() => setPage((prev) => Math.min(prev + 1, totalPages))}
           disabled={page === totalPages}
           className={`px-4 rounded-tl-xl rounded-br-xl py-2 rounded ${page === totalPages
-              ? "bg-gray-300 cursor-not-allowed"
-              : "bg-[#68B39F] text-white"
+            ? "bg-gray-300 cursor-not-allowed"
+            : "bg-[#68B39F] text-white"
             }`}
         >
           Next

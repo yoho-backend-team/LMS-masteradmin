@@ -1,5 +1,5 @@
 import { Card, CardContent } from '@/components/ui/card';
-import { Zap, Component, Droplet} from 'lucide-react';
+import { Zap, Component, Droplet } from 'lucide-react';
 import { FONTS } from '@/constants/ui constants';
 import { useEffect, useState } from 'react';
 
@@ -7,7 +7,7 @@ import { useEffect, useState } from 'react';
 const StatsCard: React.FC = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [hoveredCard, setHoveredCard] = useState<number | null>(null);
-  
+
 
   // Simulate loading
   useEffect(() => {
@@ -19,7 +19,7 @@ const StatsCard: React.FC = () => {
 
   // Filter institutes based on selected filters
 
-  const [kpiData, setKpiData] = useState([
+  const [kpiData,] = useState([
     {
       title: 'Total Notifications',
       value: '45',
@@ -61,69 +61,69 @@ const StatsCard: React.FC = () => {
         {/* KPI Cards */}
         <div className='grid grid-cols-1 md:grid-cols-4 gap-6'>
           {kpiData.map((kpi, index) => {
-            const isHovered = hoveredCard === index;
+            // const isHovered = hoveredCard === index;
             const IconComponent = kpi.icon;
 
             return (
-            <Card
-  key={index}
-  className={`
+              <Card
+                key={index}
+                className={`
     shadow-lg transition-all duration-300 cursor-pointer border-0
     rounded-tl-3xl rounded-br-3xl rounded-bl-none rounded-tr-none
     ${hoveredCard === index
-      ? 'bg-[#2D6974] text-white hover:scale-90'
-      : 'bg-white text-gray-900 hover:scale-100'
-    }
+                    ? 'bg-[#2D6974] text-white hover:scale-90'
+                    : 'bg-white text-gray-900 hover:scale-100'
+                  }
   `}
-  onMouseEnter={() => setHoveredCard(index)}
-  onMouseLeave={() => setHoveredCard(null)}
->
-  <CardContent className='p-6'>
-    <div className='flex flex-col items-center text-center space-y-4'>
-      {/* Icon with background circle */}
-      <div
-        className={`
+                onMouseEnter={() => setHoveredCard(index)}
+                onMouseLeave={() => setHoveredCard(null)}
+              >
+                <CardContent className='p-6'>
+                  <div className='flex flex-col items-center text-center space-y-4'>
+                    {/* Icon with background circle */}
+                    <div
+                      className={`
           w-12 h-12 rounded-full flex items-center justify-center
           ${hoveredCard === index ? 'bg-white/20' : kpi.iconBg}
         `}
-      >
-        <IconComponent
-          className={`
+                    >
+                      <IconComponent
+                        className={`
             w-6 h-6
             ${hoveredCard === index
-              ? 'text-white'
-              : kpi.iconColor
-            }
+                            ? 'text-white'
+                            : kpi.iconColor
+                          }
           `}
-        />
-      </div>
+                      />
+                    </div>
 
-      {/* Title */}
-      <h3
-        className={`
+                    {/* Title */}
+                    <h3
+                      className={`
           text-sm font-medium leading-tight
           ${hoveredCard === index
-            ? 'text-white/90'
-            : 'text-gray-600'
-          }
+                          ? 'text-white/90'
+                          : 'text-gray-600'
+                        }
         `}
-        style={{ ...FONTS.card_text }}
-      >
-        {kpi.title}
-      </h3>
+                      style={{ ...FONTS.card_text }}
+                    >
+                      {kpi.title}
+                    </h3>
 
-      {/* Circular progress */}
-      <div className='flex flex-col items-center'>
-        <CircularProgress
-          percentage={kpi.percentage}
-          progressColor={kpi.progressColor}
-          isLoading={isLoading}
-          isHovered={hoveredCard === index}
-        />
-      </div>
-    </div>
-  </CardContent>
-</Card>
+                    {/* Circular progress */}
+                    <div className='flex flex-col items-center'>
+                      <CircularProgress
+                        percentage={kpi.percentage}
+                        progressColor={kpi.progressColor}
+                        isLoading={isLoading}
+                        isHovered={hoveredCard === index}
+                      />
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
 
             );
           })}

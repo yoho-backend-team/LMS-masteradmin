@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import React from "react";
 import { useFormik } from "formik";
 import * as Yup from "yup";
@@ -5,8 +6,27 @@ import { updateInstituteDetails } from "@/features/institute/services";
 import toast from "react-hot-toast";
 
 interface EditInstituteFormProps {
-  instituteData: Institute;
+  instituteData: any;
   onCancel: () => void;
+}
+
+interface InstituteFormValues {
+  instituteName: string;
+  registeredDate: string;
+  state: string;
+  city: string;
+  pinCode: string;
+  addressLine1: string;
+  addressLine2: string;
+  phoneNumber: string;
+  altPhoneNumber: string;
+  officialEmail: string;
+  officialWebsite: string;
+  description: string;
+  instagram: string;
+  facebook: string;
+  linkedin: string;
+  twitter: string;
 }
 
 const validationSchema = Yup.object({
@@ -32,14 +52,13 @@ const validationSchema = Yup.object({
   facebook: Yup.string().url("Invalid Facebook URL"),
   linkedin: Yup.string().url("Invalid LinkedIn URL"),
   twitter: Yup.string().url("Invalid Twitter URL"),
-  // pinterest: Yup.string().url("Invalid Pinterest URL"),
 });
 
 const EditInstituteForm: React.FC<EditInstituteFormProps> = ({
   instituteData,
   onCancel,
 }) => {
-  const formik = useFormik({
+  const formik = useFormik<InstituteFormValues>({
     initialValues: {
       instituteName: instituteData?.institute_name || "",
       registeredDate: instituteData?.registered_date
@@ -59,13 +78,11 @@ const EditInstituteForm: React.FC<EditInstituteFormProps> = ({
       facebook: instituteData?.social_media?.facebook_id || "",
       linkedin: instituteData?.social_media?.linkedin_id || "",
       twitter: instituteData?.social_media?.twitter_id || "",
-      // pinterest: instituteData?.social_media?.pinterest_id || "",
     },
     validationSchema,
     onSubmit: async (values) => {
       const payload = {
         institute_name: values.instituteName,
-      //  registered_date: values.registeredDate,
         email: values.officialEmail,
         website: values.officialWebsite,
         description: values.description,
@@ -85,17 +102,15 @@ const EditInstituteForm: React.FC<EditInstituteFormProps> = ({
           facebook_id: values.facebook,
           linkedin_id: values.linkedin,
           twitter_id: values.twitter,
-          // pinterest_id: values.pinterest,
         },
       };
-console.log(onsubmit,'onnnnnn')
+
       try {
-       
         const response = await updateInstituteDetails({
           instituteId: instituteData?.uuid,
-          payload
+          payload,
         });
-        
+
         if (response) {
           toast.success("Institute updated successfully 🎉");
           console.log("Institute updated:", response);
@@ -113,45 +128,46 @@ console.log(onsubmit,'onnnnnn')
   const inputClass =
     "w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500";
 
+  const textFields: Array<{
+    name: keyof InstituteFormValues;
+    placeholder: string;
+    type?: string;
+  }> = [
+      { name: "instituteName", placeholder: "Institute Name" },
+      { name: "registeredDate", placeholder: "Registered Date", type: "date" },
+      { name: "state", placeholder: "State" },
+      { name: "city", placeholder: "City" },
+      { name: "pinCode", placeholder: "Pin Code" },
+      { name: "addressLine1", placeholder: "Address Line 1" },
+      { name: "addressLine2", placeholder: "Address Line 2" },
+      { name: "phoneNumber", placeholder: "Phone Number" },
+      { name: "altPhoneNumber", placeholder: "Alt Phone Number" },
+      { name: "officialEmail", placeholder: "Official Email", type: "email" },
+      { name: "officialWebsite", placeholder: "Official Website" },
+    ];
+
   return (
     <form
       onSubmit={formik.handleSubmit}
       className="max-w-5xl mx-auto bg-white p-6 shadow-lg rounded-lg grid grid-cols-1 md:grid-cols-2 gap-4 max-h-[80vh] overflow-y-auto"
     >
-      {/* Basic fields */}
-      {[
-        { name: "instituteName", placeholder: "Institute Name" },
-        { name: "registeredDate", placeholder: "Registered Date", type: "date" },
-        { name: "state", placeholder: "State" },
-        { name: "city", placeholder: "City" },
-        { name: "pinCode", placeholder: "Pin Code" },
-        { name: "addressLine1", placeholder: "Address Line 1" },
-        { name: "addressLine2", placeholder: "Address Line 2" },
-        { name: "phoneNumber", placeholder: "Phone Number" },
-        { name: "altPhoneNumber", placeholder: "Alt Phone Number" },
-        { name: "officialEmail", placeholder: "Official Email", type: "email" },
-        { name: "officialWebsite", placeholder: "Official Website" },
-      ].map((field) => (
+      {textFields.map((field) => (
         <div key={field.name}>
           <input
             type={field.type || "text"}
             name={field.name}
             placeholder={field.placeholder}
-            value={(formik.values as any)[field.name]}
+            value={formik.values[field.name]}
             onChange={formik.handleChange}
             onBlur={formik.handleBlur}
             className={inputClass}
           />
-          {formik.touched[field.name as keyof typeof formik.touched] &&
-            formik.errors[field.name as keyof typeof formik.errors] && (
-              <p className="text-red-500 text-sm">
-                {formik.errors[field.name as keyof typeof formik.errors]}
-              </p>
-            )}
+          {formik.touched[field.name] && formik.errors[field.name] && (
+            <p className="text-red-500 text-sm">{formik.errors[field.name]}</p>
+          )}
         </div>
       ))}
 
-      {/* Description */}
       <div className="md:col-span-2">
         <textarea
           name="description"
@@ -166,34 +182,23 @@ console.log(onsubmit,'onnnnnn')
         )}
       </div>
 
-      {/* Social Links */}
-      {[
-        { name: "instagram", placeholder: "Instagram URL" },
-        { name: "facebook", placeholder: "Facebook URL" },
-        { name: "linkedin", placeholder: "LinkedIn URL" },
-        { name: "twitter", placeholder: "Twitter URL" },
-        // { name: "pinterest", placeholder: "Pinterest URL" },
-      ].map((field) => (
-        <div key={field.name}>
+      {(["instagram", "facebook", "linkedin", "twitter"] as const).map((field) => (
+        <div key={field}>
           <input
             type="text"
-            name={field.name}
-            placeholder={field.placeholder}
-            value={(formik.values as any)[field.name]}
+            name={field}
+            placeholder={`${field.charAt(0).toUpperCase() + field.slice(1)} URL`}
+            value={formik.values[field]}
             onChange={formik.handleChange}
             onBlur={formik.handleBlur}
             className={inputClass}
           />
-          {formik.touched[field.name as keyof typeof formik.touched] &&
-            formik.errors[field.name as keyof typeof formik.errors] && (
-              <p className="text-red-500 text-sm">
-                {formik.errors[field.name as keyof typeof formik.errors]}
-              </p>
-            )}
+          {formik.touched[field] && formik.errors[field] && (
+            <p className="text-red-500 text-sm">{formik.errors[field]}</p>
+          )}
         </div>
       ))}
 
-      {/* Buttons */}
       <div className="flex gap-4 md:col-span-2 mt-4">
         <button
           type="submit"

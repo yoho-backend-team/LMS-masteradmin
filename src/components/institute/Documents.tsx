@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 
 import { useState } from "react";
 import { Document, Page, pdfjs } from "react-pdf";
@@ -7,21 +8,21 @@ import "pdfjs-dist/web/pdf_viewer.css";
 pdfjs.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.min.js`;
 
 // Type definitions
-type InstituteDocument = {
-  number: string;
-  file: string;
-};
+// type InstituteDocument = {
+//   number: string;
+//   file: string;
+// };
 
-type InstituteDocs = {
-  gst: InstituteDocument;
-  pan: InstituteDocument;
-};
+// type InstituteDocs = {
+//   gst: InstituteDocument;
+//   pan: InstituteDocument;
+// };
 
-type DocumentsPageProps = {
-  institute: {
-    docs?: InstituteDocs;
-  };
-};
+// type DocumentsPageProps = {
+//   institute: {
+//     docs?: InstituteDocs;
+//   };
+// };
 
 type DocumentItem = {
   title: string;
@@ -29,24 +30,24 @@ type DocumentItem = {
   number: string;
 };
 
-export default function DocumentsPage({ institute }: DocumentsPageProps) {
+export default function DocumentsPage({ institute }: any) {
   const [selectedDoc, setSelectedDoc] = useState<string | null>(null);
   const [numPages, setNumPages] = useState<number | null>(null);
   const [pageNumber] = useState(1); // For single page view
 
   // Get documents from institute data
   const documents: DocumentItem[] = [
-    { 
-      title: "GST", 
+    {
+      title: "GST",
       fileUrl: institute?.docs?.gst?.file || "",
       number: institute?.docs?.gst?.number || ""
     },
-    { 
-      title: "PAN", 
-      fileUrl:  institute?.docs?.pan?.file || "",
+    {
+      title: "PAN",
+      fileUrl: institute?.docs?.pan?.file || "",
       number: institute?.docs?.pan?.number || ""
     },
-    
+
   ];
 
   function onDocumentLoadSuccess({ numPages }: { numPages: number }): void {
@@ -55,7 +56,7 @@ export default function DocumentsPage({ institute }: DocumentsPageProps) {
 
   const renderDocumentViewer = () => {
     const doc = documents.find((d) => d.title === selectedDoc);
-    
+
     if (!doc) return null;
 
     return (
@@ -83,8 +84,8 @@ export default function DocumentsPage({ institute }: DocumentsPageProps) {
               loading={<div>Loading PDF...</div>}
               error={<div>Failed to load PDF.</div>}
             >
-              <Page 
-                pageNumber={pageNumber} 
+              <Page
+                pageNumber={pageNumber}
                 renderTextLayer={false}
                 renderAnnotationLayer={false}
                 loading={<div>Loading page...</div>}
@@ -119,11 +120,10 @@ export default function DocumentsPage({ institute }: DocumentsPageProps) {
             </div>
             <button
               onClick={() => setSelectedDoc(doc.title)}
-              className={`w-full py-2 rounded transition ${
-                doc.fileUrl 
-                  ? "bg-[#6bb5a0] text-white hover:bg-[#5aa28e]"
-                  : "bg-gray-300 text-gray-600 cursor-not-allowed"
-              }`}
+              className={`w-full py-2 rounded transition ${doc.fileUrl
+                ? "bg-[#6bb5a0] text-white hover:bg-[#5aa28e]"
+                : "bg-gray-300 text-gray-600 cursor-not-allowed"
+                }`}
               disabled={!doc.fileUrl}
               aria-label={`View ${doc.title} document`}
             >
