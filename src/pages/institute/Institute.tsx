@@ -208,7 +208,7 @@ const Institutes: React.FC = () => {
     },
   ]);
 
-  // Update KPI data based on filtered institutes
+
   useEffect(() => {
     if (!instituteData) return;
 
@@ -221,29 +221,29 @@ const Institutes: React.FC = () => {
       (i) => i.institute_active_status === 'Blocked'
     ).length;
 
-    setKpiData([
-      {
-        ...kpiData[0],
-        value: `${total}`,
-        percentage: total > 0 ? Math.round((filteredTotal / total) * 100) : 0,
-      },
-      {
-        ...kpiData[1],
-        value: `${filteredActive}`,
-        percentage:
-          filteredTotal > 0
-            ? Math.round((filteredActive / filteredTotal) * 100)
-            : 0,
-      },
-      {
-        ...kpiData[2],
-        value: `${filteredBlocked}`,
-        percentage:
-          filteredTotal > 0
-            ? Math.round((filteredBlocked / filteredTotal) * 100)
-            : 0,
-      },
-    ]);
+    // setKpiData([
+    //   {
+    //     ...kpiData[0],
+    //     value: `${total}`,
+    //     percentage: total > 0 ? Math.round((filteredTotal / total) * 100) : 0,
+    //   },
+    //   {
+    //     ...kpiData[1],
+    //     value: `${filteredActive}`,
+    //     percentage:
+    //       filteredTotal > 0
+    //         ? Math.round((filteredActive / filteredTotal) * 100)
+    //         : 0,
+    //   },
+    //   {
+    //     ...kpiData[2],
+    //     value: `${filteredBlocked}`,
+    //     percentage:
+    //       filteredTotal > 0
+    //         ? Math.round((filteredBlocked / filteredTotal) * 100)
+    //         : 0,
+    //   },
+    // ]);
   }, [filteredInstitutes, instituteData]);
 
   // Update institute plan
