@@ -1,4 +1,4 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
+
 import React, { useEffect, useState } from "react";
 import { Plus, MoreVertical, Check } from "lucide-react";
 import { FONTS } from "@/constants/ui constants";
@@ -97,13 +97,13 @@ const Subscription: React.FC = () => {
 
   useEffect(() => {
     const fetchData = async () => {
-      setIsLoading(true);
+      // setIsLoading(true);
       try {
         await dispatch(GettingAllSubscriptionThunks() as any);
       } catch (error) {
         console.error("Error fetching subscription data:", error);
       } finally {
-        setIsLoading(false);
+        // setIsLoading(false);
       }
     };
 
@@ -262,7 +262,7 @@ const Subscription: React.FC = () => {
 
 export default Subscription;
 
-function setIsLoading(arg0: boolean) {
-  console.log(arg0)
-  throw new Error("Function not implemented.");
-}
+// function setIsLoading(arg0: boolean) {
+//   console.log(arg0)
+//   throw new Error("Function not implemented.");
+// }

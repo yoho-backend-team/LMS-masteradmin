@@ -130,7 +130,7 @@ const SubscriptionView = () => {
       <div className="bg-white shadow rounded-xl max-w-5xl w-full border">
         <div className="bg-gray-100 flex justify-center items-center h-56">
           <img
-            src={plan.image}
+            src={plan.image || undefined}
             alt={plan.identity}
             className="h-full max-w-full object-contain"
           />

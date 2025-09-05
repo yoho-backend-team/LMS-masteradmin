@@ -1,6 +1,4 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-
-
 import React, { useEffect, useState } from "react";
 import type { SubscriptionPlanProps } from "../../components/SubscriptionPlan/SubscriptionCard";
 import subcard1 from "../../assets/subcard1.png";
@@ -18,8 +16,7 @@ const AddSubscription: React.FC<AddSubscriptionProps> = ({ onSubmit }) => {
     price: "",
     supportLevel: "",
     description: "",
-    duration: "",
-    durationType: "",
+    duration: { value: "", unit: "" }, 
     students: "",
     identity: "",
     unlimitedStudents: false,
@@ -39,6 +36,7 @@ const AddSubscription: React.FC<AddSubscriptionProps> = ({ onSubmit }) => {
   const [submittedPlan, setSubmittedPlan] = useState<SubscriptionPlanProps | null>(null);
   const navigate = useNavigate();
 
+  // generic input handler
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement | any>
   ) => {
@@ -49,39 +47,26 @@ const AddSubscription: React.FC<AddSubscriptionProps> = ({ onSubmit }) => {
     }));
   };
 
+  // special handler for duration
+// helper to update duration
+const handleDurationChange = (key: "value" | "unit", val: string) => {
+  setForm((prev) => ({
+    ...prev,
+    duration: {
+      ...prev.duration,
+      [key]: val,
+    },
+  }));
+};;
 
   const handleSubmit = () => {
     const features = [
-      {
-        feature: "Students",
-        count: form.unlimitedStudents ? "Unlimited" : Number(form.students || 0),
-
-      },
-      {
-        feature: "Admins",
-        count: form.unlimitedAdmins ? "Unlimited" : Number(form.admins || 0),
-
-      },
-      {
-        feature: "Teachers",
-        count: form.unlimitedTeachers ? "Unlimited" : Number(form.teachers || 0),
-
-      },
-      {
-        feature: "Batches",
-        count: form.unlimitedBatches ? "Unlimited" : Number(form.batches || 0),
-
-      },
-      {
-        feature: "Courses",
-        count: form.unlimitedCourses ? "Unlimited" : Number(form.courses || 0),
-
-      },
-      {
-        feature: "Classes",
-        count: form.unlimitedClasses ? "Unlimited" : Number(form.classes || 0),
-
-      },
+      { feature: "Students", count: form.unlimitedStudents ? "Unlimited" : Number(form.students || 0) },
+      { feature: "Admins", count: form.unlimitedAdmins ? "Unlimited" : Number(form.admins || 0) },
+      { feature: "Teachers", count: form.unlimitedTeachers ? "Unlimited" : Number(form.teachers || 0) },
+      { feature: "Batches", count: form.unlimitedBatches ? "Unlimited" : Number(form.batches || 0) },
+      { feature: "Courses", count: form.unlimitedCourses ? "Unlimited" : Number(form.courses || 0) },
+      { feature: "Classes", count: form.unlimitedClasses ? "Unlimited" : Number(form.classes || 0) },
     ];
 
     const newPlan: SubscriptionPlanProps = {
@@ -89,13 +74,13 @@ const AddSubscription: React.FC<AddSubscriptionProps> = ({ onSubmit }) => {
       description: form.description,
       price: form.price,
       duration: {
-        value: Number(form.duration || 0),
-        unit: form.durationType || "Monthly",
+        value: Number(form.duration.value || 0), // ✅ FIXED
+        unit: form.duration.unit || "month",
       },
       image: form.image,
       features,
       active: true,
-      identity: form.identity
+      identity: form.identity,
     };
 
     setSubmittedPlan(newPlan);
@@ -103,7 +88,6 @@ const AddSubscription: React.FC<AddSubscriptionProps> = ({ onSubmit }) => {
 
     navigate("/subscriptions");
   };
-
 
   useEffect(() => {
     const sendData = async () => {
@@ -125,6 +109,8 @@ const AddSubscription: React.FC<AddSubscriptionProps> = ({ onSubmit }) => {
       <h2 className="text-teal-700 text-lg font-semibold mb-6">
         Enter your Address Information Here
       </h2>
+
+      {/* Image Upload */}
       <div className="flex items-center mb-6">
         <img
           src={form.image}
@@ -139,7 +125,6 @@ const AddSubscription: React.FC<AddSubscriptionProps> = ({ onSubmit }) => {
             Upload Profile Picture
           </p>
           <p className="text-sm text-gray-500">PNG or JPEG (Max 800KB)</p>
-
           <input
             id="fileInput"
             type="file"
@@ -155,6 +140,8 @@ const AddSubscription: React.FC<AddSubscriptionProps> = ({ onSubmit }) => {
           />
         </div>
       </div>
+
+      {/* Basic Fields */}
       <div className="grid grid-cols-3 gap-4 mb-4">
         <div className="flex flex-col">
           <label htmlFor="title" className="text-sm font-medium text-gray-700 mb-1">
@@ -183,7 +170,7 @@ const AddSubscription: React.FC<AddSubscriptionProps> = ({ onSubmit }) => {
         </div>
 
         <div className="flex flex-col">
-          <label htmlFor="price" className="text-sm font-medium text-gray-700 mb-1">
+          <label htmlFor="identity" className="text-sm font-medium text-gray-700 mb-1">
             Identity
           </label>
           <input
@@ -213,6 +200,7 @@ const AddSubscription: React.FC<AddSubscriptionProps> = ({ onSubmit }) => {
         </div>
       </div>
 
+      {/* Description */}
       <div className="flex flex-col mb-4">
         <label htmlFor="description" className="text-sm font-medium text-gray-700 mb-1">
           Plan Description
@@ -225,33 +213,43 @@ const AddSubscription: React.FC<AddSubscriptionProps> = ({ onSubmit }) => {
           className="border rounded p-2 w-full"
         />
       </div>
+
+      {/* Duration */}
       <div className="grid grid-cols-2 gap-4 mb-4">
         <div className="flex flex-col">
-          <label htmlFor="duration" className="text-sm font-medium text-gray-700 mb-1">
+          <label htmlFor="durationValue" className="text-sm font-medium text-gray-700 mb-1">
             Duration
           </label>
           <input
-            id="duration"
-            name="duration"
-            value={form.duration}
-            onChange={handleChange}
+            id="durationValue"
+            type="number"
+            value={form.duration.value}
+            onChange={(e) => handleDurationChange("value", e.target.value)}
             className="border rounded p-2"
           />
         </div>
 
         <div className="flex flex-col">
-          <label htmlFor="durationType" className="text-sm font-medium text-gray-700 mb-1">
-            Duration Type
-          </label>
-          <input
-            id="durationType"
-            name="durationType"
-            value={form.durationType}
-            onChange={handleChange}
-            className="border rounded p-2"
-          />
-        </div>
+  <label
+    htmlFor="durationUnit"
+    className="text-sm font-medium text-gray-700 mb-1"
+  >
+    Duration Unit
+  </label>
+  <input
+    id="durationUnit"
+    name="durationUnit"
+    type="text"
+    value={form.duration.unit}
+    onChange={(e) => handleDurationChange("unit", e.target.value)}
+    placeholder="e.g. day, month, year"
+    className="border rounded p-2"
+  />
+</div>
+
       </div>
+
+      {/* Features with Unlimited checkboxes */}
       <div className="grid grid-cols-2 gap-4 mb-4">
         {[
           { name: "students", unlimited: "unlimitedStudents", label: "Students" },
@@ -288,6 +286,8 @@ const AddSubscription: React.FC<AddSubscriptionProps> = ({ onSubmit }) => {
           </div>
         ))}
       </div>
+
+      {/* Actions */}
       <div className="flex justify-between">
         <button
           onClick={() => navigate("/subscriptions")}

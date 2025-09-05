@@ -13,10 +13,10 @@ const SubscriptionEdit = () => {
     const [formData, setFormData] = useState<any>({
         name: "Basic Plan - Free",
         description: "",
-        price: 0,
-        duration: 100,
-        durationType: "Months",
-        supportLevel: "Basic",
+        price: "",
+        duration:"",
+        durationType: "",
+        supportLevel: "",
         features: {
             Students: "",
             Admins: "",
