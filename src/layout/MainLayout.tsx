@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { useState } from 'react';
 import Navbar from '../components/shared/NavBar';
 import Sidebar from '../components/shared/SideBar';
@@ -50,7 +51,7 @@ function MainLayout() {
 			});
 	}
 
-	const [isSidebarOpen, setIsSidebarOpen] = useState(true);
+	const [isSidebarOpen,] = useState(true);
 	const sidebarWidth = isSidebarOpen ? 250 : 87;
 	return (
 		<>
@@ -63,7 +64,10 @@ function MainLayout() {
 						className='transition-all duration-300	'
 						style={{ width: `${sidebarWidth}px` }}
 					>
-						<Sidebar isOpen={isSidebarOpen} setIsOpen={setIsSidebarOpen} />
+						<Sidebar
+						//  isOpen={isSidebarOpen} 
+						// setIsOpen={setIsSidebarOpen}
+						/>
 					</div>
 					<div className='flex-1 overflow-y-auto p-3 bg-white no-scrollbar'>
 						<Outlet />

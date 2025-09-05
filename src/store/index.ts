@@ -8,6 +8,8 @@ import FaqReducer from '../features/Faq/slice';
 import InstituteReducer from '../features/institute/reducers/slices';
 import Branch from "../features/notification/redux/reduxSlice"
 import Notification from "../features/notification/redux/reduxSlice"
+import Institute from "../features/notification/redux/reduxSlice"
+import Subscription from "../features/subscription/redux/reduxSlice" 
 
 export const store = configureStore({
     reducer: {
@@ -20,6 +22,8 @@ export const store = configureStore({
         Notification,
         Branch,
         InstituteReducer: InstituteReducer,
+        Institute:Institute,
+        Subscription:Subscription,
     },
 });
 

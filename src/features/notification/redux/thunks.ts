@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { creatNotification, GetAllBranch, GetAllInstitute, GetAllNotification } from "../sevice";
 import { getBranch, getInstitute, getNotification } from "./reduxSlice";
 
@@ -40,7 +41,7 @@ export const GetAllBranchThunks = (params: { institute: any }) => async (dispatc
   }
 };
 
-export const CreatNotificationThunks = (params: { institute: any }) => async (dispatch: any) => {
+export const CreatNotificationThunks = (params: any) => async (dispatch: any) => {
   try {
     const response = await creatNotification(params);
     dispatch(getNotification(response));

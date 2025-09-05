@@ -29,10 +29,13 @@ class Client {
 			httpClient.get(API_END_POINTS.institute.get + params.id),
 		create: (data: any) =>
 			httpClient.post(API_END_POINTS.institute.create, data),
-		getCourseList: (data: { institute_id: string }, params: any) =>
+		update: (data: {
+			payload(arg0: string, payload: any): unknown; instituteId: any
+		}) => httpClient.put(API_END_POINTS.institute.update + data.instituteId, data.payload),
+		getCourseList: (params: any) =>
 			httpClient.get(
-				API_END_POINTS.institute.get + data.institute_id + '/courses',
-				params
+				API_END_POINTS.institute.get + params.institute_id + '/courses',
+
 			),
 		getCourseWithUserDetails: (data: { courseId: string }, params: any) =>
 			httpClient.get(

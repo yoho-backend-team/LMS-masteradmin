@@ -1,4 +1,6 @@
-import React, { useState, useEffect } from "react";
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import { useState, useEffect, type ChangeEvent } from "react";
+
 import { useLocation, useNavigate } from "react-router-dom";
 
 const SubscriptionEdit = () => {
@@ -6,7 +8,9 @@ const SubscriptionEdit = () => {
     const location = useLocation();
     const incomingPlan = location.state?.plan;
 
-    const [formData, setFormData] = useState({
+
+
+    const [formData, setFormData] = useState<any>({
         name: "Basic Plan - Free",
         description: "",
         price: 0,
@@ -33,14 +37,9 @@ const SubscriptionEdit = () => {
         imagePreview: null,
     });
 
-    const handleInputChange = (e) => {
-        const { name, value } = e.target;
-        setFormData((prev) => ({ ...prev, [name]: value }));
-    };
-
-    const handleFeatureChange = (e, key) => {
+    const handleInputChange = (e: any, key: any) => {
         const { value } = e.target;
-        setFormData((prev) => ({
+        setFormData((prev: any) => ({
             ...prev,
             features: {
                 ...prev.features,
@@ -49,8 +48,8 @@ const SubscriptionEdit = () => {
         }));
     };
 
-    const handleUnlimitedChange = (key) => {
-        setFormData((prev) => ({
+    const handleUnlimitedChange = (key: any) => {
+        setFormData((prev: any) => ({
             ...prev,
             unlimited: {
                 ...prev.unlimited,
@@ -63,10 +62,10 @@ const SubscriptionEdit = () => {
         }));
     };
 
-    const handleImageChange = (e) => {
+    const handleImageChange = (e: any) => {
         const file = e.target.files[0];
         if (file) {
-            setFormData((prev) => ({
+            setFormData((prev: any) => ({
                 ...prev,
                 image: file,
                 imagePreview: URL.createObjectURL(file),
@@ -75,14 +74,14 @@ const SubscriptionEdit = () => {
     };
 
     const handleImageReset = () => {
-        setFormData((prev) => ({
+        setFormData((prev: any) => ({
             ...prev,
             image: null,
             imagePreview: null,
         }));
     };
 
-    const handleSubmit = (e) => {
+    const handleSubmit = (e: any) => {
         e.preventDefault();
 
         const updatedFeatures = Object.entries(formData.features).map(([label, value]) => ({
@@ -102,10 +101,10 @@ const SubscriptionEdit = () => {
 
     useEffect(() => {
         if (incomingPlan) {
-            const initialFeatures = {};
-            const initialUnlimited = {};
+            const initialFeatures: any = {};
+            const initialUnlimited: any = {};
 
-            incomingPlan.features.forEach(({ label, value }) => {
+            incomingPlan.features.forEach((label: any, value: any) => {
                 initialFeatures[label] = value === "Unlimited" ? "" : value;
                 initialUnlimited[label] = value === "Unlimited";
             });
@@ -118,6 +117,12 @@ const SubscriptionEdit = () => {
             });
         }
     }, [incomingPlan]);
+    function handleFeatureChange(e: ChangeEvent<HTMLInputElement>, label: string): void {
+        e.preventDefault()
+        console.log(label)
+        throw new Error("Function not implemented.");
+    }
+
     return (
         <form
             onSubmit={handleSubmit}
@@ -148,7 +153,7 @@ const SubscriptionEdit = () => {
                                 Upload
                                 <input
                                     type="file"
-                                    accept="image/png, image/jpeg"
+                                    accept="image/png"
                                     onChange={handleImageChange}
                                     className="hidden"
                                 />
@@ -174,7 +179,7 @@ const SubscriptionEdit = () => {
                             type="number"
                             name="price"
                             value={formData.price}
-                            onChange={handleInputChange}
+                            onChange={(e) => handleInputChange(e, 'price')}
                             className="w-full border rounded p-2"
                         />
 
@@ -184,10 +189,10 @@ const SubscriptionEdit = () => {
                             </label>
                             <textarea
                                 name="description"
-                                rows="3"
+                                rows={3}
                                 placeholder="Enter plan description"
                                 value={formData.description}
-                                onChange={handleInputChange}
+                                onChange={(e) => handleInputChange(e, 'description')}
                                 className="w-full border rounded p-2"
                             />
                         </div>
@@ -196,7 +201,7 @@ const SubscriptionEdit = () => {
                         <input
                             name="duration"
                             value={formData.duration}
-                            onChange={handleInputChange}
+                            onChange={(e) => handleInputChange(e, 'duration')}
                             className="w-full border rounded p-2"
                         />
 
@@ -231,7 +236,7 @@ const SubscriptionEdit = () => {
                         <input
                             name="name"
                             value={formData.name}
-                            onChange={handleInputChange}
+                            onChange={(e) => handleInputChange(e, 'name')}
                             className="w-full border rounded p-2"
                         />
 
@@ -241,7 +246,7 @@ const SubscriptionEdit = () => {
                         <input
                             name="supportLevel"
                             value={formData.supportLevel}
-                            onChange={handleInputChange}
+                            onChange={(e) => handleInputChange(e, 'supportLevel')}
                             className="w-full border rounded p-2"
                         />
 
@@ -251,7 +256,7 @@ const SubscriptionEdit = () => {
                         <select
                             name="durationType"
                             value={formData.durationType}
-                            onChange={handleInputChange}
+                            onChange={(e) => handleInputChange(e, 'durationType')}
                             className="w-full border rounded p-2"
                         >
                             <option>Days</option>

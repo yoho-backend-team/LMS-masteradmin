@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 
 
 import React, { useState, useEffect } from "react";
@@ -65,8 +66,8 @@ const AddInstituteNotify: React.FC<props> = ({
     }
 
     const dataToSend = {
-      institute: selectedInstitute,
-      branch: selectedBranch,
+      institute_id: selectedInstitute,
+      branches: [selectedBranch],
       title,
       body,
       link,

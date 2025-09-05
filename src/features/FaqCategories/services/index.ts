@@ -1,17 +1,18 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import Client from "../../../api/index"
 export const getCategoriesData = async (params: any) => {
-    const response = await Client.faq_category.get(params)
-    if (response) {
-        return response;
-    }
+  const response = await Client.faq_category.get(params)
+  if (response) {
+    return response;
+  }
 };
-export const createCategoriesData = async (paramas:any) =>{
-    const response = await Client.faq_category.create(paramas)
-    if (response){
-        return response;
-    }
-} 
-export const updateCategoriesData = async (params: { uuid: string; is_active: boolean }) => {
+export const createCategoriesData = async (paramas: any) => {
+  const response = await Client.faq_category.create(paramas)
+  if (response) {
+    return response;
+  }
+}
+export const updateCategoriesData = async (params: any) => {
   try {
     const response = await Client.faq_category.update(params);
     console.log("Category updated:", response);

@@ -44,3 +44,38 @@ export const createInstitute = async (data: any) => {
 		console.error('Error:', error);
 	}
 };
+export const getCourseDetails = async ( params: any) => {
+	try {
+		const response = await Client.institute.getCourseList( params)
+		if (response) {
+			return response;
+		}
+	}
+	catch (error) {
+		console.log(error)
+	}
+}
+
+export const getActivitylogDetails = async (params: any) => {
+	try {
+		const response = await Client.activity.get(params)
+		if (response) {
+			return response
+		}
+	}
+	catch (error) {
+		console.log('error', error)
+	}
+}
+
+export const updateInstituteDetails = async (data:any)=>{
+	try{
+		const response = await Client.institute.update(data)
+		if(response){
+			return response
+		}
+	}
+	catch(error){
+		console.log(error,'error')
+	}
+}
