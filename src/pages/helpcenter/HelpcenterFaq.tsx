@@ -1,5 +1,6 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 
-import React, { useState } from 'react';
+import React, { useEffect, useState, type ChangeEvent } from 'react';
 import prfimg from '../../assets/profileimg.png';
 import backimg1 from '../../assets/image1.png';
 import backimg2 from '../../assets/image2.png';
@@ -7,10 +8,43 @@ import addimg from '../../assets/Add.png';
 import callimg from '../../assets/callicon.png';
 import smsimg from '../../assets/smsicon.png';
 import clsimg from '../../assets/clsimg.png';
+import { useDispatch, useSelector } from 'react-redux';
+import type { AppDispatch, RootState } from '@/store';
+import { CreatehelpCenterThunks, getAllHelpCenterThunks } from '@/features/helpCenter/redux/thunks';
+import toast from 'react-hot-toast';
+import { Card, CardContent } from '@/components/ui/card';
+import { FONTS } from '@/constants/ui constants';
+import { Button } from '@/components/ui/button';
 
 const HelpcenterFaq: React.FC = () => {
 
   const [showModal, setShowModal] = useState(false);
+  const dispatch = useDispatch<AppDispatch>()
+  const [FormData, setFormData] = useState({
+    title: "",
+    module: "",
+    description: "",
+  });
+
+  const helpcenters = useSelector((state: RootState) => state.helpcenter.getAll)
+
+  const handelInputChange = (field: string, e: ChangeEvent<HTMLInputElement>) => {
+    e.preventDefault()
+    setFormData({ ...FormData, [field]: e.target.value })
+  }
+
+  async function handleSubmit() {
+    const response: any = await dispatch(CreatehelpCenterThunks(FormData))
+    if (response?.status == "success") {
+      toast.success("created new help faq")
+    } else {
+      toast.error(response?.message)
+    }
+  }
+
+  useEffect(() => {
+    dispatch(getAllHelpCenterThunks())
+  }, [dispatch]);
 
   return (
     <div className="h-[300px] w-auto bg-white p-3 font-Montserrat text-[#999999] flex flex-col">
@@ -63,8 +97,6 @@ const HelpcenterFaq: React.FC = () => {
 
 
 
-      {/* Button */}
-
       <div className="flex justify-end mb-4">
         <button onClick={() => {
           setShowModal(true);
@@ -79,8 +111,6 @@ const HelpcenterFaq: React.FC = () => {
       </div>
 
 
-
-      {/* Add New ---> Start */}
       {
         showModal && (
 
@@ -105,8 +135,10 @@ const HelpcenterFaq: React.FC = () => {
                   </label>
                   <input
                     type="text"
-                    // value={title}
-                    // onChange={(e) => setTitle(e.target.value)}
+                    name='title'
+                    value={FormData.title}
+                    required={true}
+                    onChange={(e) => handelInputChange('title', e)}
                     className="w-full border rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-teal-500"
                   />
                 </div>
@@ -117,8 +149,9 @@ const HelpcenterFaq: React.FC = () => {
                   </label>
                   <input
                     type="text"
-                    // value={modules}
-                    // onChange={(e) => setModules(e.target.value)}
+                    value={FormData.module}
+                    required={true}
+                    onChange={(e) => handelInputChange('module', e)}
                     className="w-full border rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-teal-500"
                   />
                 </div>
@@ -129,8 +162,9 @@ const HelpcenterFaq: React.FC = () => {
                   </label>
                   <input
                     type="text"
-                    // value={description}
-                    // onChange={(e) => setDescription(e.target.value)}
+                    value={FormData.description}
+                    required={true}
+                    onChange={(e) => handelInputChange('description', e)}
                     className="w-full border rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-teal-500"
                   />
                 </div>
@@ -146,7 +180,7 @@ const HelpcenterFaq: React.FC = () => {
                   Cancel
                 </button>
                 <button
-                  // onClick={handleSubmit}
+                  onClick={handleSubmit}
                   className="bg-teal-500 text-white px-6 py-2 rounded-tl-2xl rounded-br-2xl hover:bg-teal-600"
                 >
                   Submit
@@ -155,17 +189,49 @@ const HelpcenterFaq: React.FC = () => {
             </div>
           </div>
         )}
-      {/* Add New ---> End */}
 
-      {/* Questions Section */}
       <div className="text-center">
-        <button className="bg-teal-700 text-white px-3 py-1 rounded-tl-xl rounded-br-xl mb-4 font-Montserrat">
-          Questions
-        </button>
-        <h2 className="text-md font-semibold text-gray-700 mb-1">You still have a questions?</h2>
-        <p className="text-gray-500 mb-4 mx-auto">
-          If you cannot find a question in our FAQ, you can always contact us. We will answer to you shortly!
-        </p>
+
+        <div className="p-2 space-y-4 h-[60vh] overflow-y-scroll">
+          <Card className="bg-[#2d6974] text-white shadow-md sticky -top-2">
+            <CardContent
+              className="grid grid-cols-5 gap-2 text-center"
+              style={{ ...FONTS.tableheader }}
+            >
+              <div className="text-center">Title</div>
+              <div className="text-center">Body</div>
+              <div className="text-center col-span-2">Institute</div>
+              <div className="text-center">Actions</div>
+            </CardContent>
+          </Card>
+
+          {helpcenters?.map((row: any) => (
+            <Card
+              key={row.id}
+              className="shadow-md hover:shadow-md transition-shadow duration-200"
+            >
+              <CardContent
+                className="grid grid-cols-5 gap-1 items-center text-center"
+                style={{ ...FONTS.description }}
+              >
+                <div className="text-center">{row.title}</div>
+                <div className="text-center">{row.module}</div>
+                <div className="text-center col-span-2">{row.description}</div>
+                <div className="text-center">
+                  <Button
+                    // onClick={() => handleResend(row)}
+                    className="bg-[#68B39F] text-white border-[#68B39F] hover:bg-[#2D6974] rounded-tl-2xl rounded-br-2xl rounded-bl-none rounded-tr-none px-4 py-6"
+                  >
+                    <span style={{ ...FONTS.button_text }}>Resend</span>
+                  </Button>
+                </div>
+              </CardContent>
+            </Card>
+          ))}
+        </div>
+
+
+
 
         {/* Contact Info */}
         <div className="flex flex-col md:flex-row justify-between items-center gap-10">

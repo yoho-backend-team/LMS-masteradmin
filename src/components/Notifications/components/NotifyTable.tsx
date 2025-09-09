@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { FONTS } from '@/constants/ui constants';
@@ -31,9 +32,9 @@ const NotifyTable: React.FC<props> = ({ setFormModalOpen }) => {
   const handleResend = async (notification: any) => {
     try {
       const queryParams = {
-        institute_id:notification?.instituteId?.uuid,
+        institute_id: notification?.instituteId?.uuid,
         notification_id: notification?.uuid,
-        branch_id:notification?.branch?.uuid
+        branch_id: notification?.branch?.uuid
       };
 
       const data = await ResendNotification(queryParams);
@@ -45,18 +46,18 @@ const NotifyTable: React.FC<props> = ({ setFormModalOpen }) => {
     }
   };
 
-  
+
   if (isLoading) {
     return (
       <div className="grid gap-2 w-full">
         <div className="flex justify-end">
-           <Button
-          onClick={() => setFormModalOpen(true)}
-          className="bg-[#68B39F] text-white border-[#68B39F] hover:bg-[#2D6974] rounded-tl-2xl rounded-br-2xl rounded-bl-none rounded-tr-none px-4 py-6"
-        >
-          <Plus className="w-6 h-6" />
-          <span style={{ ...FONTS.button_text }}>Add Institute</span>
-        </Button>
+          <Button
+            onClick={() => setFormModalOpen(true)}
+            className="bg-[#68B39F] text-white border-[#68B39F] hover:bg-[#2D6974] rounded-tl-2xl rounded-br-2xl rounded-bl-none rounded-tr-none px-4 py-6"
+          >
+            <Plus className="w-6 h-6" />
+            <span style={{ ...FONTS.button_text }}>Add Institute</span>
+          </Button>
         </div>
         <div className="p-2 space-y-4">
           <Card className=" text-white shadow-md">
@@ -72,7 +73,7 @@ const NotifyTable: React.FC<props> = ({ setFormModalOpen }) => {
             </CardContent>
           </Card>
 
-         
+
           {[1, 2, 3, 4, 5].map((_, index) => (
             <Card
               key={index}
@@ -82,19 +83,19 @@ const NotifyTable: React.FC<props> = ({ setFormModalOpen }) => {
                 className="grid grid-cols-5 gap-1 py-4 px-1 items-center text-center"
               >
                 <div className="px-2">
-                  <div className="h-4 bg-gray-200 rounded animate-pulse mx-auto" style={{width: '80%'}}></div>
+                  <div className="h-4 bg-gray-200 rounded animate-pulse mx-auto" style={{ width: '80%' }}></div>
                 </div>
                 <div className="px-2">
-                  <div className="h-4 bg-gray-200 rounded animate-pulse mx-auto" style={{width: '90%'}}></div>
+                  <div className="h-4 bg-gray-200 rounded animate-pulse mx-auto" style={{ width: '90%' }}></div>
                 </div>
                 <div className="px-2">
-                  <div className="h-4 bg-gray-200 rounded animate-pulse mx-auto" style={{width: '70%'}}></div>
+                  <div className="h-4 bg-gray-200 rounded animate-pulse mx-auto" style={{ width: '70%' }}></div>
                 </div>
                 <div className="px-2">
-                  <div className="h-4 bg-gray-200 rounded animate-pulse mx-auto" style={{width: '40%'}}></div>
+                  <div className="h-4 bg-gray-200 rounded animate-pulse mx-auto" style={{ width: '40%' }}></div>
                 </div>
                 <div className="px-2">
-                  <div className="h-10 bg-gray-200 rounded animate-pulse mx-auto" style={{width: '80%'}}></div>
+                  <div className="h-10 bg-gray-200 rounded animate-pulse mx-auto" style={{ width: '80%' }}></div>
                 </div>
               </CardContent>
             </Card>

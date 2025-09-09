@@ -96,23 +96,21 @@ const Subscription: React.FC = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    const fetchData = async () => {
-      setIsLoading(true);
+    (async () => {
+      // setIsLoading(true);
       try {
         await dispatch(GettingAllSubscriptionThunks() as any);
       } catch (error) {
         console.error("Error fetching subscription data:", error);
       } finally {
-        setIsLoading(false);
+        // setIsLoading(false);
       }
-    };
+    })()
 
-    fetchData();
   }, [dispatch]);
 
   useEffect(() => {
-    if (output.length > 0) {
-
+    if (output?.length > 0) {
       setPlans(output);
     }
   }, [output]);
@@ -262,7 +260,7 @@ const Subscription: React.FC = () => {
 
 export default Subscription;
 
-function setIsLoading(arg0: boolean) {
-  console.log(arg0)
-  throw new Error("Function not implemented.");
-}
+// function setIsLoading(arg0: boolean) {
+//   console.log(arg0)
+//   throw new Error("Function not implemented.");
+// }

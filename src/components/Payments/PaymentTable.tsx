@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { Eye } from "lucide-react";
 import { Card, CardContent } from "../../components/ui/card";
 import { FONTS } from "@/constants/ui constants";
@@ -14,18 +15,17 @@ export default function PaymentsTable() {
 
   const [page, setPage] = useState(1);
 
-  const fetchAllPayments = async (currentPage: number) => {
-    try {
-      isLoading(true);
-      await dispatch(getPaymentThunks({ page: currentPage }));
-      isLoading(false);
-    } catch (error) {
-      console.log("Error fetching payments data:", error);
-    }
-  };
 
   useEffect(() => {
-    fetchAllPayments(page);
+    (async (currentPage: number) => {
+      try {
+        isLoading(true);
+        await dispatch(getPaymentThunks({ page: currentPage }));
+        isLoading(false);
+      } catch (error) {
+        console.log("Error fetching payments data:", error);
+      }
+    })(page)
   }, [dispatch, page]);
 
   const getAmountPaid = (paymentHistory: any) => {
@@ -94,7 +94,6 @@ export default function PaymentsTable() {
         </>
       )}
 
-      {/* Data Rows */}
       {loading ? (
         <>
           <SkeletonRow />
