@@ -35,12 +35,12 @@ interface FormData {
 	officialWebsite: string;
 	subscription: string;
 	// Gallery Info
-	instituteLogo: File | string;
+	instituteLogo: any;
 	logoDescription: string;
-	instituteImage: File | string;
+	instituteImage: any;
 	imageDescription: string;
-	instituteLogoSecond: File | string;
-	galleryImages: File[] | string[];
+	instituteLogoSecond: any;
+	galleryImages: any;
 	// Social Links
 	twitter: string;
 	facebook: string;
@@ -51,9 +51,9 @@ interface FormData {
 	gstNumber: string;
 	panNumber: string;
 	licenseNumber: string;
-	gstFile: File | string;
-	panFile: File | string;
-	licenseFile: File | string;
+	gstFile: any;
+	panFile: any;
+	licenseFile: any;
 	// Account Details
 	branchName: string;
 	branch_phone: string;
@@ -68,7 +68,7 @@ interface FormData {
 	lastName: string;
 	email: string;
 	branch_phonenumber: string;
-	profileImage: File | string;
+	profileImage: any;
 }
 
 const FileUploadBox = ({

@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import React, { useEffect, useState } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -115,18 +116,17 @@ const Institutes: React.FC = () => {
   const dispatch = useDispatch<any>();
   const instituteData = useSelector(selectInstitutes);
 
-  const fetchAllInstitutes = async () => {
-    try {
-      await dispatch(getInstitutesData());
-    } catch (error) {
-      console.error('Error fetching institutes:', error);
-    } finally {
-      setIsLoading(false);
-    }
-  };
 
   useEffect(() => {
-    fetchAllInstitutes();
+    (async () => {
+      try {
+        await dispatch(getInstitutesData());
+      } catch (error) {
+        console.error('Error fetching institutes:', error);
+      } finally {
+        setIsLoading(false);
+      }
+    })()
   }, [dispatch]);
 
   // Filter institutes based on selected filters
@@ -149,7 +149,7 @@ const Institutes: React.FC = () => {
 
     if (selectedDate) {
       const now = new Date();
-      let dateFilter = new Date();
+      const dateFilter = new Date();
 
       switch (selectedDate) {
         case "lastWeek":
@@ -175,7 +175,7 @@ const Institutes: React.FC = () => {
 
   const [filteredInstitutes, setFilteredInstitutes] = useState<Institute[]>([]);
 
-  const [kpiData, setKpiData] = useState([
+  const [kpiData,] = useState([
     {
       title: 'Total Institute',
       value: '0',
@@ -209,42 +209,42 @@ const Institutes: React.FC = () => {
   ]);
 
 
-  useEffect(() => {
-    if (!instituteData) return;
+  // useEffect(() => {
+  //   if (!instituteData) return;
 
-    const total = instituteData?.length;
-    const filteredTotal = filteredInstitutes?.length;
-    const filteredActive = filteredInstitutes?.filter(
-      (i) => i.institute_active_status === 'Active'
-    ).length;
-    const filteredBlocked = filteredInstitutes.filter(
-      (i) => i.institute_active_status === 'Blocked'
-    ).length;
+  //   const total = instituteData?.length;
+  //   const filteredTotal = filteredInstitutes?.length;
+  //   const filteredActive = filteredInstitutes?.filter(
+  //     (i) => i.institute_active_status === 'Active'
+  //   ).length;
+  //   const filteredBlocked = filteredInstitutes.filter(
+  //     (i) => i.institute_active_status === 'Blocked'
+  //   ).length;
 
-    // setKpiData([
-    //   {
-    //     ...kpiData[0],
-    //     value: `${total}`,
-    //     percentage: total > 0 ? Math.round((filteredTotal / total) * 100) : 0,
-    //   },
-    //   {
-    //     ...kpiData[1],
-    //     value: `${filteredActive}`,
-    //     percentage:
-    //       filteredTotal > 0
-    //         ? Math.round((filteredActive / filteredTotal) * 100)
-    //         : 0,
-    //   },
-    //   {
-    //     ...kpiData[2],
-    //     value: `${filteredBlocked}`,
-    //     percentage:
-    //       filteredTotal > 0
-    //         ? Math.round((filteredBlocked / filteredTotal) * 100)
-    //         : 0,
-    //   },
-    // ]);
-  }, [filteredInstitutes, instituteData]);
+  //   // setKpiData([
+  //   //   {
+  //   //     ...kpiData[0],
+  //   //     value: `${total}`,
+  //   //     percentage: total > 0 ? Math.round((filteredTotal / total) * 100) : 0,
+  //   //   },
+  //   //   {
+  //   //     ...kpiData[1],
+  //   //     value: `${filteredActive}`,
+  //   //     percentage:
+  //   //       filteredTotal > 0
+  //   //         ? Math.round((filteredActive / filteredTotal) * 100)
+  //   //         : 0,
+  //   //   },
+  //   //   {
+  //   //     ...kpiData[2],
+  //   //     value: `${filteredBlocked}`,
+  //   //     percentage:
+  //   //       filteredTotal > 0
+  //   //         ? Math.round((filteredBlocked / filteredTotal) * 100)
+  //   //         : 0,
+  //   //   },
+  //   // ]);
+  // }, [filteredInstitutes, instituteData]);
 
   // Update institute plan
   const updateInstitutePlan = (id: number, newPlan: string) => {
@@ -272,7 +272,7 @@ const Institutes: React.FC = () => {
   };
 
   const getLocationString = (institute: Institute) => {
-    const { city, state, country } = institute?.contact_info?.address;
+    const { city, state, country } = institute.contact_info.address;
     return [city, state, country].filter(Boolean).join(', ');
   };
 

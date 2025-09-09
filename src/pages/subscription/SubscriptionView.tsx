@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 
 import { useNavigate, useLocation } from "react-router-dom";
 
