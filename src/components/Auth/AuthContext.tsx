@@ -31,7 +31,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 	}, []);
 
 	const login = (data: string) => {
-		StoreLocalStorage('AdminToken', data);
+		StoreLocalStorage("pt_t_ah", data)
 		setIsAuthenticated(true);
 	};
 

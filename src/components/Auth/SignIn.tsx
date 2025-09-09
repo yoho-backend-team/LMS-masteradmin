@@ -32,7 +32,6 @@ const SignIn = () => {
 
       if (token) {
         login(token)
-        localStorage.setItem("token", token);
         localStorage.setItem("isAuthenticated", "true");
 
         navigate("/");
