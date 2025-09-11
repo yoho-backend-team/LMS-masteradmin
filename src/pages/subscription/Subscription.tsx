@@ -79,7 +79,7 @@ const Subscription: React.FC = () => {
   };
 
   useEffect(() => {
-    console.log("subscription data:", subscriptionData);
+    // console.log("subscription data:", subscriptionData);
   }, [subscriptionData]);
 
   return (
@@ -99,12 +99,13 @@ const Subscription: React.FC = () => {
         </button>
       </div>
 
-      <div className="grid gap-6  sm:grid-cols-2 lg:grid-cols-3">
+      <div className="grid gap-6  sm:grid-cols-2 lg:grid-cols-3 ">
         {plans.map((plan, index) => (
           <div
             key={index}
-            className="bg-white rounded-xl border shadow-sm
-             overflow-hidden border-gray-200 flex flex-col relative hover:bg-[]"
+            className="group bg-white rounded-xl border shadow-sm
+  overflow-hidden border-gray-200 flex flex-col relative 
+  hover:bg-[#68B39F] hover:text-white transition-colors duration-300"
           >
             <div className="p-4 flex flex-col flex-grow">
               <img
@@ -113,27 +114,29 @@ const Subscription: React.FC = () => {
                 className="h-40 w-full object-cover rounded-md mb-3"
               />
 
-              <h3 className="text-lg font-semibold text-gray-800">
+              <h3 className="text-lg font-semibold text-gray-800 group-hover:text-white">
                 {plan.identity ? plan.identity : "no data"}
               </h3>
-              <p className="text-sm text-gray-500">
+              <p className="text-sm text-gray-500 group-hover:text-white">
                 {plan.description ? plan.description : "no data"}
               </p>
 
-              <div className="mt-2 text-[#1D3A4E] font-bold text-xl flex justify-center items-center">
+              <div className="mt-2 font-bold text-xl flex justify-center items-center text-[#1D3A4E] group-hover:text-white">
                 ₹{plan?.price || "0"}
-                <span className="text-gray-500 font-normal text-base">
+                <span className="font-normal text-base text-gray-500 group-hover:text-white">
                   /{plan?.duration?.unit || "month"}
                 </span>
               </div>
 
-              <div className="mt-4 border p-3 rounded-md">
-                <h4 className="text-sm font-semibold text-gray-700 mb-2">FEATURES</h4>
+              <div className="mt-4 border p-3 rounded-md group-hover:border-white">
+                <h4 className="text-sm font-semibold text-gray-700 mb-2 group-hover:text-white">
+                  FEATURES
+                </h4>
                 <ul className="space-y-1">
                   {(plan?.features || []).map((f, idx) => (
                     <li
                       key={idx}
-                      className="flex items-center text-sm text-gray-600"
+                      className="flex items-center text-sm text-gray-600 group-hover:text-white"
                     >
                       <span className="flex items-center justify-center w-3 h-3 rounded-full bg-[#68B39F] text-white mr-2">
                         <Check size={12} strokeWidth={3} />
@@ -149,35 +152,32 @@ const Subscription: React.FC = () => {
               <div className="flex items-center justify-between mt-4 relative">
                 <button
                   onClick={() => toggleActive(index)}
-                  className={`px-4 py-2 rounded-tl-xl rounded-br-xl text-sm font-medium transition-colors ${activeStates[index]
-                    ? "bg-[#68B39F] text-white"
-                    : "bg-gray-300 text-gray-700"
-                    }`}
+                  className="px-4 py-2 rounded-tl-xl rounded-br-xl text-sm font-medium transition-colors bg-[#68B39F] text-white group-hover:bg-white group-hover:text-[#68B39F]"
                 >
                   {activeStates[index] ? "Active" : "Inactive"}
                 </button>
-
                 <div className="relative">
                   <MoreVertical
-                    className="cursor-pointer bg-[#68B39F] text-white px-2 py-2 rounded-tl-xl rounded-br-xl"
+                    className="cursor-pointer bg-[#68B39F] text-white px-2 py-2 rounded-tl-xl rounded-br-xl group-hover:bg-white group-hover:text-[#68B39F]"
                     onClick={() => toggleActions(index)}
+                    size={45}
                   />
-
                   {showActionsIndex === index && (
                     <div className="absolute bottom-full mb-2 right-0 bg-white border rounded-md shadow-md flex flex-col text-sm z-10">
                       <button
-                        className="px-4 py-2 hover:bg-gray-100 text-left"
-                        onClick={() => navigate("/subscription-view", { state: { plan } })}                      >
+                        className="px-4 py-2 hover:bg-gray-100 text-left group-hover:text-[#68B39F]"
+                        onClick={() => navigate("/subscription-view", { state: { plan } })}
+                      >
                         View
                       </button>
                       <button
-                        className="px-4 py-2 hover:bg-gray-100 text-left"
-                        onClick={() => navigate("/subscription-Edit",{ state: { plan } })}
+                        className="px-4 py-2 hover:bg-gray-100 text-left group-hover:text-[#68B39F]"
+                        onClick={() => navigate("/subscription-Edit", { state: { plan } })}
                       >
                         Edit
                       </button>
                       <button
-                        className="px-4 py-2 hover:bg-gray-100 text-left text-red-500"
+                        className="px-4 py-2 hover:bg-gray-100 text-left text-red-500 group-hover:text-red-300"
                         onClick={() => setDeleteIndex(index)}
                       >
                         Delete
@@ -187,7 +187,9 @@ const Subscription: React.FC = () => {
                 </div>
               </div>
             </div>
+
           </div>
+
         ))}
       </div>
 
