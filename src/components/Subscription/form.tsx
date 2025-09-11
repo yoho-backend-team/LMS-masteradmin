@@ -114,15 +114,15 @@ const SubscriptionPlanForm: React.FC<SubscriptionPlanFormProps> = ({ onClose }) 
   };
 
   const getFieldError = (fieldName: keyof typeof formik.values) => {
-    return formik.touched[fieldName] && formik.errors[fieldName] 
-      ? formik.errors[fieldName] 
+    return formik.touched[fieldName] && formik.errors[fieldName]
+      ? formik.errors[fieldName]
       : null;
   };
 
   return (
     <div className="w-full max-w-7xl mx-auto">
       <DialogHeader className="border-b pb-4 mb-6">
-        <DialogTitle style={{...FONTS.bold_heading}}>
+        <DialogTitle style={{ ...FONTS.bold_heading }}>
           Subscription Plan
         </DialogTitle>
       </DialogHeader>
@@ -130,10 +130,10 @@ const SubscriptionPlanForm: React.FC<SubscriptionPlanFormProps> = ({ onClose }) 
       <form onSubmit={formik.handleSubmit} className="space-y-6">
         {/* Header Section */}
         <div className="bg-gray-50 p-4 rounded-lg">
-          <h3 className=" !text-[#2D6974] mb-4"style={{...FONTS.tableheader}}>
+          <h3 className=" !text-[#2D6974] mb-4" style={{ ...FONTS.tableheader }}>
             Enter your Address Information Here
           </h3>
-          
+
           {/* Profile Picture Upload */}
           <div className="flex items-center gap-4">
             <div className="relative">
@@ -156,8 +156,8 @@ const SubscriptionPlanForm: React.FC<SubscriptionPlanFormProps> = ({ onClose }) 
               />
             </div>
             <div>
-              <p className=" !text-[#242731]"style={{...FONTS.tableheader}}>Upload Profile Picture</p>
-              <p className="!text-[#242731] opacity-40"style={{...FONTS.text3}}>PNG or JPEG (Max 800K)</p>
+              <p className=" !text-[#242731]" style={{ ...FONTS.tableheader }}>Upload Profile Picture</p>
+              <p className="!text-[#242731] opacity-40" style={{ ...FONTS.text3 }}>PNG or JPEG (Max 800K)</p>
             </div>
           </div>
         </div>
@@ -166,7 +166,7 @@ const SubscriptionPlanForm: React.FC<SubscriptionPlanFormProps> = ({ onClose }) 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           {/* Plan */}
           <div className="space-y-2">
-            <label className=" !text-[#242731]"style={{...FONTS.text5}}>Plan</label>
+            <label className=" !text-[#242731]" style={{ ...FONTS.text5 }}>Plan</label>
             <Input
               name="plan"
               placeholder=""
@@ -182,7 +182,7 @@ const SubscriptionPlanForm: React.FC<SubscriptionPlanFormProps> = ({ onClose }) 
 
           {/* Plan Price */}
           <div className="space-y-2">
-            <label className=" !text-[#242731]"style={{...FONTS.text5}}>Plan Price</label>
+            <label className=" !text-[#242731]" style={{ ...FONTS.text5 }}>Plan Price</label>
             <Input
               name="planPrice"
               placeholder=""
@@ -198,38 +198,36 @@ const SubscriptionPlanForm: React.FC<SubscriptionPlanFormProps> = ({ onClose }) 
 
           {/* Support Level */}
           <div className="space-y-2">
-            <label className="!text-[#242731]"style={{...FONTS.text5}}>Support Level</label>
-           <Select
-  value={formik.values.supportLevel}
-  onValueChange={(value) => formik.setFieldValue('supportLevel', value)}
->
-  <SelectTrigger className="border-gray-300 rounded-md">
-    <SelectValue placeholder="Select support level" />
-  </SelectTrigger>
-  <SelectContent>
-    <SelectItem
-      value="basic"
-      className={` rounded-tl-xl rounded-br-xl rounded-tr-none rounded-bl-none px-4 py-2 border ${
-        formik.values.supportLevel === "basic"
-          ? "bg-[#68b39f] text-white border-transparent font-semibold"
-                  : "bg-white text-gray-500 border-gray-300 hover:bg-[#68b39f] hover:text-white hover:border-transparent"
-      }`}
-    >
-      Basic
-    </SelectItem>
+            <label className="!text-[#242731]" style={{ ...FONTS.text5 }}>Support Level</label>
+            <Select
+              value={formik.values.supportLevel}
+              onValueChange={(value) => formik.setFieldValue('supportLevel', value)}
+            >
+              <SelectTrigger className="border-gray-300 rounded-md">
+                <SelectValue placeholder="Select support level" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem
+                  value="basic"
+                  className={` rounded-tl-xl rounded-br-xl rounded-tr-none rounded-bl-none px-4 py-2 border ${formik.values.supportLevel === "basic"
+                      ? "bg-[#68b39f] text-white border-transparent font-semibold"
+                      : "bg-white text-gray-500 border-gray-300 hover:bg-[#68b39f] hover:text-white hover:border-transparent"
+                    }`}
+                >
+                  Basic
+                </SelectItem>
 
-    <SelectItem
-      value="premium"
-      className={` rounded-tl-xl rounded-br-xl rounded-tr-none rounded-bl-none px-4 mt-2 py-2 border ${
-        formik.values.supportLevel === "premium"
-          ?"bg-[#68b39f] text-white border-transparent font-semibold"
-                  : "bg-white text-gray-500 border-gray-300 hover:bg-[#68b39f] hover:text-white hover:border-transparent"
-      }`}
-    >
-      Premium
-    </SelectItem>
-  </SelectContent>
-</Select>
+                <SelectItem
+                  value="premium"
+                  className={` rounded-tl-xl rounded-br-xl rounded-tr-none rounded-bl-none px-4 mt-2 py-2 border ${formik.values.supportLevel === "premium"
+                      ? "bg-[#68b39f] text-white border-transparent font-semibold"
+                      : "bg-white text-gray-500 border-gray-300 hover:bg-[#68b39f] hover:text-white hover:border-transparent"
+                    }`}
+                >
+                  Premium
+                </SelectItem>
+              </SelectContent>
+            </Select>
 
             {getFieldError('supportLevel') && (
               <p className="text-sm text-red-500">{getFieldError('supportLevel')}</p>
@@ -239,7 +237,7 @@ const SubscriptionPlanForm: React.FC<SubscriptionPlanFormProps> = ({ onClose }) 
 
         {/* Plan Description */}
         <div className="space-y-2">
-          <label className="!text-[#242731]"style={{...FONTS.text5}}>Plan Description</label>
+          <label className="!text-[#242731]" style={{ ...FONTS.text5 }}>Plan Description</label>
           <Textarea
             name="planDescription"
             placeholder="Enter plan description..."
@@ -256,7 +254,7 @@ const SubscriptionPlanForm: React.FC<SubscriptionPlanFormProps> = ({ onClose }) 
         {/* Duration and Duration Type */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div className="space-y-2">
-            <label className="!text-[#242731]"style={{...FONTS.text5}}>Duration</label>
+            <label className="!text-[#242731]" style={{ ...FONTS.text5 }}>Duration</label>
             <Input
               name="duration"
               placeholder=""
@@ -271,30 +269,29 @@ const SubscriptionPlanForm: React.FC<SubscriptionPlanFormProps> = ({ onClose }) 
           </div>
 
           <div className="space-y-2">
-            <label className="!text-[#242731]"style={{...FONTS.text5}}>Duration Type</label>
-           <Select
-  value={formik.values.durationType}
-  onValueChange={(value) => formik.setFieldValue('durationType', value)}
->
-  <SelectTrigger className="border-gray-300 rounded-md">
-    <SelectValue placeholder="Select duration type" />
-  </SelectTrigger>
-  <SelectContent>
-    {["days", "weeks", "months", "years"].map((option) => (
-      <SelectItem
-        key={option}
-        value={option}
-        className={`rounded-tl-xl rounded-br-xl rounded-tr-none rounded-bl-none px-4 mt-2 py-2 border text-center ${
-          formik.values.durationType === option
-           ?"bg-[#68b39f] text-white border-transparent font-semibold"
-                  : "bg-white text-gray-500 border-gray-300 hover:bg-[#68b39f] hover:text-white hover:border-transparent"
-        }`}
-      >
-        {option.charAt(0).toUpperCase() + option.slice(1)}
-      </SelectItem>
-    ))}
-  </SelectContent>
-</Select>
+            <label className="!text-[#242731]" style={{ ...FONTS.text5 }}>Duration Type</label>
+            <Select
+              value={formik.values.durationType}
+              onValueChange={(value) => formik.setFieldValue('durationType', value)}
+            >
+              <SelectTrigger className="border-gray-300 rounded-md">
+                <SelectValue placeholder="Select duration type" />
+              </SelectTrigger>
+              <SelectContent>
+                {["days", "weeks", "months", "years"].map((option) => (
+                  <SelectItem
+                    key={option}
+                    value={option}
+                    className={`rounded-tl-xl rounded-br-xl rounded-tr-none rounded-bl-none px-4 mt-2 py-2 border text-center ${formik.values.durationType === option
+                        ? "bg-[#68b39f] text-white border-transparent font-semibold"
+                        : "bg-white text-gray-500 border-gray-300 hover:bg-[#68b39f] hover:text-white hover:border-transparent"
+                      }`}
+                  >
+                    {option.charAt(0).toUpperCase() + option.slice(1)}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
 
             {getFieldError('durationType') && (
               <p className="text-sm text-red-500">{getFieldError('durationType')}</p>
@@ -307,7 +304,7 @@ const SubscriptionPlanForm: React.FC<SubscriptionPlanFormProps> = ({ onClose }) 
           {/* Students */}
           <div className="space-y-2">
             <div className="space-y-2">
-              <label className=" !text-[#242731]"style={{...FONTS.text5}}>Number of Students</label>
+              <label className=" !text-[#242731]" style={{ ...FONTS.text5 }}>Number of Students</label>
               <Input
                 name="numberOfStudents"
                 placeholder=""
@@ -341,7 +338,7 @@ const SubscriptionPlanForm: React.FC<SubscriptionPlanFormProps> = ({ onClose }) 
           {/* Admins */}
           <div className="space-y-2">
             <div className="space-y-2">
-              <label className=" !text-[#242731]"style={{...FONTS.text5}}>Number of Admins</label>
+              <label className=" !text-[#242731]" style={{ ...FONTS.text5 }}>Number of Admins</label>
               <Input
                 name="numberOfAdmins"
                 placeholder=""
@@ -375,7 +372,7 @@ const SubscriptionPlanForm: React.FC<SubscriptionPlanFormProps> = ({ onClose }) 
           {/* Teachers */}
           <div className="space-y-2">
             <div className="space-y-2">
-              <label className=" !text-[#242731]"style={{...FONTS.text5}}>Number of Teachers</label>
+              <label className=" !text-[#242731]" style={{ ...FONTS.text5 }}>Number of Teachers</label>
               <Input
                 name="numberOfTeachers"
                 placeholder=""
@@ -409,7 +406,7 @@ const SubscriptionPlanForm: React.FC<SubscriptionPlanFormProps> = ({ onClose }) 
           {/* Batches */}
           <div className="space-y-2">
             <div className="space-y-2">
-              <label className="!text-[#242731]"style={{...FONTS.text5}}>Number of Batches</label>
+              <label className="!text-[#242731]" style={{ ...FONTS.text5 }}>Number of Batches</label>
               <Input
                 name="numberOfBatches"
                 placeholder=""
@@ -443,7 +440,7 @@ const SubscriptionPlanForm: React.FC<SubscriptionPlanFormProps> = ({ onClose }) 
           {/* Courses */}
           <div className="space-y-2">
             <div className="space-y-2">
-              <label className=" !text-[#242731]"style={{...FONTS.text5}}>Number of Courses</label>
+              <label className=" !text-[#242731]" style={{ ...FONTS.text5 }}>Number of Courses</label>
               <Input
                 name="numberOfCourses"
                 placeholder=""
@@ -477,7 +474,7 @@ const SubscriptionPlanForm: React.FC<SubscriptionPlanFormProps> = ({ onClose }) 
           {/* Classes */}
           <div className="space-y-2">
             <div className="space-y-2">
-              <label className="!text-[#242731]"style={{...FONTS.text5}}>Number of Classes</label>
+              <label className="!text-[#242731]" style={{ ...FONTS.text5 }}>Number of Classes</label>
               <Input
                 name="numberOfClasses"
                 placeholder=""
@@ -510,7 +507,7 @@ const SubscriptionPlanForm: React.FC<SubscriptionPlanFormProps> = ({ onClose }) 
         </div>
 
         {/* Form Actions */}
-        <div className="flex justify-between px-4 py-2"style={{...FONTS.button}}>
+        <div className="flex justify-between px-4 py-2" style={{ ...FONTS.button }}>
           <Button
             type="button"
             variant="outline"
@@ -521,7 +518,7 @@ const SubscriptionPlanForm: React.FC<SubscriptionPlanFormProps> = ({ onClose }) 
           </Button>
           <Button
             type="submit"
-            className="bg-[#6bc1a3] px-4 py-2 rounded-tl-xl rounded-br-xl rounded-tr-none rounded-bl-none hover:bg-[#57ab90]"style={{...FONTS.button}}
+            className="bg-[#6bc1a3] px-4 py-2 rounded-tl-xl rounded-br-xl rounded-tr-none rounded-bl-none hover:bg-[#57ab90]" style={{ ...FONTS.button }}
             disabled={formik.isSubmitting}
           >
             Submit

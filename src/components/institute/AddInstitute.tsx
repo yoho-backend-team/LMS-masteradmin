@@ -399,6 +399,7 @@ const StepperForm: React.FC = () => {
 						fileData.append('file', file);
 						try {
 							const response: any = await UploadImage(fileData);
+							console.log(response, "upload ress")
 							handleInputChange(field, response?.data?.data?.file);
 							if (response) {
 								toast.success(`File uploaded successfully for ${field}`);
@@ -972,7 +973,7 @@ const StepperForm: React.FC = () => {
 								{formData.gstFile && (
 									<div className='absolute right-15 bottom-22'>
 										<p style={{ ...FONTS.small_text }}>
-											{formData.gstFile.name.substring(0, 20)}
+											{formData.gstFile?.includes("staticfiles/lms") ? 'file uploaded success' : 'upload failed try again..'}
 										</p>
 									</div>
 								)}
@@ -1016,7 +1017,7 @@ const StepperForm: React.FC = () => {
 								{formData.panFile && (
 									<div className='absolute right-15 bottom-22'>
 										<p style={{ ...FONTS.small_text }}>
-											{formData.panFile.name.substring(0, 20)}
+											{formData.panFile?.includes("staticfiles/lms") ? 'file uploaded success' : 'upload failed try again..'}
 										</p>
 									</div>
 								)}
@@ -1052,9 +1053,7 @@ const StepperForm: React.FC = () => {
 												onChange={handleFileUpload('licenseFile')}
 											/>
 											<span style={{ ...FONTS.text4, color: COLORS.button }}>
-												{formData.licenseFile
-													? formData.licenseFile.name
-													: 'License Document'}
+												License Document
 											</span>
 										</label>
 									</div>
@@ -1062,7 +1061,7 @@ const StepperForm: React.FC = () => {
 								{formData.licenseFile && (
 									<div className='absolute right-15 bottom-22'>
 										<p style={{ ...FONTS.small_text }}>
-											{formData.licenseFile.name.substring(0, 20)}
+											{formData.licenseFile?.includes("staticfiles/lms") ? 'file uploaded success' : 'upload failed try again..'}
 										</p>
 									</div>
 								)}
