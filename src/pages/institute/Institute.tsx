@@ -115,7 +115,12 @@ const Institutes: React.FC = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch<any>();
   const instituteData = useSelector(selectInstitutes);
+  console.log(instituteData,"institute data")
+  const activeCount = instituteData.filter((item: any) => item.Institute_Status === "active").length;
+  const inactiveCount = instituteData.filter((item: any) => item.Institute_Status === "inactive").length;
 
+  console.log("Active:", activeCount);
+  console.log("Inactive:", inactiveCount);
 
   useEffect(() => {
     (async () => {
@@ -178,17 +183,17 @@ const Institutes: React.FC = () => {
   const [kpiData,] = useState([
     {
       title: 'Total Institute',
-      value: '0',
+      value: instituteData.length,
       percentage: 0,
       icon: Zap,
       bgColor: 'bg-teal-600',
       iconBg: 'bg-teal-100',
-      iconColor: 'text-teal-600',
+      iconColor: 'text-purple-500',
       progressColor: '#14b8a6',
     },
     {
       title: 'Active Institute',
-      value: '0',
+      value: activeCount,
       percentage: 0,
       icon: Component,
       bgColor: 'bg-white',
@@ -198,7 +203,7 @@ const Institutes: React.FC = () => {
     },
     {
       title: 'Blocked Institute',
-      value: '0',
+      value: inactiveCount || 0,
       percentage: 0,
       icon: Droplet,
       bgColor: 'bg-white',
@@ -452,7 +457,7 @@ const Institutes: React.FC = () => {
                       shadow-lg transition-all duration-300 cursor-pointer border-0
                       rounded-tl-3xl rounded-br-3xl rounded-bl-none rounded-tr-none
                       ${hoveredCard === index
-                        ? 'bg-[#2D6974] text-white hover:scale-90'
+                        ? 'bg-[#2D6974] text-gray-900 hover:scale-90'
                         : 'bg-white text-gray-900 hover:scale-100'
                       }
                     `}
@@ -480,7 +485,7 @@ const Institutes: React.FC = () => {
                         <h3
                           className={`
                             text-sm font-medium leading-tight
-                            ${isHovered || index === 0
+                            ${isHovered
                               ? 'text-white'
                               : 'text-[#242731]'
                             }

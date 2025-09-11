@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import Client from "../../../api/index"
 
 
@@ -17,3 +16,12 @@ export const CreatSubscription = async (params?: any) => {
     return response;
   }
 };
+
+export const EditSubscription = async (params?: any) => {
+  const response = await Client.subscription.update(params);
+  console.log("Eidted subscription Successfully", response);
+  if (response) {
+    return response;
+  }
+};
+

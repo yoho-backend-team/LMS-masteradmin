@@ -60,6 +60,8 @@ class Client {
 			httpClient.get(API_END_POINTS.subscription.getWithId + params?.institute),
 		approve: (data: any) =>
 			httpClient.post(API_END_POINTS.subscription.approve, data),
+		update: (data: any) =>
+			httpClient.put(API_END_POINTS.subscription.create+ data?._id, data)
 	};
 	notification = {
 		create: (data: any) =>

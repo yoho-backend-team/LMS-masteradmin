@@ -122,6 +122,12 @@ const AddSubscription: React.FC<AddSubscriptionProps> = ({ onSubmit }) => {
 
   return (
     <div className="bg-white rounded-xl shadow p-6">
+       <button
+                onClick={() => navigate(-1)}
+                className="px-4 py-2 rounded-tl-xl mb-3 rounded-br-xl border border-[#68B39F] text-[#68B39F] hover:bg-[#68B39F] hover:text-white transition"
+            >
+                ← Back
+            </button>
       <h2 className="text-teal-700 text-lg font-semibold mb-6">
         Enter your Address Information Here
       </h2>
