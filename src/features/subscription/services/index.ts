@@ -3,7 +3,6 @@ import Client from "../../../api/index"
 
 export const GetAllSubscription = async () => {
   const response = await Client.subscription.get_all();
-  console.log("Getting all subscription", response);
   if (response) {
     return response;
   }
