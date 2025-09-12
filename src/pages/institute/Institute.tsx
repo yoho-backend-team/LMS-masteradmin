@@ -564,18 +564,18 @@ const Institutes: React.FC = () => {
 
                           <div className='flex justify-between gap-3'>
                             {/* Plan Dropdown */}
-                            <DropdownMenu>
-                              <DropdownMenuTrigger asChild>
+                            {/* <DropdownMenu> */}
+                              <div>
                                 <Button
                                   variant='outline'
                                   className='!text-[#2D6974] border-[#2D6974] px-4 flex items-center gap-2'
                                   style={{ ...FONTS.pass_head_2 }}
                                 >
                                   {institute?.subscription?.identity || 'No Plan'}
-                                  <ChevronDown className='w-4 h-4' />
+                                  {/* <ChevronDown className='w-4 h-4' /> */}
                                 </Button>
-                              </DropdownMenuTrigger>
-                              <DropdownMenuContent>
+                              </div>
+                              {/* <DropdownMenuContent>
                                 {subscriptionPlans.map((plan) => (
                                   <DropdownMenuItem
                                     key={plan}
@@ -586,8 +586,8 @@ const Institutes: React.FC = () => {
                                     {plan}
                                   </DropdownMenuItem>
                                 ))}
-                              </DropdownMenuContent>
-                            </DropdownMenu>
+                              </DropdownMenuContent> */}
+                            {/* </DropdownMenu> */}
 
                             <div className='flex gap-2'>
                               {/* Status Dropdown */}
