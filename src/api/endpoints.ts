@@ -4,7 +4,7 @@ export const API_END_POINTS = {
 		create: '/api/lms/platform/',
 		get: '/api/lms/platform/',
 		courseWithUserDeatils: '/api/lms/platform/course/',
-		update:'/api/lms/platform/update/',
+		update: '/api/lms/platform/update/',
 	},
 	branch: {
 		all: '/api/institutes/',
@@ -42,6 +42,8 @@ export const API_END_POINTS = {
 			'/api/subscription/institute/upgrade-subscription/susbcriptionupdate',
 	},
 	help_center: {
+		create: '/api/help-center/',
+		getall: '/api/help-center/all',
 		ticket: {
 			get_all: '/api/institutes/admin/ticket/get-alll',
 		},

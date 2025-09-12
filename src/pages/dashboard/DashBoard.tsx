@@ -35,6 +35,8 @@ const Dashboard = () => {
   const dispatch = useAppDispatch();
   const DashBoardDatas = useAppSelector<any>(GetDashboardSelector);
 
+
+
   useEffect(() => {
     const fetch = async () => {
       if (selectedMonth || selectedYear) {
@@ -171,55 +173,116 @@ const Dashboard = () => {
 
   const [kpiData, setKpiData] = useState<any[]>([]);
 
+  // useEffect(() => {
+  //   setKpiData([
+  //     {
+  //       title: "Total Institute",
+  //       value: DashBoardDatas?.totalInstituteCount,
+  //       percentage: DashBoardDatas?.totalInstituteCount,
+  //       icon: Zap,
+  //       bgColor: "bg-teal-600",
+  //       iconBg: "bg-teal-100",
+  //       iconColor: "text-teal-600",
+  //       progressColor: "#14b8a6",
+  //     },
+  //     {
+  //       title: "Institute Subscription",
+  //       value: DashBoardDatas?.instituteSubscriptions,
+  //       percentage:  DashBoardDatas?.instituteSubscriptions?.length,
+  //       icon: Component,
+  //       bgColor: "bg-white",
+  //       iconBg: "bg-pink-100",
+  //       iconColor: "text-pink-500",
+  //       progressColor: "#ec4899",
+  //     },
+  //     {
+  //       title: "Active Subscription",
+  //       value: DashBoardDatas?.activeSubscriptions,
+  //       percentage:  DashBoardDatas?.activeSubscriptions,
+  //       icon: Droplet,
+  //       bgColor: "bg-white",
+  //       iconBg: "bg-purple-100",
+  //       iconColor: "text-purple-500",
+  //       progressColor: "#8b5cf6",
+  //     },
+  //     {
+  //       title: "New Support Tickets",
+  //       value: DashBoardDatas?.supportTickets,
+  //       percentage: 25,
+  //       icon: LifeBuoy,
+  //       bgColor: "bg-white",
+  //       iconBg: "bg-yellow-100",
+  //       iconColor: "text-yellow-500",
+  //       progressColor: "#f59e0b",
+  //     },
+  //   ]);
+  // }, [
+  //   DashBoardDatas?.activeSubscriptions,
+  //   DashBoardDatas?.instituteSubscriptions?.length,
+  //   DashBoardDatas?.supportTickets,
+  //   DashBoardDatas?.totalInstituteCount,
+  // ]);
+
   useEffect(() => {
-    setKpiData([
-      {
-        title: "Total Institute",
-        value: DashBoardDatas?.totalInstituteCount,
-        percentage: 45,
-        icon: Zap,
-        bgColor: "bg-teal-600",
-        iconBg: "bg-teal-100",
-        iconColor: "text-teal-600",
-        progressColor: "#14b8a6",
-      },
-      {
-        title: "Institute Subscription",
-        value: DashBoardDatas?.instituteSubscriptions?.length,
-        percentage: 15,
-        icon: Component,
-        bgColor: "bg-white",
-        iconBg: "bg-pink-100",
-        iconColor: "text-pink-500",
-        progressColor: "#ec4899",
-      },
-      {
-        title: "Active Subscription",
-        value: DashBoardDatas?.activeSubscriptions,
-        percentage: 9,
-        icon: Droplet,
-        bgColor: "bg-white",
-        iconBg: "bg-purple-100",
-        iconColor: "text-purple-500",
-        progressColor: "#8b5cf6",
-      },
-      {
-        title: "New Support Tickets",
-        value: DashBoardDatas?.supportTickets,
-        percentage: 25,
-        icon: LifeBuoy,
-        bgColor: "bg-white",
-        iconBg: "bg-yellow-100",
-        iconColor: "text-yellow-500",
-        progressColor: "#f59e0b",
-      },
-    ]);
-  }, [
-    DashBoardDatas?.activeSubscriptions,
-    DashBoardDatas?.instituteSubscriptions?.length,
-    DashBoardDatas?.supportTickets,
-    DashBoardDatas?.totalInstituteCount,
+  const ticketData = [
+    { title: "Admin Tickets", value: DashBoardDatas?.supportTickets?.adminTickets ?? 0, iconBg: "bg-yellow-100", iconColor: "text-yellow-500", progressColor: "#f59e0b" },
+    { title: "Staff Tickets", value: DashBoardDatas?.supportTickets?.staffTickets ?? 0, iconBg: "bg-blue-100", iconColor: "text-blue-500", progressColor: "#3b82f6" },
+    { title: "Student Tickets", value: DashBoardDatas?.supportTickets?.studentTickets ?? 0, iconBg: "bg-green-100", iconColor: "text-green-500", progressColor: "#10b981" },
+    { title: "Teaching Tickets", value: DashBoardDatas?.supportTickets?.teachingTickets ?? 0, iconBg: "bg-red-100", iconColor: "text-red-500", progressColor: "#ef4444" },
+  ];
+
+  const totalTickets = ticketData.reduce((sum, t) => sum + t.value, 0);
+
+
+  setKpiData([
+    {
+      title: "Total Institute",
+      value: DashBoardDatas?.totalInstituteCount,
+      percentage: DashBoardDatas?.totalInstituteCount,
+      icon: Zap,
+      bgColor: "bg-teal-600",
+      iconBg: "bg-teal-100",
+      iconColor: "text-teal-600",
+      progressColor: "#14b8a6",
+    },
+    {
+      title: "Institute Subscription",
+      value: DashBoardDatas?.instituteSubscriptions,
+      percentage: DashBoardDatas?.instituteSubscriptions?.length,
+      icon: Component,
+      bgColor: "bg-white",
+      iconBg: "bg-pink-100",
+      iconColor: "text-pink-500",
+      progressColor: "#ec4899",
+    },
+    {
+      title: "Active Subscription",
+      value: DashBoardDatas?.activeSubscriptions,
+      percentage: DashBoardDatas?.activeSubscriptions,
+      icon: Droplet,
+      bgColor: "bg-white",
+      iconBg: "bg-purple-100",
+      iconColor: "text-purple-500",
+      progressColor: "#8b5cf6",
+    },
+    {
+      title: "New Support Tickets",
+      value: totalTickets,
+      percentage: totalTickets > 0 ? Math.round((totalTickets / 100) * 100) : 0,
+      icon: LifeBuoy,
+      bgColor: "bg-white",
+      iconBg: "bg-yellow-100",
+      iconColor: "text-yellow-500",
+      progressColor: "#f59e0b",
+    },
   ]);
+}, [
+  DashBoardDatas?.adminTickets,
+  DashBoardDatas?.staffTickets,
+  DashBoardDatas?.studentTickets,
+  DashBoardDatas?.teachingTickets,
+]);
+
 
   const CircularProgress = ({
     percentage,

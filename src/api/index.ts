@@ -54,12 +54,14 @@ class Client {
 			httpClient.get(API_END_POINTS.subscription.all, params),
 		create: (data: any) =>
 			httpClient.post(API_END_POINTS.subscription.create, data),
-		get_all: (data: any) =>
-			httpClient.get(API_END_POINTS.subscription.get_all, data),
+		get_all: () =>
+			httpClient.get(API_END_POINTS.subscription.get_all),
 		getWidId: (params: { institute: string }) =>
 			httpClient.get(API_END_POINTS.subscription.getWithId + params?.institute),
 		approve: (data: any) =>
 			httpClient.post(API_END_POINTS.subscription.approve, data),
+		update: (data: any) =>
+			httpClient.put(API_END_POINTS.subscription.create+ data?._id, data)
 	};
 	notification = {
 		create: (data: any) =>
@@ -106,6 +108,8 @@ class Client {
 			httpClient.delete(API_END_POINTS.faq + data.id),
 	};
 	help_center = {
+		create: (data: any) => httpClient.post(API_END_POINTS.help_center.create, data),
+		getall: () => httpClient.get(API_END_POINTS.help_center.getall),
 		ticket: {
 			get_all: (params: any) =>
 				httpClient.get(API_END_POINTS.help_center.ticket.get_all, params),

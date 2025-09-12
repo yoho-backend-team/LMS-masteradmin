@@ -25,13 +25,13 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 	const [isLoading, setIsLoading] = useState(true);
 
 	useEffect(() => {
-		const token = GetLocalStorage('AdminToken');
+		const token = GetLocalStorage('pt_t_ah');
 		setIsAuthenticated(!!token);
 		setIsLoading(false);
 	}, []);
 
 	const login = (data: string) => {
-		StoreLocalStorage('AdminToken', data);
+		StoreLocalStorage("pt_t_ah", data)
 		setIsAuthenticated(true);
 	};
 

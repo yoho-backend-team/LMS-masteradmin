@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import React, { useEffect, useState } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -114,19 +115,23 @@ const Institutes: React.FC = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch<any>();
   const instituteData = useSelector(selectInstitutes);
+  console.log(instituteData,"institute data")
+  const activeCount = instituteData.filter((item: any) => item.Institute_Status === "active").length;
+  const inactiveCount = instituteData.filter((item: any) => item.Institute_Status === "inactive").length;
 
-  const fetchAllInstitutes = async () => {
-    try {
-      await dispatch(getInstitutesData());
-    } catch (error) {
-      console.error('Error fetching institutes:', error);
-    } finally {
-      setIsLoading(false);
-    }
-  };
+  console.log("Active:", activeCount);
+  console.log("Inactive:", inactiveCount);
 
   useEffect(() => {
-    fetchAllInstitutes();
+    (async () => {
+      try {
+        await dispatch(getInstitutesData());
+      } catch (error) {
+        console.error('Error fetching institutes:', error);
+      } finally {
+        setIsLoading(false);
+      }
+    })()
   }, [dispatch]);
 
   // Filter institutes based on selected filters
@@ -149,7 +154,7 @@ const Institutes: React.FC = () => {
 
     if (selectedDate) {
       const now = new Date();
-      let dateFilter = new Date();
+      const dateFilter = new Date();
 
       switch (selectedDate) {
         case "lastWeek":
@@ -175,20 +180,20 @@ const Institutes: React.FC = () => {
 
   const [filteredInstitutes, setFilteredInstitutes] = useState<Institute[]>([]);
 
-  const [kpiData, setKpiData] = useState([
+  const [kpiData,] = useState([
     {
       title: 'Total Institute',
-      value: '0',
+      value: instituteData.length,
       percentage: 0,
       icon: Zap,
       bgColor: 'bg-teal-600',
       iconBg: 'bg-teal-100',
-      iconColor: 'text-teal-600',
+      iconColor: 'text-purple-500',
       progressColor: '#14b8a6',
     },
     {
       title: 'Active Institute',
-      value: '0',
+      value: activeCount,
       percentage: 0,
       icon: Component,
       bgColor: 'bg-white',
@@ -198,7 +203,7 @@ const Institutes: React.FC = () => {
     },
     {
       title: 'Blocked Institute',
-      value: '0',
+      value: inactiveCount || 0,
       percentage: 0,
       icon: Droplet,
       bgColor: 'bg-white',
@@ -208,43 +213,43 @@ const Institutes: React.FC = () => {
     },
   ]);
 
-  // Update KPI data based on filtered institutes
-  useEffect(() => {
-    if (!instituteData) return;
 
-    const total = instituteData?.length;
-    const filteredTotal = filteredInstitutes?.length;
-    const filteredActive = filteredInstitutes?.filter(
-      (i) => i.institute_active_status === 'Active'
-    ).length;
-    const filteredBlocked = filteredInstitutes.filter(
-      (i) => i.institute_active_status === 'Blocked'
-    ).length;
+  // useEffect(() => {
+  //   if (!instituteData) return;
 
-    setKpiData([
-      {
-        ...kpiData[0],
-        value: `${total}`,
-        percentage: total > 0 ? Math.round((filteredTotal / total) * 100) : 0,
-      },
-      {
-        ...kpiData[1],
-        value: `${filteredActive}`,
-        percentage:
-          filteredTotal > 0
-            ? Math.round((filteredActive / filteredTotal) * 100)
-            : 0,
-      },
-      {
-        ...kpiData[2],
-        value: `${filteredBlocked}`,
-        percentage:
-          filteredTotal > 0
-            ? Math.round((filteredBlocked / filteredTotal) * 100)
-            : 0,
-      },
-    ]);
-  }, [filteredInstitutes, instituteData]);
+  //   const total = instituteData?.length;
+  //   const filteredTotal = filteredInstitutes?.length;
+  //   const filteredActive = filteredInstitutes?.filter(
+  //     (i) => i.institute_active_status === 'Active'
+  //   ).length;
+  //   const filteredBlocked = filteredInstitutes.filter(
+  //     (i) => i.institute_active_status === 'Blocked'
+  //   ).length;
+
+  //   // setKpiData([
+  //   //   {
+  //   //     ...kpiData[0],
+  //   //     value: `${total}`,
+  //   //     percentage: total > 0 ? Math.round((filteredTotal / total) * 100) : 0,
+  //   //   },
+  //   //   {
+  //   //     ...kpiData[1],
+  //   //     value: `${filteredActive}`,
+  //   //     percentage:
+  //   //       filteredTotal > 0
+  //   //         ? Math.round((filteredActive / filteredTotal) * 100)
+  //   //         : 0,
+  //   //   },
+  //   //   {
+  //   //     ...kpiData[2],
+  //   //     value: `${filteredBlocked}`,
+  //   //     percentage:
+  //   //       filteredTotal > 0
+  //   //         ? Math.round((filteredBlocked / filteredTotal) * 100)
+  //   //         : 0,
+  //   //   },
+  //   // ]);
+  // }, [filteredInstitutes, instituteData]);
 
   // Update institute plan
   const updateInstitutePlan = (id: number, newPlan: string) => {
@@ -272,7 +277,7 @@ const Institutes: React.FC = () => {
   };
 
   const getLocationString = (institute: Institute) => {
-    const { city, state, country } = institute?.contact_info?.address;
+    const { city, state, country } = institute.contact_info.address;
     return [city, state, country].filter(Boolean).join(', ');
   };
 
@@ -452,7 +457,7 @@ const Institutes: React.FC = () => {
                       shadow-lg transition-all duration-300 cursor-pointer border-0
                       rounded-tl-3xl rounded-br-3xl rounded-bl-none rounded-tr-none
                       ${hoveredCard === index
-                        ? 'bg-[#2D6974] text-white hover:scale-90'
+                        ? 'bg-[#2D6974] text-gray-900 hover:scale-90'
                         : 'bg-white text-gray-900 hover:scale-100'
                       }
                     `}
@@ -480,7 +485,7 @@ const Institutes: React.FC = () => {
                         <h3
                           className={`
                             text-sm font-medium leading-tight
-                            ${isHovered || index === 0
+                            ${isHovered
                               ? 'text-white'
                               : 'text-[#242731]'
                             }
