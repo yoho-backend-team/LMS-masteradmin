@@ -565,7 +565,6 @@ const Institutes: React.FC = () => {
                                   variant='outline'
                                   className='!text-[#2D6974] border-[#2D6974] px-4 flex items-center gap-2'
                                   style={{ ...FONTS.pass_head_2 }}
-                                  disabled
                                 >
                                   {institute?.subscription?.identity || 'No Plan'}
                                   <ChevronDown className='w-4 h-4' />
