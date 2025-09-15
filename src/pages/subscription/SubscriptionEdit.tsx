@@ -119,10 +119,10 @@ const SubscriptionEdit = () => {
         try {
             const res = await EditSubscription(payload);
             console.log("Subscription Edited Successfully:", res);  
-            if (res.success) {
+            if (res && res.data && res.data.success) {
                 navigate("/subscriptions", { state: { updatedPlan: payload } });
             } else {
-                console.error("Edit failed:", res.message || "Unknown error");
+                console.error("Edit failed:", res?.data?.message || "Unknown error");
             }
         } catch (error) {
             console.error("Error Editing subscription:", error);
