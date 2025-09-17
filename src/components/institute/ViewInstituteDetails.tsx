@@ -53,6 +53,7 @@ type Institute = {
 	phone_no: any;
 	bannerUrl: string;
 	about: string;
+	institute_code:string;
 	social_media: {
 		facebook_id?: string;
 		linkedin_id?: string;
@@ -92,7 +93,7 @@ export default function UniversityDashboard() {
 	const [isEditing, setIsEditing] = useState(false);
 	const [institute, setInstitute] = useState<Institute | null>(null);
 	const [courses, setCourses] = useState<Course[]>([]);
-	console.log(courses, 'cooooooooooooooooooooooo')
+	
 	useEffect(() => {
 		const fetchInstituteData = async () => {
 			try {
@@ -365,92 +366,104 @@ export default function UniversityDashboard() {
 	);
 
 	const PersonalInfoForm = () => (
-		<div className='p-6'>
-			<h2 className='text-xl font-semibold mb-6'>
-				Enter your Address Information Here
-			</h2>
-			<div className='grid grid-cols-2 gap-6'>
-				<div className='space-y-2'>
-					<Label htmlFor='institute-id'>Institute ID</Label>
-					<Input id='institute-id' placeholder={institute.id} />
-				</div>
-				<div className='space-y-2'>
-					<Label htmlFor='institute-code'>Institute Code</Label>
-					<Input id='institute-code' placeholder='Enter Institute Code' />
-				</div>
-				<div className='space-y-2'>
-					<Label htmlFor='institute-name'>Institute Name</Label>
-					<Input id='institute-name' placeholder={institute.institute_name} />
-				</div>
-				<div className='space-y-2'>
-					<Label htmlFor='official-email'>Official Email</Label>
-					<Input
-						id='official-email'
-						type='email'
-						placeholder={institute.email}
-					/>
-				</div>
-				<div className='space-y-2'>
-					<Label htmlFor='status'>Status</Label>
-					<Input id='status' placeholder={institute.Institute_Status.toUpperCase()} />
-				</div>
-				<div className='space-y-2'>
-					<Label htmlFor='contact'>Contact</Label>
-					<Input id='contact' placeholder={institute?.contact_info?.phone_no || 'Not available'} />
-				</div>
-				<div className='space-y-2'>
-					<Label htmlFor='alternative-number'>Alternative Number</Label>
-					<Input
-						id='alternative-number'
-						placeholder={institute?.contact_info?.alternate_no || 'Not available'}
-					/>
-				</div>
-				<div className='space-y-2'>
-					<Label htmlFor='registered-date'>Registered Date</Label>
-					<Input
-						id='registered-date'
-						type="date"
-						value={new Date(institute.registered_date).toISOString().split('T')[0]}
-						readOnly
-					/>
-				</div>
-				<div className='col-span-2 space-y-2'>
-					<Label htmlFor='address'>Address</Label>
-					<Textarea
-						id='address'
-						placeholder={`${institute?.contact_info.address.address1}, 
-                    ${institute?.contact_info.address.address2}, 
-                    ${institute?.contact_info.address.city}, 
-                    ${institute?.contact_info.address.state} - 
-                    ${institute?.contact_info.address.pincode}`}
-						className='min-h-[100px]'
-					/>
-				</div>
-			</div>
-			<div className="p-6 bg-white shadow-md rounded-lg">
-				{!isEditing ? (
-					<div className="flex gap-4 mt-6">
-						<Button variant="outline" onClick={() => setIsEditing(true)}>
-							Edit
-						</Button>
-						<Button className="bg-[#2D6974] hover:bg-[#2D6974]">Suspend</Button>
-					</div>
-				) : (
-					<div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-40 z-50">
-						<div className="bg-white p-6 rounded-lg shadow-lg w-full max-w-4xl max-h-[90vh] overflow-y-auto">
-							<h2 className="text-xl font-bold mb-4">Edit Institute Information</h2>
-							<EditInstituteForm
-								instituteData={institute}
-								onCancel={() => setIsEditing(false)} />
+  <div className="p-6">
+    <h2 className="text-xl font-semibold mb-6">
+      Enter your Address Information Here
+    </h2>
+    <div className="grid grid-cols-2 gap-6">
+      <div className="space-y-2">
+        <Label htmlFor="institute-id">Institute ID</Label>
+        <Input id="institute-id" value={institute.id} readOnly />
+      </div>
 
-						</div>
-					</div>
-				)}
-			</div>
+      {/* <div className="space-y-2">
+        <Label htmlFor="institute-code">Institute Code</Label>
+        <Input id="institute-code" value={institute.institute_code || "Y1234"} readOnly />
+      </div> */}
 
+      <div className="space-y-2">
+        <Label htmlFor="institute-name">Institute Name</Label>
+        <Input id="institute-name" value={institute.institute_name} readOnly />
+      </div>
 
-		</div>
-	);
+      <div className="space-y-2">
+        <Label htmlFor="official-email">Official Email</Label>
+        <Input id="official-email" type="email" value={institute.email} readOnly />
+      </div>
+
+      <div className="space-y-2">
+        <Label htmlFor="status">Status</Label>
+        <Input id="status" value={institute.Institute_Status.toUpperCase()} readOnly />
+      </div>
+
+      <div className="space-y-2">
+        <Label htmlFor="contact">Contact</Label>
+        <Input
+          id="contact"
+          value={institute?.contact_info?.phone_no || "Not available"}
+          readOnly
+        />
+      </div>
+
+      <div className="space-y-2">
+        <Label htmlFor="alternative-number">Alternative Number</Label>
+        <Input
+          id="alternative-number"
+          value={institute?.contact_info?.alternate_no || "Not available"}
+          readOnly
+        />
+      </div>
+
+      <div className="space-y-2">
+        <Label htmlFor="registered-date">Registered Date</Label>
+        <Input
+          id="registered-date"
+          type="date"
+          value={new Date(institute.registered_date).toISOString().split("T")[0]}
+          readOnly
+        />
+      </div>
+
+      <div className="col-span-2 space-y-2">
+        <Label htmlFor="address">Address</Label>
+        <Textarea
+          id="address"
+          value={`${institute?.contact_info.address.address1}, 
+${institute?.contact_info.address.address2}, 
+${institute?.contact_info.address.city}, 
+${institute?.contact_info.address.state} - 
+${institute?.contact_info.address.pincode}`}
+          className="min-h-[100px]"
+          disabled
+        />
+      </div>
+    </div>
+
+    <div className="p-6 bg-white shadow-md rounded-lg">
+      {!isEditing ? (
+        <div className="flex gap-4 mt-6">
+          <Button variant="outline" onClick={() => setIsEditing(true)}>
+            Edit
+          </Button>
+          <Button className="bg-[#2D6974] !text-white hover:bg-[#2D6974]">Suspend</Button>
+        </div>
+      ) : (
+        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-40 z-50">
+          <div className="bg-white p-6 rounded-lg shadow-lg w-full max-w-4xl max-h-[90vh] overflow-y-auto">
+            <h2 className="text-xl font-bold mb-4">
+              Edit Institute Information
+            </h2>
+            <EditInstituteForm
+              instituteData={institute}
+              onCancel={() => setIsEditing(false)}
+            />
+          </div>
+        </div>
+      )}
+    </div>
+  </div>
+);
+
 
 	const ProfileContent = () => {
 		switch (activeProfileSection) {
