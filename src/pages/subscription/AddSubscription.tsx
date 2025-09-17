@@ -252,8 +252,8 @@ const AddSubscription: React.FC<AddSubscriptionProps> = ({ onSubmit }) => {
           <select id="durationType" onChange={handleChange} value={form?.durationType} name="durationType" className="border rounded p-2">
             <option value="" selected>select duration</option>
             <option value="day">Day</option>
-            <option value="month">Month</option>
-            <option value="year">Year</option>
+            <option value="monthly">Month</option>
+            <option value="yearly">Year</option>
           </select>
         </div>
       </div>
