@@ -252,6 +252,7 @@ const Institutes: React.FC = () => {
   // }, [filteredInstitutes, instituteData]);
 
   // Update institute plan
+  // (Removed unused updateInstitutePlan function)
 
   // Update institute status
   const updateInstituteStatus = (id: number, newStatus: string) => {
