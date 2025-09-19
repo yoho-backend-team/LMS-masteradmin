@@ -447,7 +447,7 @@ const FAQ = () => {
               {isOpen && (
                 <div
                   className="absolute w-full bg-white shadow-xl mt-1 rounded-lg border overflow-x-auto border-gray-300 z-10 space-y-2 p-2 
-                  max-h-48 overflow-y-auto"
+                  max-h-48 overflow-y-auto no-scrollbar"
                 >
                   {categoriess?.map((cat: any) => (
                     <div

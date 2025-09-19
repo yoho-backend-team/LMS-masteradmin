@@ -15,7 +15,11 @@ interface TimelineEntry {
   action: string;
 }
 
-export function TimelineComponent({ instituteId }: { instituteId: string | undefined }) {
+export function TimelineComponent({
+  instituteId,
+}: {
+  instituteId: string | undefined;
+}) {
   const [timelineData, setTimelineData] = useState<TimelineEntry[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -90,11 +94,7 @@ export function TimelineComponent({ instituteId }: { instituteId: string | undef
   }
 
   if (error) {
-    return (
-      <div className="p-4 bg-red-50 text-red-600 rounded-lg">
-        {error}
-      </div>
-    );
+    return <div className="p-4 bg-red-50 text-red-600 rounded-lg">{error}</div>;
   }
 
   return (
@@ -107,29 +107,31 @@ export function TimelineComponent({ instituteId }: { instituteId: string | undef
           <div key={entry.id} className="relative">
             {/* Timeline Dot */}
             <div
-              className={`absolute left-5 w-3 h-3 rounded-full ${entry.status === "completed"
-                ? "bg-green-500"
-                : entry.status === "failed"
+              className={`absolute left-5 w-3 h-3 rounded-full ${
+                entry.status === "completed"
+                  ? "bg-green-500"
+                  : entry.status === "failed"
                   ? "bg-red-500"
                   : "bg-yellow-500"
-                }`}
+              }`}
             ></div>
 
             {/* Status Badge */}
             <div className="mb-4">
               <Badge
-                className={`${entry.status === "completed"
-                  ? "bg-[#68B39F]"
-                  : entry.status === "failed"
+                className={`${
+                  entry.status === "completed"
+                    ? "bg-[#68B39F]"
+                    : entry.status === "failed"
                     ? "bg-red-500"
                     : "bg-yellow-500"
-                  } text-white hover:bg-opacity-80 border-0 px-3 py-1 text-sm`}
+                } text-white hover:bg-opacity-80 border-0 px-3 py-1 text-sm`}
               >
                 {entry.status === "completed"
                   ? "Completed"
                   : entry.status === "failed"
-                    ? "Failed"
-                    : "Pending"}
+                  ? "Failed"
+                  : "Pending"}
               </Badge>
             </div>
 
@@ -176,8 +178,9 @@ export function TimelineComponent({ instituteId }: { instituteId: string | undef
             <button
               key={i + 1}
               onClick={() => setCurrentPage(i + 1)}
-              className={`px-3 py-1 rounded ${currentPage === i + 1 ? "bg-blue-600 text-white" : "bg-gray-200"
-                }`}
+              className={`px-3 py-1 rounded ${
+                currentPage === i + 1 ? "bg-blue-600 text-white" : "bg-gray-200"
+              }`}
             >
               {i + 1}
             </button>

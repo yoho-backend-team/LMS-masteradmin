@@ -40,14 +40,13 @@ export default function DocumentsPage({ institute }: any) {
     {
       title: "GST",
       fileUrl: institute?.docs?.gst?.file || "",
-      number: institute?.docs?.gst?.number || ""
+      number: institute?.docs?.gst?.number || "",
     },
     {
       title: "PAN",
       fileUrl: institute?.docs?.pan?.file || "",
-      number: institute?.docs?.pan?.number || ""
+      number: institute?.docs?.pan?.number || "",
     },
-
   ];
 
   function onDocumentLoadSuccess({ numPages }: { numPages: number }): void {
@@ -77,7 +76,7 @@ export default function DocumentsPage({ institute }: any) {
         </div>
 
         {doc.fileUrl ? (
-          <div className="border rounded-lg shadow-md p-4 bg-white max-w-4xl mx-auto overflow-auto">
+          <div className="border rounded-lg shadow-md p-4 bg-white max-w-4xl mx-auto overflow-auto no-scrollbar">
             <Document
               file={doc.fileUrl}
               onLoadSuccess={onDocumentLoadSuccess}
@@ -115,19 +114,18 @@ export default function DocumentsPage({ institute }: any) {
             className="border rounded-lg shadow-sm p-4 flex flex-col items-center justify-between min-h-[120px] hover:shadow-md transition"
           >
             <div className="mb-2 font-semibold">{doc.title}</div>
-            <div className="mb-3 text-sm text-gray-600">
-              {doc.number}
-            </div>
+            <div className="mb-3 text-sm text-gray-600">{doc.number}</div>
             <button
               onClick={() => setSelectedDoc(doc.title)}
-              className={`w-full py-2 rounded transition ${doc.fileUrl
-                ? "bg-[#6bb5a0] text-white hover:bg-[#5aa28e]"
-                : "bg-gray-300 text-gray-600 cursor-not-allowed"
-                }`}
+              className={`w-full py-2 rounded transition ${
+                doc.fileUrl
+                  ? "bg-[#6bb5a0] text-white hover:bg-[#5aa28e]"
+                  : "bg-gray-300 text-gray-600 cursor-not-allowed"
+              }`}
               disabled={!doc.fileUrl}
               aria-label={`View ${doc.title} document`}
             >
-              {doc.fileUrl ? `View ${doc.title}` : 'Not Available'}
+              {doc.fileUrl ? `View ${doc.title}` : "Not Available"}
             </button>
           </div>
         ))}
@@ -137,4 +135,3 @@ export default function DocumentsPage({ institute }: any) {
 
   return selectedDoc ? renderDocumentViewer() : renderDocumentGrid();
 }
-

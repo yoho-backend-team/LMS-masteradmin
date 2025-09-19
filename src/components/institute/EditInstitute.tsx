@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import React from "react";
 import { useFormik } from "formik";
 import * as Yup from "yup";
@@ -42,12 +41,18 @@ const validationSchema = Yup.object({
   phoneNumber: Yup.string()
     .matches(/^\d{10}$/, "Phone Number must be 10 digits")
     .required("Phone Number is required"),
-  altPhoneNumber: Yup.string().matches(/^\d{10}$/, "Alt Phone Number must be 10 digits"),
+  altPhoneNumber: Yup.string().matches(
+    /^\d{10}$/,
+    "Alt Phone Number must be 10 digits"
+  ),
   officialEmail: Yup.string()
     .email("Invalid email format")
     .required("Official Email is required"),
   officialWebsite: Yup.string().url("Invalid URL"),
-  description: Yup.string().max(300, "Description can't be longer than 300 characters"),
+  description: Yup.string().max(
+    300,
+    "Description can't be longer than 300 characters"
+  ),
   instagram: Yup.string().url("Invalid Instagram URL"),
   facebook: Yup.string().url("Invalid Facebook URL"),
   linkedin: Yup.string().url("Invalid LinkedIn URL"),
@@ -133,23 +138,23 @@ const EditInstituteForm: React.FC<EditInstituteFormProps> = ({
     placeholder: string;
     type?: string;
   }> = [
-      { name: "instituteName", placeholder: "Institute Name" },
-      { name: "registeredDate", placeholder: "Registered Date", type: "date" },
-      { name: "state", placeholder: "State" },
-      { name: "city", placeholder: "City" },
-      { name: "pinCode", placeholder: "Pin Code" },
-      { name: "addressLine1", placeholder: "Address Line 1" },
-      { name: "addressLine2", placeholder: "Address Line 2" },
-      { name: "phoneNumber", placeholder: "Phone Number" },
-      { name: "altPhoneNumber", placeholder: "Alt Phone Number" },
-      { name: "officialEmail", placeholder: "Official Email", type: "email" },
-      { name: "officialWebsite", placeholder: "Official Website" },
-    ];
+    { name: "instituteName", placeholder: "Institute Name" },
+    { name: "registeredDate", placeholder: "Registered Date", type: "date" },
+    { name: "state", placeholder: "State" },
+    { name: "city", placeholder: "City" },
+    { name: "pinCode", placeholder: "Pin Code" },
+    { name: "addressLine1", placeholder: "Address Line 1" },
+    { name: "addressLine2", placeholder: "Address Line 2" },
+    { name: "phoneNumber", placeholder: "Phone Number" },
+    { name: "altPhoneNumber", placeholder: "Alt Phone Number" },
+    { name: "officialEmail", placeholder: "Official Email", type: "email" },
+    { name: "officialWebsite", placeholder: "Official Website" },
+  ];
 
   return (
     <form
       onSubmit={formik.handleSubmit}
-      className="max-w-5xl mx-auto bg-white p-6 shadow-lg rounded-lg grid grid-cols-1 md:grid-cols-2 gap-4 max-h-[80vh] overflow-y-auto"
+      className="max-w-5xl mx-auto bg-white p-6 shadow-lg rounded-lg grid grid-cols-1 md:grid-cols-2 gap-4 max-h-[80vh] overflow-y-auto no-scrollbar"
     >
       {textFields.map((field) => (
         <div key={field.name}>
@@ -182,22 +187,26 @@ const EditInstituteForm: React.FC<EditInstituteFormProps> = ({
         )}
       </div>
 
-      {(["instagram", "facebook", "linkedin", "twitter"] as const).map((field) => (
-        <div key={field}>
-          <input
-            type="text"
-            name={field}
-            placeholder={`${field.charAt(0).toUpperCase() + field.slice(1)} URL`}
-            value={formik.values[field]}
-            onChange={formik.handleChange}
-            onBlur={formik.handleBlur}
-            className={inputClass}
-          />
-          {formik.touched[field] && formik.errors[field] && (
-            <p className="text-red-500 text-sm">{formik.errors[field]}</p>
-          )}
-        </div>
-      ))}
+      {(["instagram", "facebook", "linkedin", "twitter"] as const).map(
+        (field) => (
+          <div key={field}>
+            <input
+              type="text"
+              name={field}
+              placeholder={`${
+                field.charAt(0).toUpperCase() + field.slice(1)
+              } URL`}
+              value={formik.values[field]}
+              onChange={formik.handleChange}
+              onBlur={formik.handleBlur}
+              className={inputClass}
+            />
+            {formik.touched[field] && formik.errors[field] && (
+              <p className="text-red-500 text-sm">{formik.errors[field]}</p>
+            )}
+          </div>
+        )
+      )}
 
       <div className="flex gap-4 md:col-span-2 mt-4">
         <button

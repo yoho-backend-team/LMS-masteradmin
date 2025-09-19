@@ -1,11 +1,8 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
-
-
 import React, { useEffect, useState } from "react";
 import type { SubscriptionPlanProps } from "../../components/SubscriptionPlan/SubscriptionCard";
-import subcard1 from "../../assets/subcard1.png";
 import { useNavigate } from "react-router-dom";
 import { CreatSubscription } from "@/features/subscription/services";
+import { GetImageUrl, UploadImage } from "@/utils/helper";
 
 interface AddSubscriptionProps {
   onCancel?: () => void;
@@ -33,14 +30,18 @@ const AddSubscription: React.FC<AddSubscriptionProps> = ({ onSubmit }) => {
     unlimitedCourses: false,
     classes: "",
     unlimitedClasses: false,
-    image: subcard1,
+    image: "",
   });
 
-  const [submittedPlan, setSubmittedPlan] = useState<SubscriptionPlanProps | null>(null);
+  const [uploading, setUploading] = useState(false);
+  const [submittedPlan, setSubmittedPlan] =
+    useState<SubscriptionPlanProps | null>(null);
   const navigate = useNavigate();
 
   const handleChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement | any>
+    e: React.ChangeEvent<
+      HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement | any
+    >
   ) => {
     const { name, value, type, checked } = e.target;
     setForm((prev) => ({
@@ -49,38 +50,35 @@ const AddSubscription: React.FC<AddSubscriptionProps> = ({ onSubmit }) => {
     }));
   };
 
-
   const handleSubmit = () => {
     const features = [
       {
         feature: "Students",
-        count: form.unlimitedStudents ? "Unlimited" : Number(form.students || 0),
-
+        count: form.unlimitedStudents
+          ? "Unlimited"
+          : Number(form.students || 0),
       },
       {
         feature: "Admins",
         count: form.unlimitedAdmins ? "Unlimited" : Number(form.admins || 0),
-
       },
       {
         feature: "Teachers",
-        count: form.unlimitedTeachers ? "Unlimited" : Number(form.teachers || 0),
-
+        count: form.unlimitedTeachers
+          ? "Unlimited"
+          : Number(form.teachers || 0),
       },
       {
         feature: "Batches",
         count: form.unlimitedBatches ? "Unlimited" : Number(form.batches || 0),
-
       },
       {
         feature: "Courses",
         count: form.unlimitedCourses ? "Unlimited" : Number(form.courses || 0),
-
       },
       {
         feature: "Classes",
         count: form.unlimitedClasses ? "Unlimited" : Number(form.classes || 0),
-
       },
     ];
 
@@ -95,15 +93,13 @@ const AddSubscription: React.FC<AddSubscriptionProps> = ({ onSubmit }) => {
       image: form.image,
       features,
       active: true,
-      identity: form.identity
+      identity: form.identity,
     };
 
     setSubmittedPlan(newPlan);
     onSubmit?.(newPlan);
-
     navigate("/subscriptions");
   };
-
 
   useEffect(() => {
     const sendData = async () => {
@@ -131,18 +127,27 @@ const AddSubscription: React.FC<AddSubscriptionProps> = ({ onSubmit }) => {
       <h2 className="text-teal-700 text-lg font-semibold mb-6">
         Enter your Address Information Here
       </h2>
+
+      {/* IMAGE UPLOAD SECTION */}
       <div className="flex items-center mb-6">
         <img
-          src={form.image}
-          alt="Profile"
+          src={
+            form.image
+              ? form.image.startsWith("blob:")
+                ? form.image
+                : GetImageUrl(form.image) ?? undefined
+              : undefined
+          }
+          alt="Preview"
           className="w-16 h-16 rounded-full mr-4 object-cover"
         />
+
         <div>
           <p
             className="font-semibold text-green-800 cursor-pointer"
             onClick={() => document.getElementById("fileInput")?.click()}
           >
-            Upload Profile Picture
+            {uploading ? "Uploading..." : "Upload Profile Picture"}
           </p>
           <p className="text-sm text-gray-500">PNG or JPEG (Max 800KB)</p>
 
@@ -150,20 +155,44 @@ const AddSubscription: React.FC<AddSubscriptionProps> = ({ onSubmit }) => {
             id="fileInput"
             type="file"
             accept="image/png, image/jpeg"
-            onChange={(e) => {
+            onChange={async (e) => {
               const file = e.target.files?.[0];
               if (file) {
-                const previewUrl = URL.createObjectURL(file);
-                setForm((prev) => ({ ...prev, image: previewUrl }));
+                try {
+                  setUploading(true);
+
+                  // ✅ For instant preview (local preview before upload)
+                  const localPreview = URL.createObjectURL(file);
+                  setForm((prev) => ({ ...prev, image: localPreview }));
+
+                  const formData = new FormData();
+                  formData.append("file", file);
+
+                  const response = await UploadImage(formData);
+
+                  if (response?.data?.file) {
+                    // ✅ Replace with server file path after upload succeeds
+                    setForm((prev) => ({ ...prev, image: response.data.file }));
+                  }
+                } catch (error) {
+                  console.error("Image upload failed:", error);
+                } finally {
+                  setUploading(false);
+                }
               }
             }}
             style={{ display: "none" }}
           />
         </div>
       </div>
+
+      {/* FORM FIELDS */}
       <div className="grid grid-cols-3 gap-4 mb-4">
         <div className="flex flex-col">
-          <label htmlFor="title" className="text-sm font-medium text-gray-700 mb-1">
+          <label
+            htmlFor="title"
+            className="text-sm font-medium text-gray-700 mb-1"
+          >
             Plan
           </label>
           <input
@@ -176,7 +205,10 @@ const AddSubscription: React.FC<AddSubscriptionProps> = ({ onSubmit }) => {
         </div>
 
         <div className="flex flex-col">
-          <label htmlFor="price" className="text-sm font-medium text-gray-700 mb-1">
+          <label
+            htmlFor="price"
+            className="text-sm font-medium text-gray-700 mb-1"
+          >
             Plan Price
           </label>
           <input
@@ -189,7 +221,10 @@ const AddSubscription: React.FC<AddSubscriptionProps> = ({ onSubmit }) => {
         </div>
 
         <div className="flex flex-col">
-          <label htmlFor="price" className="text-sm font-medium text-gray-700 mb-1">
+          <label
+            htmlFor="identity"
+            className="text-sm font-medium text-gray-700 mb-1"
+          >
             Identity
           </label>
           <input
@@ -202,7 +237,10 @@ const AddSubscription: React.FC<AddSubscriptionProps> = ({ onSubmit }) => {
         </div>
 
         <div className="flex flex-col">
-          <label htmlFor="supportLevel" className="text-sm font-medium text-gray-700 mb-1">
+          <label
+            htmlFor="supportLevel"
+            className="text-sm font-medium text-gray-700 mb-1"
+          >
             Support Level
           </label>
           <select
@@ -220,7 +258,10 @@ const AddSubscription: React.FC<AddSubscriptionProps> = ({ onSubmit }) => {
       </div>
 
       <div className="flex flex-col mb-4">
-        <label htmlFor="description" className="text-sm font-medium text-gray-700 mb-1">
+        <label
+          htmlFor="description"
+          className="text-sm font-medium text-gray-700 mb-1"
+        >
           Plan Description
         </label>
         <textarea
@@ -231,9 +272,13 @@ const AddSubscription: React.FC<AddSubscriptionProps> = ({ onSubmit }) => {
           className="border rounded p-2 w-full"
         />
       </div>
+
       <div className="grid grid-cols-2 gap-4 mb-4">
         <div className="flex flex-col">
-          <label htmlFor="duration" className="text-sm font-medium text-gray-700 mb-1">
+          <label
+            htmlFor="duration"
+            className="text-sm font-medium text-gray-700 mb-1"
+          >
             Duration
           </label>
           <input
@@ -246,22 +291,40 @@ const AddSubscription: React.FC<AddSubscriptionProps> = ({ onSubmit }) => {
         </div>
 
         <div className="flex flex-col">
-          <label htmlFor="durationType" className="text-sm font-medium text-gray-700 mb-1">
+          <label
+            htmlFor="durationType"
+            className="text-sm font-medium text-gray-700 mb-1"
+          >
             Duration Type
           </label>
-          <select id="durationType" onChange={handleChange} value={form?.durationType} name="durationType" className="border rounded p-2">
-            <option value="" selected>select duration</option>
+          <select
+            id="durationType"
+            onChange={handleChange}
+            value={form?.durationType}
+            name="durationType"
+            className="border rounded p-2"
+          >
+            <option value="">select duration</option>
             <option value="day">Day</option>
             <option value="monthly">Month</option>
             <option value="yearly">Year</option>
           </select>
         </div>
       </div>
+
       <div className="grid grid-cols-2 gap-4 mb-4">
         {[
-          { name: "students", unlimited: "unlimitedStudents", label: "Students" },
+          {
+            name: "students",
+            unlimited: "unlimitedStudents",
+            label: "Students",
+          },
           { name: "admins", unlimited: "unlimitedAdmins", label: "Admins" },
-          { name: "teachers", unlimited: "unlimitedTeachers", label: "Teachers" },
+          {
+            name: "teachers",
+            unlimited: "unlimitedTeachers",
+            label: "Teachers",
+          },
           { name: "batches", unlimited: "unlimitedBatches", label: "Batches" },
           { name: "courses", unlimited: "unlimitedCourses", label: "Courses" },
           { name: "classes", unlimited: "unlimitedClasses", label: "Classes" },
@@ -293,6 +356,7 @@ const AddSubscription: React.FC<AddSubscriptionProps> = ({ onSubmit }) => {
           </div>
         ))}
       </div>
+
       <div className="flex justify-between">
         <button
           onClick={() => navigate("/subscriptions")}
@@ -303,8 +367,9 @@ const AddSubscription: React.FC<AddSubscriptionProps> = ({ onSubmit }) => {
         <button
           onClick={handleSubmit}
           className="px-4 py-2 rounded-tl-xl rounded-br-xl bg-[#68B39F] text-white hover:bg-[#58a18e]"
+          disabled={uploading}
         >
-          Submit
+          {uploading ? "Please wait..." : "Submit"}
         </button>
       </div>
     </div>

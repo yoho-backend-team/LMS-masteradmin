@@ -31,10 +31,14 @@ const Subscription: React.FC = () => {
   const [plans, setPlans] = useState<SubscriptionPlanProps[]>([]);
   const [deleteIndex, setDeleteIndex] = useState<number | null>(null);
   const [showActionsIndex, setShowActionsIndex] = useState<number | null>(null);
-  const [activeStates, setActiveStates] = useState<boolean[]>(plans.map((p: any) => p.active));
+  const [activeStates, setActiveStates] = useState<boolean[]>(
+    plans.map((p: any) => p.active)
+  );
 
   const dispatch = useDispatch();
-  const subscriptionData = useSelector((state: any) => state.Subscription.subscription);
+  const subscriptionData = useSelector(
+    (state: any) => state.Subscription.subscription
+  );
   const output = subscriptionData?.data;
   const navigate = useNavigate();
 
@@ -48,8 +52,7 @@ const Subscription: React.FC = () => {
       } finally {
         // setIsLoading(false);
       }
-    })()
-
+    })();
   }, [dispatch]);
 
   useEffect(() => {
@@ -57,8 +60,6 @@ const Subscription: React.FC = () => {
       setPlans(output);
     }
   }, [output]);
-
-
 
   const handleDeletePlan = () => {
     if (deleteIndex !== null) {
@@ -141,7 +142,8 @@ const Subscription: React.FC = () => {
                       <span className="flex items-center justify-center w-3 h-3 rounded-full bg-[#68B39F] text-white mr-2">
                         <Check size={12} strokeWidth={3} />
                       </span>
-                      {f.value ?? f.feature?.identity}: {f.value ?? (f.count ?? "No Data")}
+                      {f.value ?? f.feature?.identity}:{" "}
+                      {f.value ?? f.count ?? "No Data"}
                     </li>
                   ))}
                 </ul>
@@ -166,13 +168,17 @@ const Subscription: React.FC = () => {
                     <div className="absolute bottom-full mb-2 right-0 bg-white border rounded-md shadow-md flex flex-col text-sm z-10">
                       <button
                         className="px-4 py-2 hover:bg-gray-100 text-left group-hover:text-[#68B39F]"
-                        onClick={() => navigate("/subscription-view", { state: { plan } })}
+                        onClick={() =>
+                          navigate("/subscription-view", { state: { plan } })
+                        }
                       >
                         View
                       </button>
                       <button
                         className="px-4 py-2 hover:bg-gray-100 text-left group-hover:text-[#68B39F]"
-                        onClick={() => navigate("/subscription-Edit", { state: { plan } })}
+                        onClick={() =>
+                          navigate("/subscription-Edit", { state: { plan } })
+                        }
                       >
                         Edit
                       </button>
@@ -187,9 +193,7 @@ const Subscription: React.FC = () => {
                 </div>
               </div>
             </div>
-
           </div>
-
         ))}
       </div>
 

@@ -14,8 +14,7 @@ export default function PaymentsTable() {
   const [loading, isLoading] = useState<boolean>(false);
 
   const [page, setPage] = useState(1);
-  const [selectedPayment, setSelectedPayment] = useState<any>(null); // ✅ Store clicked payment
-
+  const [selectedPayment, setSelectedPayment] = useState<any>(null); 
   useEffect(() => {
     (async (currentPage: number) => {
       try {

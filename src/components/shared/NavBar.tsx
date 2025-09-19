@@ -1,10 +1,12 @@
-import  { useState, useRef, useEffect } from "react";
+import { useState, useRef, useEffect } from "react";
 import { ChevronDown, Search } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import Profileicon from "../../assets/profileicon.png";
 import icon from "../../assets/masteradminicon.png";
 import notification from "../../assets/notification.png";
-
+import { useAppDispatch, useAppSelector } from "@/hooks/reduxhooks";
+import { getProfileThunks } from "@/features/Profile/reducers/thunks";
+import { GetImageUrl } from "@/utils/helper";
 
 export default function Navbar() {
   const [showProfileDropdown, setShowProfileDropdown] = useState(false);
@@ -16,6 +18,17 @@ export default function Navbar() {
   const profileRef = useRef<HTMLDivElement>(null);
   const notificationRef = useRef<HTMLDivElement>(null);
   const navigate = useNavigate();
+  const dispatch = useAppDispatch();
+  const profileData: any = useAppSelector((state) => state.ProfileSlice.data);
+
+  useEffect(() => {
+    if (!profileData) {
+      dispatch(getProfileThunks({}));
+    }
+  }, [dispatch, profileData]);
+  useEffect(() => {
+    dispatch(getProfileThunks({}));
+  }, [dispatch]);
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -105,8 +118,9 @@ export default function Navbar() {
                   >
                     <span className="flex-1">{selectedOption}</span>
                     <ChevronDown
-                      className={`w-5 h-5 transition-transform duration-300 ${shownavoption ? "rotate-180" : ""
-                        }`}
+                      className={`w-5 h-5 transition-transform duration-300 ${
+                        shownavoption ? "rotate-180" : ""
+                      }`}
                       stroke="#999999"
                     />
                   </div>
@@ -125,10 +139,11 @@ export default function Navbar() {
                                 setShownavoption(false);
                               }}
                               className={`border p-2 mb-3 rounded-tl-2xl  rounded-br-2xl rounded-bl-none rounded-tr-none cursor-pointer
-              ${isSelected
-                                  ? "bg-[#68B39F] text-white border-[#68B39F]"
-                                  : "bg-white text-[#68B39F] hover:bg-[#5a9e8b] hover:text-white"
-                                }`}
+              ${
+                isSelected
+                  ? "bg-[#68B39F] text-white border-[#68B39F]"
+                  : "bg-white text-[#68B39F] hover:bg-[#5a9e8b] hover:text-white"
+              }`}
                             >
                               {option}
                             </div>
@@ -239,14 +254,12 @@ export default function Navbar() {
           onClick={handleView}
         >
           <img
-            src={Profileicon}
+            src={GetImageUrl(profileData?.image) ?? Profileicon}
             alt="profile"
             className="h-full w-full object-cover"
-             onClick={handleViewProfile}
+            onClick={handleViewProfile}
           />
         </div>
-
-       
       </div>
     </nav>
   );
