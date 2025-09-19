@@ -6,7 +6,7 @@ import { useNavigate } from "react-router-dom";
 import { useAuth } from "./AuthContext";
 
 const SignIn = () => {
-  const [email, setEmail] = useState("mernstackdev.yoho@gmail.com");
+  const [email, setEmail] = useState("mernstackdev@gmail.com");
   const [password, setPassword] = useState("Wecandoit@2024");
   const [showPassword, setShowPassword] = useState(false);
   const navigate = useNavigate();
@@ -46,14 +46,14 @@ const SignIn = () => {
 
 
   return (
-    <div className="min-h-screen grid grid-cols-1 md:grid-cols-2">
+    <div className="grid min-h-screen grid-cols-1 md:grid-cols-2">
 
-      <div className="flex flex-col justify-center items-center p-3 bg-white">
+      <div className="flex flex-col items-center justify-center p-3 bg-white">
         <h1 className="text-9xl text-[#2D6974] tracking-widest ">
           Classie
         </h1>
 
-        <form onSubmit={handleSignIn} className="mt-8 p-5 w-full">
+        <form onSubmit={handleSignIn} className="w-full p-5 mt-8">
           <h2 className="text-2xl font-bold text-[#68B39F]">
             Hi, Welcome Back
           </h2>
@@ -63,7 +63,7 @@ const SignIn = () => {
 
 
           <div className="mt-6">
-            <label className="block text-md font-medium text-gray-700">
+            <label className="block font-medium text-gray-700 text-md">
               User Name
             </label>
             <input
@@ -77,7 +77,7 @@ const SignIn = () => {
 
 
           <div className="mt-4">
-            <label className="block text-md font-medium text-gray-700">
+            <label className="block font-medium text-gray-700 text-md">
               Password
             </label>
             <div className="relative mt-1">
@@ -89,7 +89,7 @@ const SignIn = () => {
                 required
               />
               <div
-                className="absolute right-3 top-4 cursor-pointer text-gray-500"
+                className="absolute text-gray-500 cursor-pointer right-3 top-4"
                 onClick={() => setShowPassword(!showPassword)}
               >
                 {showPassword ? <FiEye /> : <FiEyeOff />}
@@ -98,7 +98,7 @@ const SignIn = () => {
           </div>
 
 
-          <div className="mt-3 flex items-center justify-between">
+          <div className="flex items-center justify-between mt-3">
 
             <a href="#" className="text-sm ml-auto text-gray-500 hover:text-[#68B39F]" onClick={() => navigate('/send-otp')}>
               Forgot Password?
