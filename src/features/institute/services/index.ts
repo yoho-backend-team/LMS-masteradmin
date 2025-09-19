@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import Client from '../../../api/index';
 
 export const getAllInstitutes = async (params?: any) => {
@@ -13,7 +14,8 @@ export const getAllInstitutes = async (params?: any) => {
 
 export const getAllSubscriptions = async (params?: any) => {
 	try {
-		const response = await Client.subscription.get_all(params);
+		console.log(params)
+		const response = await Client.subscription.get_all();
 		if (response) {
 			return response;
 		}
@@ -44,9 +46,9 @@ export const createInstitute = async (data: any) => {
 		console.error('Error:', error);
 	}
 };
-export const getCourseDetails = async (data: any, params: any) => {
+export const getCourseDetails = async (params: any) => {
 	try {
-		const response = await Client.institute.getCourseList(data, params)
+		const response = await Client.institute.getCourseList(params)
 		if (response) {
 			return response;
 		}
@@ -65,5 +67,17 @@ export const getActivitylogDetails = async (params: any) => {
 	}
 	catch (error) {
 		console.log('error', error)
+	}
+}
+
+export const updateInstituteDetails = async (data: any) => {
+	try {
+		const response = await Client.institute.update(data)
+		if (response) {
+			return response
+		}
+	}
+	catch (error) {
+		console.log(error, 'error')
 	}
 }

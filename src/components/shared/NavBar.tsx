@@ -1,10 +1,10 @@
-import React, { useState, useRef, useEffect } from "react";
+import  { useState, useRef, useEffect } from "react";
 import { ChevronDown, Search } from "lucide-react";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import Profileicon from "../../assets/profileicon.png";
 import icon from "../../assets/masteradminicon.png";
 import notification from "../../assets/notification.png";
-import { COLORS, FONTS } from "@/constants/ui constants";
+
 
 export default function Navbar() {
   const [showProfileDropdown, setShowProfileDropdown] = useState(false);
@@ -242,27 +242,11 @@ export default function Navbar() {
             src={Profileicon}
             alt="profile"
             className="h-full w-full object-cover"
+             onClick={handleViewProfile}
           />
         </div>
 
-        {showProfileDropdown && (
-          <div className="bg-[#68B39F] w-[150px] flex flex-col gap-4 absolute top-13 right-0 rounded-2xl p-4">
-            <button
-              className="bg-white w-full rounded-tl-xl rounded-br-xl p-2"
-              style={{ ...FONTS.btn_txt_active, color: COLORS.button }}
-              onClick={handleViewProfile}
-            >
-              Profile
-            </button>
-
-            <button
-              className="bg-white rounded-tl-xl rounded-br-xl p-2"
-              style={{ ...FONTS.btn_txt_active, color: COLORS.button }}
-            >
-              Logout
-            </button>
-          </div>
-        )}
+       
       </div>
     </nav>
   );

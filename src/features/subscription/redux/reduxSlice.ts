@@ -15,13 +15,13 @@ const ModuleSlice = createSlice({
       state.subscription= action.payload;
     },
 
-
-    
- 
+     editSubscription: (state, action) => {
+      state.subscription= action.payload;
+    },
 
   },
 });
 export const {
- getSubscription,creatSubscription
+ getSubscription,creatSubscription,editSubscription
 } = ModuleSlice.actions;
 export default ModuleSlice.reducer;

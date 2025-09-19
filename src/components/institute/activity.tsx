@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 import { useEffect, useState } from "react";
@@ -14,18 +15,20 @@ interface TimelineEntry {
   action: string;
 }
 
-export function TimelineComponent({ instituteId }: { instituteId: string }) {
+export function TimelineComponent({ instituteId }: { instituteId: string | undefined }) {
   const [timelineData, setTimelineData] = useState<TimelineEntry[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+
+  // ✅ Pagination state
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 5; // show 5 per page
 
   useEffect(() => {
     const fetchActivityLogs = async () => {
       try {
         setLoading(true);
         const response = await getActivitylogDetails({ id: instituteId });
-
-        console.log(response, 'ressssssssssssssssss')
 
         if (response?.data) {
           const transformedData = response?.data?.data?.map((log: any) => ({
@@ -63,7 +66,11 @@ export function TimelineComponent({ instituteId }: { instituteId: string }) {
     fetchActivityLogs();
   }, [instituteId]);
 
-  console.log(timelineData, 'dataaaaaaaaaaaaa')
+  // ✅ Pagination logic
+  const indexOfLast = currentPage * itemsPerPage;
+  const indexOfFirst = indexOfLast - itemsPerPage;
+  const currentData = timelineData.slice(indexOfFirst, indexOfLast);
+  const totalPages = Math.ceil(timelineData.length / itemsPerPage);
 
   if (loading) {
     return (
@@ -96,35 +103,33 @@ export function TimelineComponent({ instituteId }: { instituteId: string }) {
       <div className="absolute left-6 top-0 bottom-0 w-px bg-gray-300"></div>
 
       <div className="space-y-16">
-        {timelineData.map((entry) => (
+        {currentData.map((entry) => (
           <div key={entry.id} className="relative">
-            {/* Timeline Dot with status color */}
+            {/* Timeline Dot */}
             <div
-              className={`absolute left-5 w-3 h-3 rounded-full ${
-                entry.status === "completed"
-                  ? "bg-green-500"
-                  : entry.status === "failed"
+              className={`absolute left-5 w-3 h-3 rounded-full ${entry.status === "completed"
+                ? "bg-green-500"
+                : entry.status === "failed"
                   ? "bg-red-500"
                   : "bg-yellow-500"
-              }`}
+                }`}
             ></div>
 
             {/* Status Badge */}
             <div className="mb-4">
               <Badge
-                className={`${
-                  entry.status === "completed"
-                    ? "bg-[#68B39F]"
-                    : entry.status === "failed"
+                className={`${entry.status === "completed"
+                  ? "bg-[#68B39F]"
+                  : entry.status === "failed"
                     ? "bg-red-500"
                     : "bg-yellow-500"
-                } text-white hover:bg-opacity-80 border-0 px-3 py-1 text-sm`}
+                  } text-white hover:bg-opacity-80 border-0 px-3 py-1 text-sm`}
               >
                 {entry.status === "completed"
                   ? "Completed"
                   : entry.status === "failed"
-                  ? "Failed"
-                  : "Pending"}
+                    ? "Failed"
+                    : "Pending"}
               </Badge>
             </div>
 
@@ -155,6 +160,38 @@ export function TimelineComponent({ instituteId }: { instituteId: string }) {
           </div>
         ))}
       </div>
+
+      {/* ✅ Pagination Controls */}
+      {timelineData.length > itemsPerPage && (
+        <div className="flex justify-center mt-8 space-x-2">
+          <button
+            onClick={() => setCurrentPage((p) => Math.max(p - 1, 1))}
+            disabled={currentPage === 1}
+            className="px-3 py-1 bg-gray-200 rounded disabled:opacity-50"
+          >
+            Prev
+          </button>
+
+          {Array.from({ length: totalPages }, (_, i) => (
+            <button
+              key={i + 1}
+              onClick={() => setCurrentPage(i + 1)}
+              className={`px-3 py-1 rounded ${currentPage === i + 1 ? "bg-blue-600 text-white" : "bg-gray-200"
+                }`}
+            >
+              {i + 1}
+            </button>
+          ))}
+
+          <button
+            onClick={() => setCurrentPage((p) => Math.min(p + 1, totalPages))}
+            disabled={currentPage === totalPages}
+            className="px-3 py-1 bg-gray-200 rounded disabled:opacity-50"
+          >
+            Next
+          </button>
+        </div>
+      )}
     </div>
   );
 }

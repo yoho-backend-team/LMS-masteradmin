@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import type React from 'react';
 import { useState, useCallback, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
@@ -19,7 +20,7 @@ import { UploadImage, UploadMultipleImages } from '@/utils/helper';
 
 interface FormData {
 	// Personal Info
-	instituteName: string;
+	institute_name: string;
 	registeredCode: string;
 	description: string;
 	addressLine1: string;
@@ -34,12 +35,12 @@ interface FormData {
 	officialWebsite: string;
 	subscription: string;
 	// Gallery Info
-	instituteLogo: File | null;
+	instituteLogo: any;
 	logoDescription: string;
-	instituteImage: File | null;
+	instituteImage: any;
 	imageDescription: string;
-	instituteLogoSecond: File | null;
-	galleryImages: File[] | null;
+	instituteLogoSecond: any;
+	galleryImages: any;
 	// Social Links
 	twitter: string;
 	facebook: string;
@@ -50,15 +51,15 @@ interface FormData {
 	gstNumber: string;
 	panNumber: string;
 	licenseNumber: string;
-	gstFile: File | null;
-	panFile: File | null;
-	licenseFile: File | null;
+	gstFile: any;
+	panFile: any;
+	licenseFile: any;
 	// Account Details
 	branchName: string;
-	phone: string;
-	alternativePhone: string;
-	addressLin1: string;
-	addressLin2: string;
+	branch_phone: string;
+	branch_altphone: string;
+	branch_addressLine1: string;
+	branch_addressLine2: string;
 	country: string;
 	stateBranch: string;
 	cityBranch: string;
@@ -66,8 +67,8 @@ interface FormData {
 	fullName: string;
 	lastName: string;
 	email: string;
-	phoneNumberAccount: string;
-	profileImage: File | null;
+	branch_phonenumber: string;
+	profileImage: any;
 }
 
 const FileUploadBox = ({
@@ -218,7 +219,7 @@ const StepperForm: React.FC = () => {
 	const navigate = useNavigate();
 	const [currentStep, setCurrentStep] = useState(1);
 	const [formData, setFormData] = useState<FormData>({
-		instituteName: '',
+		institute_name: '',
 		registeredCode: '',
 		description: '',
 		addressLine1: '',
@@ -232,12 +233,12 @@ const StepperForm: React.FC = () => {
 		officialEmail: '',
 		officialWebsite: '',
 		subscription: '',
-		instituteLogo: null,
+		instituteLogo: "",
 		logoDescription: '',
-		instituteImage: null,
+		instituteImage: "",
 		imageDescription: '',
-		instituteLogoSecond: null,
-		galleryImages: null,
+		instituteLogoSecond: "",
+		galleryImages: [],
 		twitter: '',
 		facebook: '',
 		instagram: '',
@@ -246,14 +247,13 @@ const StepperForm: React.FC = () => {
 		gstNumber: '',
 		panNumber: '',
 		licenseNumber: '',
-		gstFile: null,
-		panFile: null,
-		licenseFile: null,
+		gstFile: "",
+		panFile: "",
+		licenseFile: "",
 		branchName: '',
-		phone: '',
-		alternativePhone: '',
-		addressLin1: '',
-		addressLin2: '',
+		branch_altphone: '',
+		branch_addressLine1: '',
+		branch_addressLine2: '',
 		country: '',
 		stateBranch: '',
 		cityBranch: '',
@@ -261,8 +261,9 @@ const StepperForm: React.FC = () => {
 		fullName: '',
 		lastName: '',
 		email: '',
-		phoneNumberAccount: '',
-		profileImage: null,
+		branch_phonenumber: '',
+		profileImage: "",
+		branch_phone: ""
 	});
 	const [allSubscriptions, setAllSubscriptions] = useState<any[]>([]);
 
@@ -324,6 +325,7 @@ const StepperForm: React.FC = () => {
 			setLoadingStates(true);
 			const data = await fetchStates(value);
 			setStates(data);
+			setBranchStates(data);
 			setLoadingStates(false);
 			handleInputChange('state', '');
 			handleInputChange('city', '');
@@ -331,7 +333,6 @@ const StepperForm: React.FC = () => {
 		}
 	};
 
-	// Add this handler for state selection (for both main and branch address)
 	const handleStateChange = async (
 		value: string,
 		countryCode: string,
@@ -354,7 +355,7 @@ const StepperForm: React.FC = () => {
 	};
 
 	const handleInputChange = useCallback(
-		(field: keyof FormData, value: string | File | null) => {
+		(field: keyof FormData, value: any) => {
 			setFormData((prev) => ({
 				...prev,
 				[field]: value,
@@ -373,7 +374,6 @@ const StepperForm: React.FC = () => {
 					// Handle multiple files for galleryImages
 					const fileList = Array.from(files);
 					console.log(`Files selected for ${field}:`, fileList);
-					handleInputChange(field, fileList);
 
 					try {
 						const formData = new FormData();
@@ -381,7 +381,8 @@ const StepperForm: React.FC = () => {
 							formData.append('files', file);
 						});
 
-						const response = await UploadMultipleImages(formData); // Use the multiple upload function
+						const response = await UploadMultipleImages(formData);
+						handleInputChange(field, response?.data?.data?.file);
 						console.log(`Files uploaded for ${field}:`, response);
 						if (response) {
 							toast.success(
@@ -393,13 +394,13 @@ const StepperForm: React.FC = () => {
 					}
 				} else {
 					const file = files[0];
-					handleInputChange(field, file);
 					if (file) {
 						const fileData = new FormData();
 						fileData.append('file', file);
 						try {
-							const response = await UploadImage(fileData);
-							console.log(response, `File uploaded for ${field}:`, response);
+							const response: any = await UploadImage(fileData);
+							console.log(response, "upload ress")
+							handleInputChange(field, response?.data?.data?.file);
 							if (response) {
 								toast.success(`File uploaded successfully for ${field}`);
 							}
@@ -412,34 +413,6 @@ const StepperForm: React.FC = () => {
 		[handleInputChange]
 	);
 
-	const handleMultipleFileUpload = useCallback(
-		(field: keyof FormData) =>
-			async (event: React.ChangeEvent<HTMLInputElement>) => {
-				const files = event.target.files;
-				if (!files || files.length === 0) return;
-
-				const fileList = Array.from(files);
-				handleInputChange(field, fileList);
-
-				try {
-					const formData = new FormData();
-					fileList.forEach((file) => {
-						formData.append('files', file);
-					});
-
-					const response = await UploadMultipleImages(formData);
-					console.log(`Files uploaded for ${field}:`, response);
-					if (response) {
-						toast.success(
-							`${fileList.length} files uploaded successfully for ${field}`
-						);
-					}
-				} catch (error) {
-					toast.error(`Error uploading files for ${field}: ${error}`);
-				}
-			},
-		[handleInputChange]
-	);
 
 	const nextStep = async () => {
 		if (currentStep < 5) {
@@ -447,14 +420,95 @@ const StepperForm: React.FC = () => {
 		} else {
 			console.log('Institute Data:', formData);
 			try {
-				const response = await createInstitute(formData);
+				const data = {
+					institute: {
+						institute_name: formData?.institute_name,
+						email: formData?.email,
+						subscription: formData?.subscription,
+						contact_info: {
+							phone_no: formData?.phoneNumber,
+							alternate_no: formData?.altPhoneNumber,
+							address: {
+								address1: formData?.branch_addressLine1,
+								address2: formData?.branch_addressLine2,
+								state: states.forEach((state) => {
+									if (state.iso2 === formData.state) {
+										return state.name
+									}
+								}),
+								city: cities.forEach((city) => {
+									if (city.iso2 === formData.city) {
+										return city.name
+									}
+								}),
+								pincode: formData?.pinCode,
+							}
+						},
+						website: formData?.officialWebsite,
+						description: formData?.description,
+						logo: formData?.instituteLogo,
+						image: formData?.profileImage,
+						gallery_images: formData?.galleryImages,
+						docs: {
+							gst: {
+								number: formData?.gstNumber,
+								file: formData?.gstFile,
+							},
+							pan: {
+								number: formData?.panNumber,
+								file: formData?.panFile
+							},
+							licence: {
+								number: formData?.licenseNumber,
+								file: formData?.licenseFile
+							}
+						},
+						social_media: {
+							twitter_id: formData?.twitter,
+							facebook_id: formData?.facebook,
+							instagram_id: formData?.instagram,
+							linkedin_id: formData?.linkedin,
+							pinterest: formData?.pinterest,
+						},
+					},
+					branch: {
+						branch_identity: formData?.branchName,
+						contact_info: {
+							phone_no: formData.branch_phonenumber,
+							alternate_no: formData.branch_altphone,
+							address: formData.branch_addressLine1,
+							landmark: formData.branch_addressLine2,
+							state: states.forEach((state) => {
+								if (state.iso2 === formData.stateBranch) {
+									return state.name
+								}
+							}),
+							city: cities.forEach((city) => {
+								if (city.iso2 === formData.cityBranch) {
+									return city.name
+								}
+							}),
+							pincode: formData.pinCodeBranch
+						}
+					},
+					admin: {
+						first_name: formData.fullName,
+						last_name: formData.lastName,
+						username: "admin",
+						phone_number: formData.phoneNumber,
+						email: formData.email,
+						image: formData.instituteLogo,
+					}
+				}
+				const response = await createInstitute(data);
 				if (response) {
 					toast.success('Institute added successfully');
 					navigate('/institute');
 				} else {
 					toast.error('Failed to add institute');
 				}
-			} catch (error) {
+			} catch (error: any) {
+				console.log(error)
 				toast.error('Failed to add institute');
 			}
 		}
@@ -477,7 +531,7 @@ const StepperForm: React.FC = () => {
 	}: {
 		label: string;
 		field: keyof FormData;
-		options: { iso2?: string; name: string }[];
+		options: { _id?: string; iso2?: string; name: string }[];
 		loading?: boolean;
 		className?: string;
 		value: string;
@@ -505,7 +559,7 @@ const StepperForm: React.FC = () => {
 					{options?.map((option) => (
 						<option
 							key={option?.iso2 || option?.name}
-							value={option?.iso2 || option?.name}
+							value={option?._id ?? option?.iso2}
 						>
 							{option?.name}
 						</option>
@@ -520,22 +574,20 @@ const StepperForm: React.FC = () => {
 			{steps?.map((step) => (
 				<div key={step.id} className='flex flex-col items-center gap-3'>
 					<div
-						className={`w-42 h-44 rounded-lg flex flex-col items-center justify-center gap-4 ${
-							currentStep === step.id
-								? '!bg-[#2D6974]'
-								: currentStep > step.id
+						className={`w-42 h-44 rounded-lg flex flex-col items-center justify-center gap-4 ${currentStep === step.id
+							? '!bg-[#2D6974]'
+							: currentStep > step.id
 								? '!bg-[#2D6974]'
 								: ''
-						}`}
+							}`}
 					>
 						<div
-							className={`w-12 h-12 rounded-lg flex items-center justify-center text-white font-medium ${
-								currentStep === step.id
-									? '!bg-white !text-[#2D6974]'
-									: currentStep > step.id
+							className={`w-12 h-12 rounded-lg flex items-center justify-center text-white font-medium ${currentStep === step.id
+								? '!bg-white !text-[#2D6974]'
+								: currentStep > step.id
 									? '!bg-white !text-[#2D6974]'
 									: '!bg-[#999999] !text-white'
-							}`}
+								}`}
 							style={{ ...FONTS.percentage_text }}
 						>
 							{currentStep > step.id ? (
@@ -546,13 +598,12 @@ const StepperForm: React.FC = () => {
 						</div>
 						<div className='ml-2 text-center'>
 							<div
-								className={`${
-									currentStep === step.id
-										? '!text-white'
-										: currentStep > step.id
+								className={`${currentStep === step.id
+									? '!text-white'
+									: currentStep > step.id
 										? '!text-white'
 										: '!text-[#999999]'
-								}`}
+									}`}
 								style={{ ...FONTS.tableheader }}
 							>
 								{step.title}
@@ -590,8 +641,8 @@ const StepperForm: React.FC = () => {
 							<div className='grid grid-cols-1 md:grid-cols-2 gap-4'>
 								<InputField
 									label='Institute Name'
-									field='instituteName'
-									value={formData.instituteName}
+									field='institute_name'
+									value={formData.institute_name}
 									onChange={handleInputChange}
 								/>
 								<InputField
@@ -633,6 +684,7 @@ const StepperForm: React.FC = () => {
 									label='Phone Number'
 									field='phoneNumber'
 									type='tel'
+									placeholder='eg: +91xxxxxxxx'
 									value={formData.phoneNumber}
 									onChange={handleInputChange}
 								/>
@@ -640,29 +692,28 @@ const StepperForm: React.FC = () => {
 									label='Alt Phone Number'
 									field='altPhoneNumber'
 									type='tel'
+									placeholder='eg: +91xxxxxxxx'
 									value={formData.altPhoneNumber}
 									onChange={handleInputChange}
 								/>
-								{/* <DropdownField
+								<DropdownField
 									label='Country'
-									field='state' // Note: You might want to rename this field to 'country' in your FormData interface
+									field='country'
 									options={countries}
 									loading={loadingCountries}
-									value={formData.state} // Or formData.country if you rename the field
-									onChange={(field, value) => handleCountryChange(value)}
-								/> */}
-								{/* {states?.length > 0 && (
+									value={formData.country}
+									onChange={(field, value) => { handleCountryChange(value); handleInputChange(field, value) }}
+								/>
+								{states?.length > 0 && (
 									<DropdownField
 										label='State'
 										field='state'
 										options={states}
 										loading={loadingStates}
 										value={formData.state}
-										onChange={(field, value) =>
-											handleStateChange(value, formData.state)
-										}
+										onChange={(field, value) => { handleStateChange(value, formData.country); handleInputChange(field, value) }}
 									/>
-								)} */}
+								)}
 								{cities?.length > 0 && (
 									<DropdownField
 										label='City'
@@ -673,13 +724,13 @@ const StepperForm: React.FC = () => {
 										onChange={handleInputChange}
 									/>
 								)}
-								<DropdownField
+								{/* <DropdownField
 									label='Country'
 									field='country'
 									options={countries}
 									loading={loadingCountries}
 									value={formData.country}
-									onChange={(field, value) => handleCountryChange(value, true)}
+									onChange={(value) => handleCountryChange(value, true)}
 								/>
 								{branchStates?.length > 0 && (
 									<DropdownField
@@ -688,7 +739,7 @@ const StepperForm: React.FC = () => {
 										options={branchStates}
 										loading={loadingBranchStates}
 										value={formData.stateBranch}
-										onChange={(field, value) =>
+										onChange={(value) =>
 											handleStateChange(value, formData.country, true)
 										}
 									/>
@@ -702,7 +753,7 @@ const StepperForm: React.FC = () => {
 										value={formData.cityBranch}
 										onChange={handleInputChange}
 									/>
-								)}
+								)} */}
 								<InputField
 									label='Pin code'
 									field='pinCode'
@@ -747,8 +798,9 @@ const StepperForm: React.FC = () => {
 								options={
 									allSubscriptions && allSubscriptions?.length > 0
 										? allSubscriptions?.map((sub) => ({
-												name: sub?.identity,
-										  }))
+											name: sub?.identity,
+											_id: sub?._id
+										}))
 										: []
 								}
 								value={formData.subscription}
@@ -921,7 +973,7 @@ const StepperForm: React.FC = () => {
 								{formData.gstFile && (
 									<div className='absolute right-15 bottom-22'>
 										<p style={{ ...FONTS.small_text }}>
-											{formData.gstFile.name.substring(0, 20)}
+											{formData.gstFile?.includes("staticfiles/lms") ? 'file uploaded success' : 'upload failed try again..'}
 										</p>
 									</div>
 								)}
@@ -965,7 +1017,7 @@ const StepperForm: React.FC = () => {
 								{formData.panFile && (
 									<div className='absolute right-15 bottom-22'>
 										<p style={{ ...FONTS.small_text }}>
-											{formData.panFile.name.substring(0, 20)}
+											{formData.panFile?.includes("staticfiles/lms") ? 'file uploaded success' : 'upload failed try again..'}
 										</p>
 									</div>
 								)}
@@ -1001,9 +1053,7 @@ const StepperForm: React.FC = () => {
 												onChange={handleFileUpload('licenseFile')}
 											/>
 											<span style={{ ...FONTS.text4, color: COLORS.button }}>
-												{formData.licenseFile
-													? formData.licenseFile.name
-													: 'License Document'}
+												License Document
 											</span>
 										</label>
 									</div>
@@ -1011,7 +1061,7 @@ const StepperForm: React.FC = () => {
 								{formData.licenseFile && (
 									<div className='absolute right-15 bottom-22'>
 										<p style={{ ...FONTS.small_text }}>
-											{formData.licenseFile.name.substring(0, 20)}
+											{formData.licenseFile?.includes("staticfiles/lms") ? 'file uploaded success' : 'upload failed try again..'}
 										</p>
 									</div>
 								)}
@@ -1050,28 +1100,30 @@ const StepperForm: React.FC = () => {
 								/>
 								<InputField
 									label='Phone'
-									field='phone'
+									field='branch_phonenumber'
+									placeholder='eg: +91xxxxxxxx'
 									type='tel'
-									value={formData.phone}
+									value={formData.branch_phonenumber}
 									onChange={handleInputChange}
 								/>
 								<InputField
 									label='Alternative Phone'
-									field='alternativePhone'
+									field='branch_altphone'
+									placeholder='eg: +91xxxxxxxx'
 									type='tel'
-									value={formData.alternativePhone}
+									value={formData.branch_altphone}
 									onChange={handleInputChange}
 								/>
 								<InputField
 									label='Address Line 1'
-									field='addressLin1'
-									value={formData.addressLin1}
+									field='branch_addressLine1'
+									value={formData.branch_addressLine1}
 									onChange={handleInputChange}
 								/>
 								<InputField
 									label='Address Line 2'
-									field='addressLin2'
-									value={formData.addressLin2}
+									field='branch_addressLine2'
+									value={formData.branch_addressLine2}
 									onChange={handleInputChange}
 								/>
 
@@ -1082,19 +1134,21 @@ const StepperForm: React.FC = () => {
 									options={countries}
 									loading={loadingCountries}
 									value={formData.country}
-									onChange={(field, value) => handleCountryChange(value, true)}
+									onChange={(field, value) => { handleCountryChange(value, true); handleInputChange(field, value) }}
 								/>
 
 								{/* State Dropdown (only shown when country is selected) */}
-								{formData.country && branchStates.length > 0 && (
+								{branchStates.length > 0 && (
 									<DropdownField
 										label='State'
 										field='stateBranch'
 										options={branchStates}
 										loading={loadingBranchStates}
 										value={formData.stateBranch}
-										onChange={(field, value) =>
-											handleStateChange(value, formData.country, true)
+										onChange={(field, value) => {
+											handleStateChange(value, formData.country, true);
+											handleInputChange(field, value)
+										}
 										}
 									/>
 								)}
@@ -1148,9 +1202,9 @@ const StepperForm: React.FC = () => {
 								/>
 								<InputField
 									label='Phone Number'
-									field='phoneNumberAccount'
+									field='branch_phone'
 									type='tel'
-									value={formData.phoneNumberAccount}
+									value={formData.branch_phone}
 									onChange={handleInputChange}
 								/>
 							</div>
@@ -1180,7 +1234,7 @@ const StepperForm: React.FC = () => {
 									</label>
 									{formData.profileImage && (
 										<p style={{ ...FONTS.small_text }}>
-											{formData.profileImage.name.substring(0, 20)}
+											{formData?.profileImage?.name?.substring(0, 20)}
 										</p>
 									)}
 								</div>

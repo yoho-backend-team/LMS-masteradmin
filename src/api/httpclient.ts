@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { GetLocalStorage } from "@/utils/localStorage";
+import { ClearLocalStorage, GetLocalStorage } from "@/utils/localStorage";
 import axios from "axios";
 
 const Axios = axios.create({
@@ -11,7 +11,7 @@ const Axios = axios.create({
 });
 
 Axios.interceptors.request.use((config: any) => {
-    const token = GetLocalStorage("AdminToken")
+    const token = GetLocalStorage("pt_t_ah")
     if (token) {
         config.headers["Authorization"] = `Token ${token}`
     }
@@ -26,11 +26,7 @@ Axios.interceptors.response.use(
             error?.response?.status === 401 &&
             error?.response?.statusText === 'Unauthorized'
         ) {
-            localStorage.removeItem('isAuthenticated');
-            localStorage.removeItem('permissions');
-            localStorage.removeItem('token');
-            localStorage.removeItem('userData');
-            window.location.href = '/';
+            ClearLocalStorage()
         }
         return Promise.reject(error);
     }
@@ -47,6 +43,10 @@ class HttpClient {
     }
     async patch(url: string, data: any) {
         const response = Axios.patch(url, data);
+        return response;
+    }
+    async put(url: string, data: any) {
+        const response = Axios.put(url, data);
         return response;
     }
     async delete(url: string) {

@@ -1,7 +1,6 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { Signin } from "@/features/SignIn/service";
-import { StoreLocalStorage } from "@/utils/localStorage";
 import React, { useState } from "react";
-import { CiCircleInfo } from "react-icons/ci";
 import { FiEyeOff, FiEye } from "react-icons/fi";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "./AuthContext";
@@ -33,7 +32,6 @@ const SignIn = () => {
 
       if (token) {
         login(token)
-        localStorage.setItem("token", token);
         localStorage.setItem("isAuthenticated", "true");
 
         navigate("/");

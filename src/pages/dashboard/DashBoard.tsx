@@ -27,7 +27,6 @@ const Dashboard = () => {
   const [showFilter, setShowFilter] = useState(false);
   const [selectedMonth, setSelectedMonth] = useState<string | null>(null);
   const [selectedYear, setSelectedYear] = useState<string | null>(null);
-  const [revenueYear, setRevenueYear] = useState("2025");
   const [skeletonloading, isSkeletonLoading] = useState<boolean>(false);
   const nowDate = new Date();
   const currentMonth = nowDate.getMonth();
@@ -35,6 +34,8 @@ const Dashboard = () => {
 
   const dispatch = useAppDispatch();
   const DashBoardDatas = useAppSelector<any>(GetDashboardSelector);
+
+
 
   useEffect(() => {
     const fetch = async () => {
@@ -61,32 +62,32 @@ const Dashboard = () => {
     fetch();
   }, [currentMonth, currentYear, dispatch, selectedMonth, selectedYear]);
 
-const SkeletonCard = () => (
-  <div
-    className={`
+  const SkeletonCard = () => (
+    <div
+      className={`
       shadow-lg border-0 rounded-tl-3xl w-2/3 gap-3 flex rounded-br-3xl 
       rounded-bl-none rounded-tr-none bg-white p-6 animate-pulse
     `}
-  >
-    <div className="flex flex-col ml-20 items-center text-center space-y-4">
-      {/* Icon placeholder */}
-      <div className="w-12 h-12 rounded-full bg-gray-200"></div>
+    >
+      <div className="flex flex-col ml-20 items-center text-center space-y-4">
+        {/* Icon placeholder */}
+        <div className="w-12 h-12 rounded-full bg-gray-200"></div>
 
-      {/* Title placeholder */}
-      <div className="h-4 w-24 bg-gray-200 rounded"></div>
+        {/* Title placeholder */}
+        <div className="h-4 w-24 bg-gray-200 rounded"></div>
 
-      {/* Circular progress placeholder */}
-      <div className="w-20 h-20 rounded-full bg-gray-200"></div>
+        {/* Circular progress placeholder */}
+        <div className="w-20 h-20 rounded-full bg-gray-200"></div>
+      </div>
     </div>
-  </div>
-);
+  );
 
 
   const SkeletonChartHeader = () => (
     <div className="h-66 w-full bg-gray-50 shadow-xl rounded mb-4"></div>
   );
 
- 
+
 
   function setSubcriptionData() {
     try {
@@ -172,55 +173,116 @@ const SkeletonCard = () => (
 
   const [kpiData, setKpiData] = useState<any[]>([]);
 
+  // useEffect(() => {
+  //   setKpiData([
+  //     {
+  //       title: "Total Institute",
+  //       value: DashBoardDatas?.totalInstituteCount,
+  //       percentage: DashBoardDatas?.totalInstituteCount,
+  //       icon: Zap,
+  //       bgColor: "bg-teal-600",
+  //       iconBg: "bg-teal-100",
+  //       iconColor: "text-teal-600",
+  //       progressColor: "#14b8a6",
+  //     },
+  //     {
+  //       title: "Institute Subscription",
+  //       value: DashBoardDatas?.instituteSubscriptions,
+  //       percentage:  DashBoardDatas?.instituteSubscriptions?.length,
+  //       icon: Component,
+  //       bgColor: "bg-white",
+  //       iconBg: "bg-pink-100",
+  //       iconColor: "text-pink-500",
+  //       progressColor: "#ec4899",
+  //     },
+  //     {
+  //       title: "Active Subscription",
+  //       value: DashBoardDatas?.activeSubscriptions,
+  //       percentage:  DashBoardDatas?.activeSubscriptions,
+  //       icon: Droplet,
+  //       bgColor: "bg-white",
+  //       iconBg: "bg-purple-100",
+  //       iconColor: "text-purple-500",
+  //       progressColor: "#8b5cf6",
+  //     },
+  //     {
+  //       title: "New Support Tickets",
+  //       value: DashBoardDatas?.supportTickets,
+  //       percentage: 25,
+  //       icon: LifeBuoy,
+  //       bgColor: "bg-white",
+  //       iconBg: "bg-yellow-100",
+  //       iconColor: "text-yellow-500",
+  //       progressColor: "#f59e0b",
+  //     },
+  //   ]);
+  // }, [
+  //   DashBoardDatas?.activeSubscriptions,
+  //   DashBoardDatas?.instituteSubscriptions?.length,
+  //   DashBoardDatas?.supportTickets,
+  //   DashBoardDatas?.totalInstituteCount,
+  // ]);
+
   useEffect(() => {
-    setKpiData([
-      {
-        title: "Total Institute",
-        value: DashBoardDatas?.totalInstituteCount,
-        percentage: 45,
-        icon: Zap,
-        bgColor: "bg-teal-600",
-        iconBg: "bg-teal-100",
-        iconColor: "text-teal-600",
-        progressColor: "#14b8a6",
-      },
-      {
-        title: "Institute Subscription",
-        value: DashBoardDatas?.instituteSubscriptions?.length,
-        percentage: 15,
-        icon: Component,
-        bgColor: "bg-white",
-        iconBg: "bg-pink-100",
-        iconColor: "text-pink-500",
-        progressColor: "#ec4899",
-      },
-      {
-        title: "Active Subscription",
-        value: DashBoardDatas?.activeSubscriptions,
-        percentage: 9,
-        icon: Droplet,
-        bgColor: "bg-white",
-        iconBg: "bg-purple-100",
-        iconColor: "text-purple-500",
-        progressColor: "#8b5cf6",
-      },
-      {
-        title: "New Support Tickets",
-        value: DashBoardDatas?.supportTickets,
-        percentage: 25,
-        icon: LifeBuoy,
-        bgColor: "bg-white",
-        iconBg: "bg-yellow-100",
-        iconColor: "text-yellow-500",
-        progressColor: "#f59e0b",
-      },
-    ]);
-  }, [
-    DashBoardDatas?.activeSubscriptions,
-    DashBoardDatas?.instituteSubscriptions?.length,
-    DashBoardDatas?.supportTickets,
-    DashBoardDatas?.totalInstituteCount,
+  const ticketData = [
+    { title: "Admin Tickets", value: DashBoardDatas?.supportTickets?.adminTickets ?? 0, iconBg: "bg-yellow-100", iconColor: "text-yellow-500", progressColor: "#f59e0b" },
+    { title: "Staff Tickets", value: DashBoardDatas?.supportTickets?.staffTickets ?? 0, iconBg: "bg-blue-100", iconColor: "text-blue-500", progressColor: "#3b82f6" },
+    { title: "Student Tickets", value: DashBoardDatas?.supportTickets?.studentTickets ?? 0, iconBg: "bg-green-100", iconColor: "text-green-500", progressColor: "#10b981" },
+    { title: "Teaching Tickets", value: DashBoardDatas?.supportTickets?.teachingTickets ?? 0, iconBg: "bg-red-100", iconColor: "text-red-500", progressColor: "#ef4444" },
+  ];
+
+  const totalTickets = ticketData.reduce((sum, t) => sum + t.value, 0);
+
+
+  setKpiData([
+    {
+      title: "Total Institute",
+      value: DashBoardDatas?.totalInstituteCount,
+      percentage: DashBoardDatas?.totalInstituteCount,
+      icon: Zap,
+      bgColor: "bg-teal-600",
+      iconBg: "bg-teal-100",
+      iconColor: "text-teal-600",
+      progressColor: "#14b8a6",
+    },
+    {
+      title: "Institute Subscription",
+      value: DashBoardDatas?.instituteSubscriptions,
+      percentage: DashBoardDatas?.instituteSubscriptions?.length,
+      icon: Component,
+      bgColor: "bg-white",
+      iconBg: "bg-pink-100",
+      iconColor: "text-pink-500",
+      progressColor: "#ec4899",
+    },
+    {
+      title: "Active Subscription",
+      value: DashBoardDatas?.activeSubscriptions,
+      percentage: DashBoardDatas?.activeSubscriptions,
+      icon: Droplet,
+      bgColor: "bg-white",
+      iconBg: "bg-purple-100",
+      iconColor: "text-purple-500",
+      progressColor: "#8b5cf6",
+    },
+    {
+      title: "New Support Tickets",
+      value: totalTickets,
+      percentage: totalTickets > 0 ? Math.round((totalTickets / 100) * 100) : 0,
+      icon: LifeBuoy,
+      bgColor: "bg-white",
+      iconBg: "bg-yellow-100",
+      iconColor: "text-yellow-500",
+      progressColor: "#f59e0b",
+    },
   ]);
+}, [
+  DashBoardDatas?.adminTickets,
+  DashBoardDatas?.staffTickets,
+  DashBoardDatas?.studentTickets,
+  DashBoardDatas?.teachingTickets,
+]);
+
 
   const CircularProgress = ({
     percentage,
@@ -267,9 +329,8 @@ const SkeletonCard = () => (
         {/* Center percentage text */}
         <div className="absolute inset-0 flex items-center justify-center">
           <span
-            className={`text-lg font-bold ${
-              isHovered ? "text-white" : "text-gray-800"
-            } ${isLoading ? "animate-pulse" : ""}`}
+            className={`text-lg font-bold ${isHovered ? "text-white" : "text-gray-800"
+              } ${isLoading ? "animate-pulse" : ""}`}
             style={{ ...FONTS.percentage_text }}
           >
             {`${percentage}`}
@@ -384,8 +445,8 @@ const SkeletonCard = () => (
             isCurrentMonthBar
               ? "#2D6974"
               : isHovered
-              ? `url(#crosshatch-hover-${props.payload?.index})`
-              : `url(#crosshatch-${props.payload?.index})`
+                ? `url(#crosshatch-hover-${props.payload?.index})`
+                : `url(#crosshatch-${props.payload?.index})`
           }
           rx="6"
           ry="6"
@@ -517,233 +578,224 @@ const SkeletonCard = () => (
           </Card>
         )}
 
-        {skeletonloading? (
-			<>
-			<div className="flex gap-5">
-				<SkeletonCard />
-			<SkeletonCard />
-			<SkeletonCard />
-			<SkeletonCard />
-			</div>
-			</>
-	):(
-	<>
-	<div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-          {kpiData.map((kpi, index) => {
-            const isHovered = hoveredCard === index;
-            const IconComponent = kpi.icon;
+        {skeletonloading ? (
+          <>
+            <div className="flex gap-5">
+              <SkeletonCard />
+              <SkeletonCard />
+              <SkeletonCard />
+              <SkeletonCard />
+            </div>
+          </>
+        ) : (
+          <>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+              {kpiData.map((kpi, index) => {
+                const isHovered = hoveredCard === index;
+                const IconComponent = kpi.icon;
 
-            return (
-              <Card
-                key={index}
-                className={`
-                  shadow-lg transition-all duration-300 cursor-pointer border-0
-                  rounded-tl-3xl rounded-br-3xl rounded-bl-none rounded-tr-none
-                  ${
-                    isHovered || index === 0
-                      ? "bg-[#2D6974] text-white hover:scale-105"
-                      : "bg-white text-gray-900 hover:scale-100"
-                  }
-                `}
-                onMouseEnter={() => setHoveredCard(index)}
-                onMouseLeave={() => setHoveredCard(null)}
-              >
-                <CardContent className="p-6">
-                  <div className="flex flex-col items-center text-center space-y-4">
-                    {/* Icon with background circle */}
-                    <div
-                      className={`
-                        w-12 h-12 rounded-full flex items-center justify-center
-                        ${isHovered || index === 0 ? "bg-white/20" : kpi.iconBg}
-                      `}
-                    >
-                      <IconComponent
-                        className={`
-                          w-6 h-6
-                          ${
-                            isHovered || index === 0
-                              ? "text-white"
-                              : kpi.iconColor
-                          }
-                        `}
-                      />
-                    </div>
+                return (
+                  <Card
+                    key={index}
+                    className={`
+    shadow-lg transition-all duration-300 cursor-pointer border-0
+    rounded-tl-3xl rounded-br-3xl rounded-bl-none rounded-tr-none
+    ${isHovered
+                        ? "bg-[#2D6974] text-white hover:scale-90"
+                        : "bg-white text-gray-900 hover:scale-100"
+                      }
+  `}
+                    onMouseEnter={() => setHoveredCard(index)}
+                    onMouseLeave={() => setHoveredCard(null)}
+                  >
+                    <CardContent className="p-6">
+                      <div className="flex flex-col items-center text-center space-y-4">
+                        {/* Icon with background circle */}
+                        <div
+                          className={`
+          w-12 h-12 rounded-full flex items-center justify-center
+          ${isHovered ? "bg-white/20" : kpi.iconBg}
+        `}
+                        >
+                          <IconComponent
+                            className={`
+            w-6 h-6
+            ${isHovered ? "text-white" : kpi.iconColor}
+          `}
+                          />
+                        </div>
 
-                    {/* Title */}
-                    <h3
-                      className={`
-                        text-sm font-medium leading-tight
-                        ${
-                          isHovered || index === 0
-                            ? "text-white/90"
-                            : "text-gray-600"
-                        }
-                      `}
-                      style={{ ...FONTS.card_text }}
-                    >
-                      {kpi.title}
-                    </h3>
+                        {/* Title */}
+                        <h3
+                          className={`
+          text-sm font-medium leading-tight
+          ${isHovered ? "text-white/90" : "text-gray-600"}
+        `}
+                          style={{ ...FONTS.card_text }}
+                        >
+                          {kpi.title}
+                        </h3>
 
-                    {/* Circular progress */}
-                    <div className="flex flex-col items-center">
-                      <CircularProgress
-                        percentage={kpi.percentage}
-                        progressColor={kpi.progressColor}
-                        isLoading={isLoading}
-                        isHovered={isHovered || index === 0}
-                      />
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
-            );
-          })}
-        </div>
-	</>
-	)}
+                        {/* Circular progress */}
+                        <div className="flex flex-col items-center">
+                          <CircularProgress
+                            percentage={kpi.percentage}
+                            progressColor={kpi.progressColor}
+                            isLoading={isLoading}
+                            isHovered={isHovered}
+                          />
+                        </div>
+                      </div>
+                    </CardContent>
+                  </Card>
+                );
+              })}
+            </div>
+          </>
+        )}
 
         <div className="space-y-6">
           <h1 style={{ ...FONTS.bold_heading }}>Graphs & Trends</h1>
 
-		  {skeletonloading? (
-			<>
-			<SkeletonChartHeader />
-			</>
-		  ):(
-			<>
-			 <Card className="shadow-lg border-0">
-            <CardHeader className="pb-4 flex flex-row justify-between items-center">
-              <CardTitle style={{ ...FONTS.sub_text, color: COLORS.button }}>
-                Revenue Trends (Monthly)
-              </CardTitle>
-            </CardHeader>
+          {skeletonloading ? (
+            <>
+              <SkeletonChartHeader />
+            </>
+          ) : (
+            <>
+              <Card className="shadow-lg border-0">
+                <CardHeader className="pb-4 flex flex-row justify-between items-center">
+                  <CardTitle style={{ ...FONTS.sub_text, color: COLORS.button }}>
+                    Revenue Trends (Monthly)
+                  </CardTitle>
+                </CardHeader>
 
-            <CardContent>
-              <div className="flex">
-                <div className="flex-1 h-64">
-                  <ResponsiveContainer width="100%" height="100%">
-                    <BarChart
-                      data={revenueData}
-                      onMouseMove={(e) => {
-                        if (e && typeof e.activeTooltipIndex === "number") {
-                          setHoveredBar(e.activeTooltipIndex);
-                        }
-                      }}
-                      onMouseLeave={() => setHoveredBar(null)}
-                    >
-                      <XAxis
-                        dataKey="month"
-                        axisLine={false}
-                        tickLine={false}
-                        style={{ ...FONTS.small_text, color: COLORS.gray_01 }}
-                      />
-                      <YAxis
-                        dataKey="amount"
-                        axisLine={false}
-                        tickLine={false}
-                        style={{ ...FONTS.small_text, color: COLORS.gray_01 }}
-                      />
-                      <Bar
-                        dataKey="amount"
-                        maxBarSize={50}
-                        shape={<CustomBar />}
-                      />
-                    </BarChart>
-                  </ResponsiveContainer>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-</>
-			)}
-         
+                <CardContent>
+                  <div className="flex">
+                    <div className="flex-1 h-64">
+                      <ResponsiveContainer width="100%" height="100%">
+                        <BarChart
+                          data={revenueData}
+                          onMouseMove={(e) => {
+                            if (e && typeof e.activeTooltipIndex === "number") {
+                              setHoveredBar(e.activeTooltipIndex);
+                            }
+                          }}
+                          onMouseLeave={() => setHoveredBar(null)}
+                        >
+                          <XAxis
+                            dataKey="month"
+                            axisLine={false}
+                            tickLine={false}
+                            style={{ ...FONTS.small_text, color: COLORS.gray_01 }}
+                          />
+                          <YAxis
+                            dataKey="amount"
+                            axisLine={false}
+                            tickLine={false}
+                            style={{ ...FONTS.small_text, color: COLORS.gray_01 }}
+                          />
+                          <Bar
+                            dataKey="amount"
+                            maxBarSize={50}
+                            shape={<CustomBar />}
+                          />
+                        </BarChart>
+                      </ResponsiveContainer>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+            </>
+          )}
 
 
-         {skeletonloading? (
-			<>
-			<SkeletonChartHeader />
-			</>
-		):(
-		<>
-		 <Card className="shadow-lg border-0">
-            <CardHeader className="pb-4 flex flex-row justify-between items-center">
-              <div>
-                <CardTitle style={{ ...FONTS.card_text, color: COLORS.black }}>
-                  Subscription{" "}
-                  <span style={{ ...FONTS.sub_text_2, color: COLORS.black }}>
-                    Details
-                  </span>
-                </CardTitle>
-              </div>
-            </CardHeader>
-            <CardContent>
-              <div className="h-48">
-                <ResponsiveContainer width="100%" height="100%">
-                  <LineChart
-                    data={subscriptionData}
-                    margin={{ top: 5, right: 10, left: 10, bottom: 25 }}
-                  >
-                    <defs>
-                      <linearGradient
-                        id="lineGradient"
-                        x1="0"
-                        y1="0"
-                        x2="1"
-                        y2="0"
+
+          {skeletonloading ? (
+            <>
+              <SkeletonChartHeader />
+            </>
+          ) : (
+            <>
+              <Card className="shadow-lg border-0">
+                <CardHeader className="pb-4 flex flex-row justify-between items-center">
+                  <div>
+                    <CardTitle style={{ ...FONTS.card_text, color: COLORS.black }}>
+                      Subscription{" "}
+                      <span style={{ ...FONTS.sub_text_2, color: COLORS.black }}>
+                        Details
+                      </span>
+                    </CardTitle>
+                  </div>
+                </CardHeader>
+                <CardContent>
+                  <div className="h-48">
+                    <ResponsiveContainer width="100%" height="100%">
+                      <LineChart
+                        data={subscriptionData}
+                        margin={{ top: 5, right: 10, left: 10, bottom: 25 }}
                       >
-                        <stop offset="0%" stopColor="#2D6974" stopOpacity={1} />
-                        <stop
-                          offset="100%"
-                          stopColor="#68B39F"
-                          stopOpacity={1}
+                        <defs>
+                          <linearGradient
+                            id="lineGradient"
+                            x1="0"
+                            y1="0"
+                            x2="1"
+                            y2="0"
+                          >
+                            <stop offset="0%" stopColor="#2D6974" stopOpacity={1} />
+                            <stop
+                              offset="100%"
+                              stopColor="#68B39F"
+                              stopOpacity={1}
+                            />
+                          </linearGradient>
+                        </defs>
+                        <XAxis
+                          dataKey="month"
+                          axisLine={false}
+                          tickLine={false}
+                          tick={{ fill: "#6b7280", fontSize: 12 }}
+                          interval={0}
+                          style={{ ...FONTS.small_text, color: COLORS.gray_02 }}
                         />
-                      </linearGradient>
-                    </defs>
-                    <XAxis
-                      dataKey="month"
-                      axisLine={false}
-                      tickLine={false}
-                      tick={{ fill: "#6b7280", fontSize: 12 }}
-                      interval={0}
-                      style={{ ...FONTS.small_text, color: COLORS.gray_02 }}
-                    />
-                    <YAxis hide />
-                    <Tooltip content={<CustomTooltip />} />
-                    <Line
-                      type="monotone"
-                      dataKey="subscriptions"
-                      stroke="url(#lineGradient)"
-                      strokeWidth={1.5}
-                      dot={{
-                        r: 0,
-                        stroke: "#2D6974",
-                        strokeWidth: 1,
-                        fill: "#fff",
-                      }}
-                      activeDot={{
-                        r: 3,
-                        fill: "#2D6974",
-                        stroke: "#fff",
-                        strokeWidth: 2,
-                      }}
-                    />
+                        <YAxis hide />
+                        <Tooltip content={<CustomTooltip />} />
+                        <Line
+                          type="monotone"
+                          dataKey="subscriptions"
+                          stroke="url(#lineGradient)"
+                          strokeWidth={1.5}
+                          dot={{
+                            r: 0,
+                            stroke: "#2D6974",
+                            strokeWidth: 1,
+                            fill: "#fff",
+                          }}
+                          activeDot={{
+                            r: 3,
+                            fill: "#2D6974",
+                            stroke: "#fff",
+                            strokeWidth: 2,
+                          }}
+                        />
 
-                    <Line
-                      type="monotone"
-                      dataKey="subscriptions"
-                      stroke="#2D6974"
-                      strokeWidth={3}
-                      strokeOpacity={0.2}
-                      dot={false}
-                      activeDot={false}
-                    />
-                  </LineChart>
-                </ResponsiveContainer>
-              </div>
-            </CardContent>
-          </Card>
-		</>
-		)}
+                        <Line
+                          type="monotone"
+                          dataKey="subscriptions"
+                          stroke="#2D6974"
+                          strokeWidth={3}
+                          strokeOpacity={0.2}
+                          dot={false}
+                          activeDot={false}
+                        />
+                      </LineChart>
+                    </ResponsiveContainer>
+                  </div>
+                </CardContent>
+              </Card>
+            </>
+          )}
         </div>
       </div>
     </div>
