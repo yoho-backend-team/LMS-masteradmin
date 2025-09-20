@@ -150,7 +150,6 @@ const AddSubscription: React.FC<AddSubscriptionProps> = ({ onSubmit }) => {
             {uploading ? "Uploading..." : "Upload Profile Picture"}
           </p>
           <p className="text-sm text-gray-500">PNG or JPEG (Max 800KB)</p>
-
           <input
             id="fileInput"
             type="file"
@@ -160,18 +159,15 @@ const AddSubscription: React.FC<AddSubscriptionProps> = ({ onSubmit }) => {
               if (file) {
                 try {
                   setUploading(true);
-
-                  // ✅ For instant preview (local preview before upload)
                   const localPreview = URL.createObjectURL(file);
                   setForm((prev) => ({ ...prev, image: localPreview }));
-
                   const formData = new FormData();
                   formData.append("file", file);
 
                   const response = await UploadImage(formData);
+                  console.log("IMAGE UPLOAD RESPONSE:", response);
 
                   if (response?.data?.file) {
-                    // ✅ Replace with server file path after upload succeeds
                     setForm((prev) => ({ ...prev, image: response.data.file }));
                   }
                 } catch (error) {

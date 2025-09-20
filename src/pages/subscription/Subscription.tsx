@@ -5,6 +5,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { GettingAllSubscriptionThunks } from "@/features/subscription/redux/thunks";
 import ConfirmDeleteModal from "../../components/SubscriptionPlan/ConfirmDeleteModal";
 import { useNavigate } from "react-router-dom";
+import { GetImageUrl } from "@/utils/helper";
 
 export interface Feature {
   label?: string;
@@ -109,11 +110,17 @@ const Subscription: React.FC = () => {
   hover:bg-[#68B39F] hover:text-white transition-colors duration-300"
           >
             <div className="p-4 flex flex-col flex-grow">
-              <img
-                src={plan.image ? plan.image : "no data"}
-                alt={plan.identity ? plan.identity : "no data"}
-                className="h-40 w-full object-cover rounded-md mb-3"
-              />
+              {plan.image ? (
+                <img
+                  src={GetImageUrl(plan.image) ?? undefined}
+                  alt={plan.identity || "subscription image"}
+                  className="h-40 w-full object-cover rounded-md mb-3"
+                />
+              ) : (
+                <div className="h-40 w-full bg-gray-200 rounded-md mb-3 flex items-center justify-center text-gray-500">
+                  No Image
+                </div>
+              )}
 
               <h3 className="text-lg font-semibold text-gray-800 group-hover:text-white">
                 {plan.identity ? plan.identity : "no data"}
