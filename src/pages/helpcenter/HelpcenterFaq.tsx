@@ -15,6 +15,7 @@ import toast from 'react-hot-toast';
 import { Card, CardContent } from '@/components/ui/card';
 import { FONTS } from '@/constants/ui constants';
 import { Button } from '@/components/ui/button';
+import { useLoader } from '@/context/LoadingContext/Loader';
 
 const HelpcenterFaq: React.FC = () => {
 
@@ -25,6 +26,7 @@ const HelpcenterFaq: React.FC = () => {
     module: "",
     description: "",
   });
+  const { showLoader, hideLoader } = useLoader()
 
   const helpcenters = useSelector((state: RootState) => state.helpcenter.getAll)
 
@@ -43,8 +45,14 @@ const HelpcenterFaq: React.FC = () => {
   }
 
   useEffect(() => {
-    dispatch(getAllHelpCenterThunks())
-  }, [dispatch]);
+    (async () => {
+      showLoader()
+      const response = await dispatch(getAllHelpCenterThunks())
+      if (response) {
+        hideLoader()
+      }
+    })()
+  }, [dispatch, hideLoader, showLoader]);
 
   return (
     <div className="h-[300px] w-auto bg-white p-3 font-Montserrat text-[#999999] flex flex-col">

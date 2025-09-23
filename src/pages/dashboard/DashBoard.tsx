@@ -19,6 +19,7 @@ import { COLORS, FONTS } from "@/constants/ui constants";
 import { useAppDispatch, useAppSelector } from "@/hooks/reduxhooks";
 import { GetDashboardThunks } from "@/features/dashboard/redux/thunks";
 import { GetDashboardSelector } from "@/features/dashboard/redux/selector";
+import { useLoader } from "@/context/LoadingContext/Loader";
 
 const Dashboard = () => {
   const [isLoading, setIsLoading] = useState(true);
@@ -34,11 +35,13 @@ const Dashboard = () => {
 
   const dispatch = useAppDispatch();
   const DashBoardDatas = useAppSelector<any>(GetDashboardSelector);
+  const { showLoader, hideLoader } = useLoader()
 
 
 
   useEffect(() => {
     const fetch = async () => {
+      showLoader()
       if (selectedMonth || selectedYear) {
         isSkeletonLoading(true);
         await dispatch(
@@ -56,11 +59,12 @@ const Dashboard = () => {
       isSkeletonLoading(false);
       const timer = setTimeout(() => {
         setIsLoading(false);
+        hideLoader()
       }, 2000);
       return () => clearTimeout(timer);
     };
     fetch();
-  }, [currentMonth, currentYear, dispatch, selectedMonth, selectedYear]);
+  }, [currentMonth, currentYear, dispatch, hideLoader, selectedMonth, selectedYear, showLoader]);
 
   const SkeletonCard = () => (
     <div
@@ -172,56 +176,6 @@ const Dashboard = () => {
   const subscriptionData = setSubcriptionData();
 
   const [kpiData, setKpiData] = useState<any[]>([]);
-
-  // useEffect(() => {
-  //   setKpiData([
-  //     {
-  //       title: "Total Institute",
-  //       value: DashBoardDatas?.totalInstituteCount,
-  //       percentage: DashBoardDatas?.totalInstituteCount,
-  //       icon: Zap,
-  //       bgColor: "bg-teal-600",
-  //       iconBg: "bg-teal-100",
-  //       iconColor: "text-teal-600",
-  //       progressColor: "#14b8a6",
-  //     },
-  //     {
-  //       title: "Institute Subscription",
-  //       value: DashBoardDatas?.instituteSubscriptions,
-  //       percentage:  DashBoardDatas?.instituteSubscriptions?.length,
-  //       icon: Component,
-  //       bgColor: "bg-white",
-  //       iconBg: "bg-pink-100",
-  //       iconColor: "text-pink-500",
-  //       progressColor: "#ec4899",
-  //     },
-  //     {
-  //       title: "Active Subscription",
-  //       value: DashBoardDatas?.activeSubscriptions,
-  //       percentage:  DashBoardDatas?.activeSubscriptions,
-  //       icon: Droplet,
-  //       bgColor: "bg-white",
-  //       iconBg: "bg-purple-100",
-  //       iconColor: "text-purple-500",
-  //       progressColor: "#8b5cf6",
-  //     },
-  //     {
-  //       title: "New Support Tickets",
-  //       value: DashBoardDatas?.supportTickets,
-  //       percentage: 25,
-  //       icon: LifeBuoy,
-  //       bgColor: "bg-white",
-  //       iconBg: "bg-yellow-100",
-  //       iconColor: "text-yellow-500",
-  //       progressColor: "#f59e0b",
-  //     },
-  //   ]);
-  // }, [
-  //   DashBoardDatas?.activeSubscriptions,
-  //   DashBoardDatas?.instituteSubscriptions?.length,
-  //   DashBoardDatas?.supportTickets,
-  //   DashBoardDatas?.totalInstituteCount,
-  // ]);
 
   useEffect(() => {
     const ticketData = [

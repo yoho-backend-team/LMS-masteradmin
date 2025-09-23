@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import React, { useEffect, useState } from "react";
 import { Plus, MoreVertical, Check } from "lucide-react";
 import { FONTS } from "@/constants/ui constants";
@@ -5,6 +6,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { GettingAllSubscriptionThunks } from "@/features/subscription/redux/thunks";
 import ConfirmDeleteModal from "../../components/SubscriptionPlan/ConfirmDeleteModal";
 import { useNavigate } from "react-router-dom";
+import { useLoader } from "@/context/LoadingContext/Loader";
 
 export interface Feature {
   label?: string;
@@ -37,20 +39,25 @@ const Subscription: React.FC = () => {
   const subscriptionData = useSelector((state: any) => state.Subscription.subscription);
   const output = subscriptionData?.data;
   const navigate = useNavigate();
+  const { showLoader, hideLoader } = useLoader()
 
   useEffect(() => {
     (async () => {
       // setIsLoading(true);
+      showLoader()
       try {
         await dispatch(GettingAllSubscriptionThunks() as any);
+        hideLoader()
       } catch (error) {
         console.error("Error fetching subscription data:", error);
+        hideLoader()
       } finally {
+        hideLoader()
         // setIsLoading(false);
       }
     })()
 
-  }, [dispatch]);
+  }, [dispatch, hideLoader, showLoader]);
 
   useEffect(() => {
     if (output?.length > 0) {

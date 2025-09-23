@@ -4,11 +4,14 @@ import Navbar from '../components/shared/NavBar';
 import Sidebar from '../components/shared/SideBar';
 import { Outlet } from 'react-router-dom';
 import Client from '../api/index'
+import { useLoader } from '@/context/LoadingContext/Loader';
+import Loader from '@/components/Loader/Loader';
 
 function MainLayout() {
 
 
 	const publicVapidKey = import.meta.env.VITE_WEBPUSH_PUBLIC_KEY;
+	const { IsLoading } = useLoader()
 
 	function urlBase64ToUint8Array(base64String: string) {
 		const padding = '='.repeat((4 - (base64String.length % 4)) % 4);
@@ -56,6 +59,11 @@ function MainLayout() {
 	return (
 		<>
 			<div className='flex flex-col w-screen h-screen overflow-hidden bg-[#1BBFCA]'>
+				{IsLoading && (
+					<div className='w-full h-full flex justify-center items-center absolute z-10 bg-transparent backdrop-blur-md transition-all duration-500 ease-in-out'>
+						<Loader />
+					</div>
+				)}
 				<div className='flex flex-col flex-1'>
 					<Navbar />
 				</div>

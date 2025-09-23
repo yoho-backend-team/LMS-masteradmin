@@ -7,6 +7,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { getPaymentThunks } from "@/features/Payments/Reducers/thunks";
 import { selectPayment } from "@/features/Payments/Reducers/selectors";
 import { GetImageUrl } from "@/utils/helper";
+import { useLoader } from "@/context/LoadingContext/Loader";
 
 export default function PaymentsTable() {
   const dispatch = useDispatch<any>();
@@ -15,18 +16,21 @@ export default function PaymentsTable() {
 
   const [page, setPage] = useState(1);
   const [selectedPayment, setSelectedPayment] = useState<any>(null); // ✅ Store clicked payment
+  const { showLoader, hideLoader } = useLoader()
 
   useEffect(() => {
     (async (currentPage: number) => {
       try {
+        showLoader()
         isLoading(true);
         await dispatch(getPaymentThunks({ page: currentPage }));
         isLoading(false);
+        hideLoader()
       } catch (error) {
         console.log("Error fetching payments data:", error);
       }
     })(page);
-  }, [dispatch, page]);
+  }, [dispatch, hideLoader, page, showLoader]);
 
   const getAmountPaid = (paymentHistory: any) => {
     const amountPaid = paymentHistory?.map((pay: any) => pay.amount);

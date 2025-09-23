@@ -14,6 +14,7 @@ import {
 } from '@/features/Profile/services';
 import toast from 'react-hot-toast';
 import dayjs from 'dayjs';
+import { useLoader } from '@/context/LoadingContext/Loader';
 
 
 const SkeletonLoader = () => {
@@ -88,6 +89,7 @@ const ProfileDetails = () => {
 	const activityData: any = useAppSelector(
 		(state) => state.ProfileSlice.activity
 	);
+	const { showLoader, hideLoader } = useLoader()
 
 	const handleImageChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
 		const file = e.target.files?.[0];
@@ -141,21 +143,25 @@ const ProfileDetails = () => {
 	useEffect(() => {
 		const fetchData = async () => {
 			setIsLoading(true);
+			showLoader()
 			try {
 				await Promise.all([
 					dispatch(getProfileThunks({})),
 					dispatch(getActivityThunks({}))
 				]);
+				hideLoader()
 			} catch (error) {
 				console.error('Error fetching data:', error);
 				toast.error('Failed to load profile data');
+				hideLoader()
 			} finally {
+				hideLoader()
 				setIsLoading(false);
 			}
 		};
 
 		fetchData();
-	}, [dispatch]);
+	}, [dispatch, hideLoader, showLoader]);
 
 	useEffect(() => {
 		if (profileData) {

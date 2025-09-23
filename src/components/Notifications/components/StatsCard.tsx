@@ -1,20 +1,25 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { Card, CardContent } from '@/components/ui/card';
 import { Zap, Component, Droplet } from 'lucide-react';
 import { FONTS } from '@/constants/ui constants';
 import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { GetAllNotificationThunks } from '@/features/notification/redux/thunks';
+import { useLoader } from '@/context/LoadingContext/Loader';
 
 const StatsCard: React.FC = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [hoveredCard, setHoveredCard] = useState<number | null>(null);
+  const { showLoader, hideLoader } = useLoader()
 
   useEffect(() => {
+    showLoader()
     const timer = setTimeout(() => {
       setIsLoading(false);
+      hideLoader()
     }, 2000);
     return () => clearTimeout(timer);
-  }, []);
+  }, [hideLoader, showLoader]);
 
   const dispatch = useDispatch();
 
@@ -29,14 +34,14 @@ const StatsCard: React.FC = () => {
   const totalNotifications = notifications?.length;
   const seenNotifications = notifications?.filter((n: any) => n?.status === 'read').length;
   const unseenNotifications = notifications?.filter((n: any) => n?.status === 'unread').length;
-  
+
   const maxNotifications = 100;
 
   const kpiData = [
     {
       title: 'Total Notifications',
       value: totalNotifications,
-      percentage: totalNotifications > 0 ? Math.min((totalNotifications / maxNotifications) * 100, 100) : 0, 
+      percentage: totalNotifications > 0 ? Math.min((totalNotifications / maxNotifications) * 100, 100) : 0,
       icon: Zap,
       bgColor: 'bg-teal-600',
       iconBg: 'bg-teal-100',
@@ -56,7 +61,7 @@ const StatsCard: React.FC = () => {
     {
       title: 'Unseen Notifications',
       value: unseenNotifications,
-      percentage: totalNotifications > 0 ? Math.min((totalNotifications / maxNotifications) * 100, 100) : 0, 
+      percentage: totalNotifications > 0 ? Math.min((totalNotifications / maxNotifications) * 100, 100) : 0,
       icon: Droplet,
       bgColor: 'bg-white',
       iconBg: 'bg-yellow-100',
@@ -78,13 +83,13 @@ const StatsCard: React.FC = () => {
               >
                 <CardContent className='p-6'>
                   <div className='flex flex-col items-center text-center space-y-4 -mt-5'>
-                   
+
                     <div className='w-16 h-16 rounded-full bg-gray-200 animate-pulse'></div>
-                        
+
                     <div className='w-32 h-6 bg-gray-200 rounded animate-pulse'></div>
-              
+
                     <div className='w-16 h-8 bg-gray-200 rounded animate-pulse'></div>
-                    
+
                     <div className='relative w-30 h-30'>
                       <div className='w-full h-full rounded-full bg-gray-200 animate-pulse'></div>
                     </div>

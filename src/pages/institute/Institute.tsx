@@ -18,6 +18,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { selectInstitutes } from '@/features/institute/reducers/selectors';
 import { getInstitutesData } from '@/features/institute/reducers/thunks';
 import { GetImageUrl } from '../../utils/helper';
+import { useLoader } from "@/context/LoadingContext/Loader";
 
 // Skeleton Loader Components
 const SkeletonKpiCard = () => (
@@ -115,26 +116,27 @@ const Institutes: React.FC = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch<any>();
   const instituteData = useSelector(selectInstitutes);
-  console.log(instituteData,"institute data")
+  console.log(instituteData, "institute data")
   const activeCount = instituteData.filter((item: any) => item.Institute_Status === "active").length;
   const inactiveCount = instituteData.filter((item: any) => item.Institute_Status === "inactive").length;
-
-  console.log("Active:", activeCount);
-  console.log("Inactive:", inactiveCount);
+  const { showLoader, hideLoader } = useLoader()
 
   useEffect(() => {
     (async () => {
+      showLoader()
       try {
         await dispatch(getInstitutesData());
+        hideLoader()
       } catch (error) {
         console.error('Error fetching institutes:', error);
+        hideLoader()
       } finally {
+        hideLoader()
         setIsLoading(false);
       }
     })()
-  }, [dispatch]);
+  }, [dispatch, hideLoader, showLoader]);
 
-  // Filter institutes based on selected filters
   useEffect(() => {
     if (!instituteData) return;
 
@@ -213,50 +215,6 @@ const Institutes: React.FC = () => {
     },
   ]);
 
-
-  // useEffect(() => {
-  //   if (!instituteData) return;
-
-  //   const total = instituteData?.length;
-  //   const filteredTotal = filteredInstitutes?.length;
-  //   const filteredActive = filteredInstitutes?.filter(
-  //     (i) => i.institute_active_status === 'Active'
-  //   ).length;
-  //   const filteredBlocked = filteredInstitutes.filter(
-  //     (i) => i.institute_active_status === 'Blocked'
-  //   ).length;
-
-  //   // setKpiData([
-  //   //   {
-  //   //     ...kpiData[0],
-  //   //     value: `${total}`,
-  //   //     percentage: total > 0 ? Math.round((filteredTotal / total) * 100) : 0,
-  //   //   },
-  //   //   {
-  //   //     ...kpiData[1],
-  //   //     value: `${filteredActive}`,
-  //   //     percentage:
-  //   //       filteredTotal > 0
-  //   //         ? Math.round((filteredActive / filteredTotal) * 100)
-  //   //         : 0,
-  //   //   },
-  //   //   {
-  //   //     ...kpiData[2],
-  //   //     value: `${filteredBlocked}`,
-  //   //     percentage:
-  //   //       filteredTotal > 0
-  //   //         ? Math.round((filteredBlocked / filteredTotal) * 100)
-  //   //         : 0,
-  //   //   },
-  //   // ]);
-  // }, [filteredInstitutes, instituteData]);
-
-  // Update institute plan
-  const updateInstitutePlan = (id: number, newPlan: string) => {
-    console.log(`Updating institute ${id} to plan ${newPlan}`);
-  };
-
-  // Update institute status
   const updateInstituteStatus = (id: number, newStatus: string) => {
     console.log(`Updating institute ${id} to status ${newStatus}`);
   };
@@ -565,17 +523,17 @@ const Institutes: React.FC = () => {
                           <div className='flex justify-between gap-3'>
                             {/* Plan Dropdown */}
                             {/* <DropdownMenu> */}
-                              <div>
-                                <Button
-                                  variant='outline'
-                                  className='!text-[#2D6974] border-[#2D6974] px-4 flex items-center gap-2'
-                                  style={{ ...FONTS.pass_head_2 }}
-                                >
-                                  {institute?.subscription?.identity || 'No Plan'}
-                                  {/* <ChevronDown className='w-4 h-4' /> */}
-                                </Button>
-                              </div>
-                              {/* <DropdownMenuContent>
+                            <div>
+                              <Button
+                                variant='outline'
+                                className='!text-[#2D6974] border-[#2D6974] px-4 flex items-center gap-2'
+                                style={{ ...FONTS.pass_head_2 }}
+                              >
+                                {institute?.subscription?.identity || 'No Plan'}
+                                {/* <ChevronDown className='w-4 h-4' /> */}
+                              </Button>
+                            </div>
+                            {/* <DropdownMenuContent>
                                 {subscriptionPlans.map((plan) => (
                                   <DropdownMenuItem
                                     key={plan}

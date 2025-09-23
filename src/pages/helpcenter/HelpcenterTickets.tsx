@@ -16,6 +16,7 @@ import { getHelpcenterTicketData } from '@/features/Profile/helpcenter-ticket/re
 import { helpcenterTicketSelect } from '@/features/Profile/helpcenter-ticket/reducers/Selector'
 import { GetImageUrl } from '@/utils/helper'
 import socket from '@/utils/socket'
+import { useLoader } from '@/context/LoadingContext/Loader'
 
 interface Ticket {
   _id: string
@@ -158,6 +159,7 @@ const HelpcenterTickets = () => {
   const [selectedUserProfile, setSelectedUserProfile] = useState<UserProfile | null>(null)
   const [searchQuery, setSearchQuery] = useState<string>('')
   const [isLoading, setIsLoading] = useState(true)
+  const { showLoader, hideLoader } = useLoader()
 
   const filteredTickets = ticketData?.filter((ticket) => {
     const fullName = `${ticket.user.first_name} ${ticket.user.last_name}`.toLowerCase();
@@ -189,17 +191,21 @@ const HelpcenterTickets = () => {
   useEffect(() => {
     const loadData = async () => {
       setIsLoading(true)
+      showLoader()
       try {
         await dispatch(getHelpcenterTicketData({}))
+        hideLoader()
       } catch (error) {
         console.error("Failed to load ticket data:", error)
+        hideLoader()
       } finally {
+        hideLoader()
         // We'll set loading to false in the other useEffect when data is processed
       }
     }
 
     loadData()
-  }, [dispatch])
+  }, [dispatch, hideLoader, showLoader])
 
   const handleSendMessage = () => {
     if (messageInput.trim() && selectedTicket) {

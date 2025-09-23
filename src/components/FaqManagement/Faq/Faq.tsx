@@ -11,6 +11,7 @@ import { fetchFAQsThunk } from "@/features/Faq/thunks";
 import { createFAQ, deleteFAQ, updateFAQ } from "@/features/Faq/service";
 import { getCategoriesThunks } from "@/features/FaqCategories/reducers/thunks";
 import { FONTS } from "@/constants/ui constants";
+import { useLoader } from "@/context/LoadingContext/Loader";
 
 const FAQ = () => {
 
@@ -47,6 +48,8 @@ const FAQ = () => {
   });
 
   const dispatch = useDispatch<any>();
+  const { showLoader, hideLoader } = useLoader()
+
   const AllFaqs = useSelector(getAllFaq);
   console.log("faqs", AllFaqs);
 
@@ -71,12 +74,14 @@ const FAQ = () => {
 
   useEffect(() => {
     const fetchData = async () => {
-      setLoading(true); // show skeleton
+      setLoading(true);
+      showLoader()
       await dispatch(fetchFAQsThunk({ page }));
       setLoading(false);
+      hideLoader()
     };
     fetchData();
-  }, [dispatch, page]);
+  }, [dispatch, hideLoader, page, showLoader]);
 
   const categoriess = useSelector((state: any) => state.CategoriesSlice.data);
 

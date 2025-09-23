@@ -18,6 +18,7 @@ import { getCategoriesThunks } from "@/features/FaqCategories/reducers/thunks";
 import { useDispatch, useSelector } from "react-redux";
 import { createCategoriesData, deleteCategoriesData, updateCategoriesData } from "@/features/FaqCategories/services";
 import { FONTS } from "@/constants/ui constants";
+import { useLoader } from "@/context/LoadingContext/Loader";
 
 interface Category {
   id: string;
@@ -177,15 +178,18 @@ export default function Categories() {
 
   const dispatch = useDispatch<any>();
   const categoriess = useSelector((state: any) => state.CategoriesSlice.data);
+  const { showLoader, hideLoader } = useLoader()
 
   useEffect(() => {
     const fetch = async () => {
       isLoading(true);
+      showLoader()
       await dispatch(getCategoriesThunks({ page: 1 }));
       isLoading(false);
+      hideLoader()
     };
     fetch();
-  }, [dispatch]);
+  }, [dispatch, hideLoader, showLoader]);
 
   useEffect(() => {
     setCategories(categoriess);

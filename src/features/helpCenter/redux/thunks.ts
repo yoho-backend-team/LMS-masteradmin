@@ -18,6 +18,7 @@ export const getAllHelpCenterThunks = () => async (dispatch: AppDispatch) => {
     try {
         const response = await getAllHelpCenterService()
         dispatch(getAllHelp(response?.data))
+        return response
     } catch (error) {
         console.warn(error)
     }
